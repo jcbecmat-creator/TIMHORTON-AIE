@@ -24,63 +24,97 @@
             corePlugins: { preflight: false },
             theme: {
                 extend: {
-                    colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", },
-                    fontFamily: { sans: ["Inter", "sans-serif"] },
-                    boxShadow: { 'premium': '0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)' }
+                    colors: { 
+                        primary: "#DC2626", 
+                        "primary-dark": "#B91C1C", 
+                        "surface": "#FFFFFF", 
+                        "background": "#F8FAFC", 
+                        "text-main": "#1E293B", 
+                        "text-sub": "#64748B", 
+                    },
+                    fontFamily: { sans: ["Inter", "sans-serif"] }
                 }
             }
         };
     </script>
 
     <style>
-        /* === ESTILOS GENERALES Y SPA === */
-        #login-screen { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); background-attachment: fixed; }
+        /* === ESTILOS GENERALES Y LOGIN === */
+        body { margin: 0; padding: 0; background-color: #f3f4f6; }
+        
+        #login-screen { 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        
+        .login-box { 
+            width: 100%; 
+            max-width: 420px; 
+            background: white; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            padding: 32px; 
+        }
+        
+        /* === NAVEGACIÓN SPA === */
         .modulo-vista { display: none; animation: fadeIn 0.3s ease-in-out; }
         .modulo-vista.activa { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; }
+        .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #f8fafc; }
+        
+        /* === MENÚ LATERAL TIM HORTONS === */
         .sidebar-link.activa { background-color: #FFF1F1 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
+
+        /* === RESTAURACIÓN DE TARJETAS (BORDES REDONDOS Y SOMBRA) === */
+        .form-card { 
+            background: white; 
+            border-radius: 16px !important; 
+            padding: 30px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06) !important; 
+            border: 1px solid #e5e7eb; 
+            width: 100%; 
+            margin-bottom: 24px; 
+        }
+        .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; color: #111827; margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
         
-        /* === ESTILOS DE MÓDULOS RESTAURADOS === */
-        .page-header-section { margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 1px solid var(--gray-200); }
-        .tabs-segmented { display: inline-flex; background: var(--gray-100); border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 20px; overflow-x: auto; max-width: 100%; }
-        .tab-segment { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--gray-600); cursor: pointer; white-space: nowrap; transition: all 0.2s; text-decoration: none; }
-        .tab-segment.active { background: white; color: var(--gray-900); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .tab-segment-count { background: var(--gray-200); padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 6px; }
+        .fc-stat-card { background: white; border-radius: 16px !important; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important; border: 1px solid #e5e7eb; }
+        .data-table-container { background: white; border-radius: 16px !important; overflow-x: auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05) !important; border: 1px solid #e5e7eb; margin-bottom: 20px; }
+        .filters-bar { background: white; border-radius: 12px !important; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; border: 1px solid #e5e7eb; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+        .filter-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
+
+        /* === TABS Y TABLAS === */
+        .page-header-section { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
+        .tabs-segmented { display: inline-flex; background: #f3f4f6; border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 20px; overflow-x: auto; max-width: 100%; border: 1px solid #e5e7eb;}
+        .tab-segment { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; white-space: nowrap; transition: all 0.2s; text-decoration: none; }
+        .tab-segment.active { background: white; color: #111827; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;}
+        .tab-segment-count { background: #e5e7eb; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 6px; }
         .tab-segment.active .tab-segment-count { background: #DC2626; color: white; }
         
-        .filters-bar { background: white; border-radius: 12px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid var(--gray-200); display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
-        .filter-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 6px; }
-        .filter-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        .data-table th { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6b7280; padding: 16px; text-align: left; background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
+        .data-table td { padding: 16px; border-bottom: 1px solid #f3f4f6; font-size: 14px; color: #374151; vertical-align: middle; }
         
-        .data-table-container, .fc-table-container, .co-table-container { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--gray-200); margin-bottom: 20px; }
-        .data-table, .fc-table, .co-table { width: 100%; border-collapse: collapse; min-width: 900px; }
-        .data-table th, .fc-table th, .co-table th { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gray-500); padding: 16px; text-align: left; background: #f8fafc; border-bottom: 1px solid var(--gray-200); }
-        .data-table td, .fc-table td, .co-table td { padding: 16px; border-bottom: 1px solid var(--gray-100); font-size: 14px; color: var(--gray-700); vertical-align: middle; }
-        .data-table tbody tr:hover, .fc-table tbody tr:hover, .co-table tbody tr:hover { background: #f8fafc; }
-        
-        .fc-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .fc-stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--gray-200); }
-        .fc-stat-label { font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); margin-bottom: 8px; }
-        .fc-stat-value { font-size: 28px; font-weight: 700; color: var(--gray-900); }
-        
-        .status-pill, .fc-badge, .co-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
-        .status-danger, .co-badge-rejected { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
-        .status-success, .co-badge-approved { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
-        .status-warning, .co-badge-pending { background: #FEF9C3; color: #854D0E; border: 1px solid #FEF08A; }
-        
-        .form-card { background: white; border-radius: var(--radius-xl); padding: 30px; box-shadow: var(--shadow-lg); border: 1px solid var(--gray-200); width: 100%; margin-bottom: 24px; }
-        .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; color: var(--gray-900); margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid var(--gray-100); }
-        
+        /* Badges */
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
+        .status-danger { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
+        .status-success { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
+        .status-warning { background: #FEF9C3; color: #854D0E; border: 1px solid #FEF08A; }
+
+        /* FOTOS Y CÁMARA */
         .photo-controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .btn-photo { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #DC2626; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
-        .btn-photo-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: var(--gray-700); border: 1px solid var(--gray-300); border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
+        .btn-photo-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
         .photo-grid-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
-        .photo-slot { aspect-ratio: 1; border: 2px dashed var(--gray-300); border-radius: 12px; background: var(--gray-50); display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .photo-slot { aspect-ratio: 1; border: 2px dashed #d1d5db; border-radius: 12px; background: #f9fafb; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
         .slot-placeholder-icon { color: var(--gray-400); width: 30px; height: 30px; margin-bottom: 8px; }
         .remove-photo { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 22px; cursor: pointer; font-size: 16px; font-weight: bold; z-index: 10; }
@@ -88,65 +122,78 @@
         #camera-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 11000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         #camera-stream { width: 100%; max-width: 600px; aspect-ratio: 4/3; background: black; border-radius: 12px; overflow: hidden; position: relative; }
         #camera-video { width: 100%; height: 100%; object-fit: cover; }
-        .camera-controls { display: flex; gap: 20px; margin-top: 20px; }
+        
         .modal-enlarger { display: none; position: fixed; z-index: 10000; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); }
         .modal-content-img { margin: auto; display: block; max-width: 90%; max-height: 80%; border-radius: 8px; animation: zoomIn 0.3s; }
         @keyframes zoomIn { from {transform:scale(0)} to {transform:scale(1)} }
 
-        .signature-container { border: 2px dashed var(--gray-300); border-radius: var(--radius-md); background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
+        /* FIRMA */
+        .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
         .signature-pad { width: 100%; height: 200px; cursor: crosshair; touch-action: none; display: block; } 
         
-        .submit-section { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--gray-200); margin-top: 20px; margin-bottom: 50px; }
-        .submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 44px; border-radius: var(--radius-lg); font-size: 16px; font-weight: 600; cursor: pointer; min-width: 220px; transition: all 0.2s; }
-        .draft-btn { background: white; border: 1px solid var(--gray-300); color: var(--gray-900); box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
-        .btn-submit-order { background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); }
-
+        /* BOTONES DE ENVÍO */
+        .submit-section { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid #e5e7eb; margin-top: 20px; margin-bottom: 50px; }
+        .submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 44px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; min-width: 220px; transition: all 0.2s; }
+        .draft-btn { background: white; border: 1px solid #d1d5db; color: #111827; }
+        .btn-submit-order { background: #DC2626; color: white; border: none; }
+        
+        /* REPORTES */
         .reports-grid-enhanced { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
         .rpt-card { background: white; border: 1px solid var(--gray-200); border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
         .rpt-card-header { font-size: 16px; font-weight: 600; color: var(--gray-900); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         .report-option { display: block; width: 100%; text-align: left; padding: 14px 16px; border: 1px solid var(--gray-300); background: white; color: var(--gray-800); border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; }
         .report-option.active { border-color: #DC2626; color: #DC2626; background: #FFF1F1; font-weight: 600; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1); }
         .download-excel-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: #166534; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
+        @media (max-width: 900px) { .reports-grid-enhanced { grid-template-columns: 1fr; } }
     </style>
 </head>
-<body class="has-sidebar">
+<body>
 
-    <div id="login-screen" class="min-h-screen flex flex-col items-center justify-center p-4 antialiased">
-        <div class="w-full max-w-[420px] bg-surface rounded-2xl shadow-premium border border-slate-100 overflow-hidden" style="box-sizing: border-box; background: white;">
-            <div class="p-8">
-                <div class="flex flex-col items-center mb-4">
-                    <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
-                    <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
-                    <p class="text-[15px] text-text-sub mt-1" style="margin-top:5px;">Mesa de Servicio Operativo</p>
-                </div>
-                <form id="loginForm" class="space-y-5">
-                    <div class="space-y-1.5" style="margin-bottom: 15px;">
-                        <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Usuario</label>
-                        <div class="relative flex items-center">
-                            <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px;">person</span>
-                            <input required autocomplete="username" class="block w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 12px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;" id="username" name="username" placeholder="ID" type="text">
-                        </div>
-                    </div>
-                    <div class="space-y-1.5" style="margin-bottom: 15px;">
-                        <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Contraseña</label>
-                        <div class="relative flex items-center">
-                            <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px;">lock</span>
-                            <input required autocomplete="current-password" class="block w-full pl-12 pr-12 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 40px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;" id="password" name="password" placeholder="••••••••" type="password">
-                            <button class="absolute right-4 flex items-center text-slate-400 hover:text-primary transition-colors" style="position:absolute; right: 10px; background:none; border:none; cursor:pointer;" onclick="togglePassword()" type="button"><span class="material-symbols-outlined text-xl" id="toggleIcon">visibility_off</span></button>
-                        </div>
-                    </div>
-                    <div id="alertMessage" class="hidden py-2.5 px-3 bg-red-50 border border-red-200 text-red-600 text-[13px] font-medium rounded-lg text-center transition-all" style="display:none; padding:10px; background:#FEE2E2; color:#DC2626; border-radius:8px; text-align:center; border:1px solid #FECACA; margin-bottom: 15px;">Verifica tu usuario o contraseña</div>
-                    <button id="submitBtn" class="w-full flex justify-center items-center py-3.5 px-4 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-dark shadow-sm transition-all" style="width:100%; padding:14px; background:#DC2626; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px;" type="submit">Iniciar Sesión</button>
-                </form>
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="flex flex-col items-center mb-4">
+                <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
+                <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
+                <p class="text-[15px] text-text-sub mt-1" style="margin-top:5px;">Mesa de Servicio Operativo</p>
             </div>
+            <form id="loginForm" class="space-y-5">
+                <div class="space-y-1.5" style="margin-bottom: 15px;">
+                    <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Usuario</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px;">person</span>
+                        <input required autocomplete="username" id="username" type="text" placeholder="ID" style="width:100%; padding: 12px 12px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
+                    </div>
+                </div>
+                <div class="space-y-1.5" style="margin-bottom: 15px;">
+                    <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Contraseña</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px;">lock</span>
+                        <input required autocomplete="current-password" id="password" type="password" placeholder="••••••••" style="width:100%; padding: 12px 40px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box;">
+                        <button type="button" style="position:absolute; right: 10px; background:none; border:none; cursor:pointer;" onclick="togglePassword()">
+                            <span class="material-symbols-outlined text-xl" id="toggleIcon">visibility_off</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="alertMessage" style="display:none; padding:10px; background:#FEE2E2; color:#DC2626; border-radius:8px; text-align:center; border:1px solid #FECACA; margin-bottom: 15px; font-size: 13px;">
+                    Verifica tu usuario o contraseña
+                </div>
+                <button id="submitBtn" type="submit" style="width:100%; padding:14px; background:#DC2626; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px;">
+                    Iniciar Sesión
+                </button>
+            </form>
+            <p style="text-align: center; color: #fff; font-size: 12px; margin-top: 20px; opacity: 0.8;">© 2026 TIM HORTONS. Todos los derechos reservados.</p>
         </div>
-        <div class="mt-6 text-center" style="margin-top: 20px;"><p class="text-[12px] font-medium uppercase tracking-widest text-white/60" style="color:rgba(255,255,255,0.8); font-size:12px;">© 2026 TIM HORTONS. Todos los derechos reservados.</p></div>
     </div>
-
-    <div id="app-screen" style="display: none;">
+    <div id="app-screen" style="display: none;" class="has-sidebar">
         <header class="main-header">
-            <div class="header-left"><button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo"><h1 class="system-title">Ordenes de Servicio</h1></div>
-            <div class="header-right"><div class="user-menu"><button class="user-circle-btn"><span class="user-circle-initial">U</span></button></div></div>
+            <div class="header-left">
+                <button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button>
+                <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo">
+                <h1 class="system-title">Ordenes de Servicio</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-menu"><button class="user-circle-btn"><span class="user-circle-initial">U</span></button></div>
+            </div>
         </header>
 
         <div class="main-layout">
@@ -154,19 +201,41 @@
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')"><i data-lucide="home"></i> Inicio</a>
-                        <div class="sidebar-section"><div class="sidebar-section-title">Formas</div>
-                            <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
-                            <a href="#" class="sidebar-link" id="nav-crear-orden" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="file-plus-2"></i> Crear Nueva Orden</a>
+                        <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')">
+                            <i data-lucide="home"></i> Inicio
+                        </a>
+                        
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Formas</div>
+                            <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')">
+                                <i data-lucide="wrench"></i> Mantenimiento correctivo
+                            </a>
+                            <a href="#" class="sidebar-link" id="nav-crear-orden" onclick="cambiarVista(event, 'vista-ordenes-servicio')">
+                                <i data-lucide="file-plus-2"></i> Crear Nueva Orden
+                            </a>
                         </div>
-                        <div class="sidebar-section" id="nav-seccion-admin"><div class="sidebar-section-title">Administración</div>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-confirmacion')"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-costos')"><i data-lucide="calculator"></i> Costos de reparación</a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-aprobacion')"><i data-lucide="badge-check"></i> Aprobación de costos</a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-facturacion')"><i data-lucide="file-text"></i> Facturación</a>
+                        
+                        <div class="sidebar-section" id="nav-seccion-admin">
+                            <div class="sidebar-section-title">Administración</div>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-confirmacion')">
+                                <i data-lucide="check-circle-2"></i> Confirmación operativa
+                            </a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-costos')">
+                                <i data-lucide="calculator"></i> Costos de reparación
+                            </a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-aprobacion')">
+                                <i data-lucide="badge-check"></i> Aprobación de costos
+                            </a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-facturacion')">
+                                <i data-lucide="file-text"></i> Facturación
+                            </a>
                         </div>
-                        <div class="sidebar-section" id="nav-seccion-reportes"><div class="sidebar-section-title">Reportes</div>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                        
+                        <div class="sidebar-section" id="nav-seccion-reportes">
+                            <div class="sidebar-section-title">Reportes</div>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')">
+                                <i data-lucide="bar-chart-3"></i> Reportes
+                            </a>
                         </div>
                     </nav>
                 </div>
@@ -175,50 +244,174 @@
 
             <main class="main-content app-content">
 
-                <div id="vista-inicio" class="modulo-vista"><div class="reporte-container" style="text-align: center; padding-top: 50px;"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;"><h2>Bienvenido al Sistema</h2><p style="color: #666;">Selecciona una opción del menú lateral.</p></div></div>
+                <div id="vista-inicio" class="modulo-vista">
+                    <div style="text-align: center; padding-top: 50px;">
+                        <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
+                        <h2>Bienvenido al Sistema</h2>
+                        <p style="color: #666;">Selecciona una opción del menú lateral.</p>
+                    </div>
+                </div>
 
                 <div id="vista-mantenimiento" class="modulo-vista activa">
-                    <div class="reporte-container" style="max-width: 900px; margin: 0 auto; padding: 20px;">
-                        <header class="page-header-section"><h1>Mantenimiento Correctivo</h1><p>Registrar orden de servicio - Tim Hortons</p></header>
-                        <form method="POST" id="ordenMttoForm">
-                            <div class="form-card"><h3 class="section-title"><i data-lucide="map-pin"></i> Ubicación</h3><div class="form-group"><label class="form-label required">Sucursal Tim Hortons</label><input class="form-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." required autocomplete="off"><datalist id="sucursales-list"><option value="Acoxpa"></option><option value="20 de Noviembre"></option><option value="Pabellon M"></option><option value="TESTJOYA"></option><option value="Parque Delta"></option><option value="Santa Fe"></option><option value="Reforma 222"></option><option value="Insurgentes"></option><option value="Perisur"></option><option value="Valle Oriente"></option><option value="Galerías Monterrey"></option><option value="Satélite"></option><option value="Polanco"></option><option value="San Ángel"></option></datalist></div></div>
-                            <div class="form-card"><h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3><div class="form-group" style="margin-bottom: 15px;"><label class="form-label required">Nombre del técnico</label><input type="text" class="form-input" required placeholder="Nombre completo"></div><div class="form-group"><label class="form-label required">Proveedor</label><select class="form-select" required><option value="">Seleccione proveedor...</option><option>ALIMENTOS NUTRI-FACIL</option><option>TIM HORTONS</option></select></div></div>
-                            <div class="form-card"><h3 class="section-title"><i data-lucide="ticket"></i> Tickets</h3><div class="form-group"><label class="form-label">Número de Ticket GLPI / Interno</label><input type="text" class="form-input" placeholder="Ej. 10293"></div></div>
-                            <div class="form-card"><h3 class="section-title"><i data-lucide="file-text"></i> Descripción de la solución</h3><div class="form-group"><label class="form-label required">Detalle del trabajo realizado / Falla reportada</label><textarea class="form-input" rows="4" placeholder="Describe detalladamente la falla y la solución aplicada..." required></textarea></div></div>
-                            <div class="form-card"><h3 class="section-title"><i data-lucide="camera"></i> Evidencia Fotográfica (Antes) (Máx 3)</h3><div class="photo-controls"><button type="button" class="btn-photo" onclick="triggerCamera()"><i data-lucide="camera"></i> Tomar Foto (Cámara)</button><button type="button" class="btn-photo-secondary" onclick="triggerFile()"><i data-lucide="upload"></i> Subir Archivo</button><input type="file" id="fileInput" accept="image/*" style="display:none" onchange="addPhoto(this)"><canvas id="tempCanvas" style="display:none"></canvas></div><div id="photoGrid" class="photo-grid-slots"><div class="photo-slot" id="slot-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div><div class="photo-slot" id="slot-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div><div class="photo-slot" id="slot-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div></div></div>
-                            <div class="form-card"><h3 class="section-title"><i data-lucide="pen-tool"></i> Firma Táctil</h3><div class="form-group"><div class="signature-container"><canvas id="firma_tecnico" class="signature-pad"></canvas></div><div style="display: flex; justify-content: flex-end; margin-top: 8px;"><button type="button" onclick="limpiarFirma('firma_tecnico')" class="draft-btn" style="padding: 6px 12px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;"><i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar</button></div><input type="hidden" id="firma_tecnico_data" required></div></div>
-                            <div class="submit-section"><button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado.')"><i data-lucide="save"></i> Guardar Borrador</button><button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden</button></div>
+                    <div style="max-width: 900px; margin: 0 auto; padding: 20px;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
+                            <p style="color: #6b7280; margin: 0;">Registrar orden de servicio - Tim Hortons</p>
+                        </header>
+                        <form id="ordenMttoForm">
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="map-pin"></i> Ubicación</h3>
+                                <div class="form-group">
+                                    <label class="form-label required">Sucursal Tim Hortons</label>
+                                    <input class="form-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." required autocomplete="off">
+                                    <datalist id="sucursales-list">
+                                        <option value="Acoxpa"></option>
+                                        <option value="20 de Noviembre"></option>
+                                        <option value="Pabellon M"></option>
+                                        <option value="TESTJOYA"></option>
+                                        <option value="Parque Delta"></option>
+                                        <option value="Santa Fe"></option>
+                                        <option value="Reforma 222"></option>
+                                        <option value="Insurgentes"></option>
+                                        <option value="Perisur"></option>
+                                        <option value="Valle Oriente"></option>
+                                        <option value="Galerías Monterrey"></option>
+                                        <option value="Satélite"></option>
+                                        <option value="Polanco"></option>
+                                        <option value="San Ángel"></option>
+                                    </datalist>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label class="form-label required">Nombre del técnico</label>
+                                    <input type="text" class="form-input" required placeholder="Nombre completo">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Proveedor</label>
+                                    <select class="form-select" required>
+                                        <option value="">Seleccione proveedor...</option>
+                                        <option>ALIMENTOS NUTRI-FACIL</option>
+                                        <option>TIM HORTONS</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="ticket"></i> Tickets</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Número de Ticket GLPI / Interno</label>
+                                    <input type="text" class="form-input" placeholder="Ej. 10293">
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="file-text"></i> Descripción de la solución</h3>
+                                <div class="form-group">
+                                    <label class="form-label required">Detalle del trabajo realizado / Falla reportada</label>
+                                    <textarea class="form-input" rows="4" placeholder="Describe detalladamente la falla y la solución aplicada..." required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="camera"></i> Evidencia Fotográfica (Máx 3)</h3>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera()">
+                                        <i data-lucide="camera"></i> Cámara
+                                    </button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile()">
+                                        <i data-lucide="upload"></i> Archivo
+                                    </button>
+                                    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="addPhoto(this)">
+                                    <canvas id="tempCanvas" style="display:none"></canvas>
+                                </div>
+                                <div id="photoGrid" class="photo-grid-slots">
+                                    <div class="photo-slot" id="slot-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="pen-tool"></i> Firma Táctil</h3>
+                                <div class="form-group">
+                                    <div class="signature-container">
+                                        <canvas id="firma_tecnico" class="signature-pad"></canvas>
+                                    </div>
+                                    <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                                        <button type="button" onclick="limpiarFirma('firma_tecnico')" class="draft-btn" style="padding: 6px 12px; font-size: 13px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;">
+                                            <i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar
+                                        </button>
+                                    </div>
+                                    <input type="hidden" id="firma_tecnico_data" required>
+                                </div>
+                            </div>
+
+                            <div class="submit-section">
+                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado.')">
+                                    <i data-lucide="save"></i> Borrador
+                                </button>
+                                <button type="button" class="submit-btn btn-submit-order">
+                                    <i data-lucide="send"></i> Enviar
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>
+
                 <div id="vista-ordenes-servicio" class="modulo-vista">
-                    <div class="reporte-container" style="max-width: 900px; margin: 0 auto; padding: 20px;">
-                        <header class="page-header-section"><h1>Crear Nueva Orden</h1><p>Formulario general para nuevas solicitudes operativas</p></header>
-                        <div class="form-card"><h3 class="section-title"><i data-lucide="map-pin"></i> Restaurante</h3><div class="form-group"><label class="form-label">Seleccione Sucursal</label><select class="form-select"><option>Acoxpa</option><option>TESTJOYA</option></select></div></div>
+                    <div style="padding: 20px;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Crear Nueva Orden</h1>
+                        </header>
+                        <div class="form-card">
+                            <h3 class="section-title"><i data-lucide="map-pin"></i> Restaurante</h3>
+                            <div class="form-group">
+                                <label class="form-label required">Sucursal</label>
+                                <select class="form-select"><option>Acoxpa</option><option>TESTJOYA</option></select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 <div id="vista-confirmacion" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section"><h1>Confirmación Operativa</h1><p style="color:var(--gray-500);">Revisa y aprueba las órdenes de servicio finalizadas por los técnicos</p></header>
-                        
-                        <div class="tabs-segmented"><span class="tab-segment active">Pendientes <span class="tab-segment-count">3</span></span><span class="tab-segment">Confirmadas <span class="tab-segment-count">0</span></span></div>
-                        
-                        <form class="filters-bar">
-                            <div class="filter-group"><label class="filter-label">Fecha inicio</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Fecha fin</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Tipo de orden</label><select class="form-select"><option value="">Todos los tipos</option><option value="mantenimiento">Mantenimiento</option><option value="capex">Capex Supply</option></select></div>
-                            <div class="filter-group"><label class="filter-label">Buscar</label><input type="text" class="form-input" placeholder="Folio o sucursal..."></div>
-                            <button type="button" class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; min-width: auto;"><i data-lucide="filter"></i> Filtrar</button>
-                        </form>
-
+                    <div style="padding: 20px;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Confirmación Operativa</h1>
+                            <p style="color:var(--gray-500); margin:0;">Revisa y aprueba las órdenes finalizadas</p>
+                        </header>
+                        <div class="tabs-segmented">
+                            <span class="tab-segment active">Pendientes <span class="tab-segment-count">3</span></span>
+                            <span class="tab-segment">Confirmadas <span class="tab-segment-count">0</span></span>
+                        </div>
+                        <div class="filters-bar">
+                            <div class="filter-group">
+                                <label style="font-size: 11px; color:#6b7280; font-weight:bold;">BUSCAR</label>
+                                <input type="text" class="form-input" placeholder="Folio o sucursal...">
+                            </div>
+                            <div class="filter-group">
+                                <label style="font-size: 11px; color:#6b7280; font-weight:bold;">TIPO</label>
+                                <select class="form-select"><option>Todos</option><option>Mantenimiento</option></select>
+                            </div>
+                            <button class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px;">
+                                <i data-lucide="search"></i> Filtrar
+                            </button>
+                        </div>
                         <div class="data-table-container">
                             <table class="data-table">
-                                <thead><tr><th>Folio</th><th>Sucursal</th><th>Tipo</th><th>Fecha</th><th style="text-align: right;">Acción</th></tr></thead>
+                                <thead>
+                                    <tr><th>Folio</th><th>Sucursal</th><th>Tipo</th><th>Fecha</th><th style="text-align:right;">Acción</th></tr>
+                                </thead>
                                 <tbody>
-                                    <tr><td><strong>OS-2026-00012</strong></td><td>Acoxpa</td><td>Mantenimiento</td><td>10/02/2026</td><td style="text-align: right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; min-width: auto; border-radius: 6px;"><i data-lucide="check-circle" style="width: 14px;"></i> Revisar</button></td></tr>
-                                    <tr><td><strong>OS-2025-00008</strong></td><td>TESTJOYA</td><td>Capex Supply</td><td>12/12/2025</td><td style="text-align: right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; min-width: auto; border-radius: 6px;"><i data-lucide="check-circle" style="width: 14px;"></i> Revisar</button></td></tr>
-                                    <tr><td><strong>OS-2025-00005</strong></td><td>TESTQUETZAL</td><td>Capex Supply</td><td>07/12/2025</td><td style="text-align: right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; min-width: auto; border-radius: 6px;"><i data-lucide="check-circle" style="width: 14px;"></i> Revisar</button></td></tr>
+                                    <tr>
+                                        <td><strong>OS-2026-00012</strong></td><td>Acoxpa</td><td>Mantenimiento</td><td>10/02/2026</td>
+                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">Revisar</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>OS-2025-00008</strong></td><td>TESTJOYA</td><td>Mantenimiento</td><td>12/12/2025</td>
+                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">Revisar</button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -226,26 +419,32 @@
                 </div>
 
                 <div id="vista-costos" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section"><h1>Costos de Reparación</h1><p style="color:var(--gray-500);">Gestiona los costos de materiales y mano de obra de las órdenes aprobadas</p></header>
-                        
-                        <div class="tabs-segmented"><span class="tab-segment active">Pendientes <span class="tab-segment-count">3</span></span><span class="tab-segment">Enviados <span class="tab-segment-count">0</span></span><span class="tab-segment rejected">Rechazados <span class="tab-segment-count">1</span></span></div>
-                        
-                        <form class="filters-bar">
-                            <div class="filter-group"><label class="filter-label">Fecha inicio</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Fecha fin</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Buscar</label><input type="text" class="form-input" placeholder="Folio o sucursal..."></div>
-                            <button type="button" class="draft-btn" style="padding: 12px 24px; border-radius: 8px;"><i data-lucide="search"></i> Buscar</button>
-                            <button type="button" class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #166534;"><i data-lucide="download"></i> Exportar</button>
-                        </form>
-
+                    <div style="padding: 20px;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1>
+                            <p style="color:var(--gray-500); margin:0;">Captura de materiales y mano de obra</p>
+                        </header>
+                        <div class="tabs-segmented">
+                            <span class="tab-segment active">Pendientes <span class="tab-segment-count">2</span></span>
+                            <span class="tab-segment">Enviados <span class="tab-segment-count">0</span></span>
+                        </div>
+                        <div class="filters-bar">
+                            <div class="filter-group">
+                                <label style="font-size: 11px; color:#6b7280; font-weight:bold;">BUSCAR FOLIO</label>
+                                <input type="text" class="form-input" placeholder="Ej. OS-2024...">
+                            </div>
+                        </div>
                         <div class="data-table-container">
                             <table class="data-table">
-                                <thead><tr><th>Folio</th><th>Sucursal</th><th>Fecha Aprobación</th><th>Conceptos</th><th>Estado</th><th>Total</th><th style="text-align: right;">Acción</th></tr></thead>
+                                <thead>
+                                    <tr><th>Folio</th><th>Sucursal</th><th>Fecha</th><th>Proveedor</th><th>Estado</th><th style="text-align:right;">Acción</th></tr>
+                                </thead>
                                 <tbody>
-                                    <tr><td><strong>OS-2026-00010</strong></td><td>Anaxagoras</td><td>2026-02-03</td><td><span style="color: #aaa;">—</span></td><td><span class="status-pill status-warning">Sin capturar</span></td><td><span style="color: #aaa;">—</span></td><td style="text-align: right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; min-width: auto; border-radius: 6px;"><i data-lucide="edit" style="width: 14px;"></i> Capturar</button></td></tr>
-                                    <tr><td><strong>OS-2026-00008</strong></td><td>TESTJOYA</td><td>2026-01-30</td><td><span style="color: #aaa;">—</span></td><td><span class="status-pill status-warning">Sin capturar</span></td><td><span style="color: #aaa;">—</span></td><td style="text-align: right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; min-width: auto; border-radius: 6px;"><i data-lucide="edit" style="width: 14px;"></i> Capturar</button></td></tr>
-                                    <tr><td><strong>OS-2026-00007</strong></td><td>20 de Noviembre</td><td>2026-01-30</td><td><span style="color: #aaa;">—</span></td><td><span class="status-pill status-warning">Sin capturar</span></td><td><span style="color: #aaa;">—</span></td><td style="text-align: right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; min-width: auto; border-radius: 6px;"><i data-lucide="edit" style="width: 14px;"></i> Capturar</button></td></tr>
+                                    <tr>
+                                        <td><strong>OS-2026-00010</strong></td><td>Anaxagoras</td><td>2026-02-03</td><td>TIM HORTONS</td>
+                                        <td><span class="status-pill status-warning">Sin capturar</span></td>
+                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">Capturar</button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -253,68 +452,60 @@
                 </div>
 
                 <div id="vista-aprobacion" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section"><h1>Aprobación de Costos</h1><p style="color:var(--gray-500);">Revisa y autoriza los presupuestos enviados por los proveedores</p></header>
-                        
-                        <div class="tabs-segmented"><span class="tab-segment active">Pendientes <span class="tab-segment-count">1</span></span><span class="tab-segment">Aprobados <span class="tab-segment-count">7</span></span><span class="tab-segment rejected">Rechazados <span class="tab-segment-count">1</span></span></div>
-                        
-                        <form class="filters-bar">
-                            <div class="filter-group"><label class="filter-label">Fecha inicio</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Fecha fin</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Buscar</label><input type="text" class="form-input" placeholder="Folio o sucursal..."></div>
-                            <button type="button" class="draft-btn" style="padding: 12px 24px; border-radius: 8px;"><i data-lucide="search"></i> Buscar</button>
-                            <button type="button" class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #166534;"><i data-lucide="download"></i> Exportar</button>
-                        </form>
-
+                    <div style="padding: 20px;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1>
+                            <p style="color:var(--gray-500); margin:0;">Autoriza presupuestos de proveedores</p>
+                        </header>
+                        <div class="tabs-segmented">
+                            <span class="tab-segment active">Pendientes <span class="tab-segment-count">1</span></span>
+                            <span class="tab-segment">Aprobados <span class="tab-segment-count">7</span></span>
+                        </div>
                         <div class="data-table-container">
                             <table class="data-table">
-                                <thead><tr><th>Folio</th><th>Sucursal</th><th>Enviado por</th><th>Fecha envío</th><th>Total Cotizado</th><th>Estado</th><th style="text-align: right;">Acciones</th></tr></thead>
+                                <thead>
+                                    <tr><th>Folio</th><th>Sucursal</th><th>Proveedor</th><th>Total Cotizado</th><th>Estado</th><th style="text-align:right;">Acciones</th></tr>
+                                </thead>
                                 <tbody>
-                                    <tr><td><strong>OS-2026-00009</strong></td><td>Perinorte PS</td><td>Proveedor X</td><td>2026-01-30</td><td><strong>$4,500.00</strong></td><td><span class="status-pill status-warning">Pendiente</span></td><td style="text-align: right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; min-width: auto; border-radius: 6px;"><i data-lucide="check-circle" style="width: 14px;"></i> Revisar</button></td></tr>
+                                    <tr>
+                                        <td><strong>OS-2026-00009</strong></td><td>Perinorte PS</td><td>Proveedor X</td><td><strong>$4,500.00</strong></td>
+                                        <td><span class="status-pill status-warning">Pendiente</span></td>
+                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">Revisar</button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
+
                 <div id="vista-facturacion" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section"><h1>Facturación</h1><p style="color:var(--gray-500);">Vincula y gestiona los CFDI de las órdenes aprobadas</p></header>
-                        
+                    <div style="padding: 20px;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Facturación</h1>
+                            <p style="color:var(--gray-500); margin:0;">Vincula los CFDI a las órdenes</p>
+                        </header>
                         <div class="fc-stats">
-                            <div class="fc-stat-card"><div class="fc-stat-label">Órdenes pendientes</div><div class="fc-stat-value" style="color:#DC2626;">7</div></div>
-                            <div class="fc-stat-card"><div class="fc-stat-label">Facturas pendientes</div><div class="fc-stat-value" style="color:#854D0E;">0</div></div>
-                            <div class="fc-stat-card"><div class="fc-stat-label">Facturas pagadas</div><div class="fc-stat-value" style="color:#166534;">0</div></div>
-                            <div class="fc-stat-card"><div class="fc-stat-label">Total facturado</div><div class="fc-stat-value">$0.00</div></div>
-                        </div>
-
-                        <form class="filters-bar">
-                            <div class="filter-group"><label class="filter-label">Fecha inicio</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Fecha fin</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Estado</label><select class="form-select"><option value="">Todos</option><option value="sin_factura">Sin factura</option><option value="pendiente">Pago pendiente</option><option value="pagado">Pagado</option></select></div>
-                            <div class="filter-group"><label class="filter-label">Buscar</label><input type="text" class="form-input" placeholder="Folio, UUID..."></div>
-                            <button type="button" class="draft-btn" style="padding: 12px 24px; border-radius: 8px;"><i data-lucide="filter"></i> Filtrar</button>
-                            <button type="button" class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #166534;"><i data-lucide="download"></i> Exportar</button>
-                        </form>
-
-                        <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
-                            <div><span class="filter-label">Selección actual</span><h3 style="margin:0; font-size:16px;">0 folios <span style="color:var(--gray-500); font-weight:normal; font-size:14px;">($0.00 aprobados)</span></h3></div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="draft-btn" style="padding: 10px 20px; border-radius: 8px; font-size: 14px;"><i data-lucide="x-circle" style="width: 16px;"></i> Limpiar</button>
-                                <button class="btn-submit-order" style="padding: 10px 20px; border-radius: 8px; font-size: 14px; min-width: auto;"><i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar XML</button>
+                            <div class="fc-stat-card">
+                                <div class="fc-stat-label">Órdenes Pendientes</div>
+                                <div class="fc-stat-value" style="color:#DC2626;">7</div>
+                            </div>
+                            <div class="fc-stat-card">
+                                <div class="fc-stat-label">Total Facturado</div>
+                                <div class="fc-stat-value">$0.00</div>
                             </div>
                         </div>
-
                         <div class="data-table-container">
                             <table class="data-table">
-                                <thead><tr><th style="width: 48px;">Sel.</th><th>Folio</th><th>Sucursal</th><th>Costo Aprobado</th><th>Facturas</th><th>Total XML</th><th style="text-align: right;">Acción</th></tr></thead>
+                                <thead>
+                                    <tr><th>Sel</th><th>Folio OS</th><th>Sucursal</th><th>Proveedor</th><th>Costo Aprobado</th><th>Estado</th><th style="text-align:right;">Acción</th></tr>
+                                </thead>
                                 <tbody>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00015</strong></td><td>20 de Noviembre</td><td><strong>$1,200.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00014</strong></td><td>Bernardo Quintana</td><td><strong>$2,100.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00013</strong></td><td>20 de Noviembre</td><td><strong>$1,750.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00008</strong></td><td>Santa Monica DTO</td><td><strong>$3,210.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00006</strong></td><td>Pabellon M</td><td><strong>$1,000.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00004</strong></td><td>Sentura</td><td><strong>$100.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00001</strong></td><td>Pabellon M</td><td><strong>$1,800.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                    <tr>
+                                        <td><input type="checkbox" style="width:16px;height:16px;"></td>
+                                        <td><strong>OS-2026-00015</strong></td><td>20 de Noviembre</td><td>TIM HORTONS</td><td><strong>$1,200.00</strong></td>
+                                        <td><span style="color: #aaa;">Sin facturas</span></td>
+                                        <td style="text-align:right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;">Adjuntar</button></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -322,24 +513,33 @@
                 </div>
 
                 <div id="vista-reportes" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section"><h1>Reportes</h1><p style="color:var(--gray-500);">Visualiza y descarga información operativa (Imagen 1)</p></header>
-                        <div class="reports-grid-enhanced">
-                            <div class="rpt-card"><div class="rpt-card-header"><i data-lucide="file-bar-chart"></i> Tipos de Reporte</div>
-                                <div class="report-options-list">
-                                    <button class="report-option active">Historial Completo OS<br><span style="font-size:12px; color:#666;">Todas las órdenes enviadas y estados</span></button>
-                                    <button class="report-option">Costos de reparación<br><span style="font-size:12px; color:#666;">Detalle completo de costos y facturación</span></button>
-                                </div>
+                    <div style="padding: 20px;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes</h1>
+                            <p style="color:var(--gray-500); margin:0;">Descarga información en Excel</p>
+                        </header>
+                        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 24px;">
+                            <div class="form-card" style="margin:0;">
+                                <h3 class="section-title"><i data-lucide="file-bar-chart"></i> Tipos</h3>
+                                <button style="width:100%; text-align:left; padding:14px; background:#FFF1F1; border:2px solid #DC2626; color:#DC2626; border-radius:8px; font-weight:bold;">
+                                    Historial Completo OS
+                                </button>
                             </div>
-                            <div class="rpt-card">
-                                <div class="rpt-card-header"><i data-lucide="filter"></i> Filtros</div>
-                                <button class="download-excel-btn"><i data-lucide="download"></i> Descargar Excel</button>
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:20px;">
-                                    <div class="form-group"><label class="form-label">Fecha Inicio</label><input type="date" class="form-input"></div>
-                                    <div class="form-group"><label class="form-label">Fecha Fin</label><input type="date" class="form-input"></div>
-                                    <div class="form-group"><label class="form-label">Tipo</label><select class="form-select"><option>Todos</option><option>Mantenimiento</option></select></div>
-                                    <div class="form-group"><label class="form-label">Status</label><select class="form-select"><option>Todos</option><option>Aprobada</option></select></div>
+                            <div class="form-card" style="margin:0;">
+                                <h3 class="section-title"><i data-lucide="filter"></i> Filtros</h3>
+                                <div style="display:flex; gap:10px; margin-bottom: 20px;">
+                                    <div style="flex:1;">
+                                        <label style="font-size: 11px; color:#6b7280; font-weight:bold;">INICIO</label>
+                                        <input type="date" class="form-input" style="width:100%;">
+                                    </div>
+                                    <div style="flex:1;">
+                                        <label style="font-size: 11px; color:#6b7280; font-weight:bold;">FIN</label>
+                                        <input type="date" class="form-input" style="width:100%;">
+                                    </div>
                                 </div>
+                                <button class="btn-submit-order" style="width:100%; padding:14px; border-radius:8px;">
+                                    <i data-lucide="download"></i> Descargar Excel
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -349,8 +549,17 @@
         </div>
     </div>
 
-    <div id="camera-overlay"><div id="camera-stream"><video id="camera-video" autoplay="true"></video></div><div class="camera-controls"><button class="draft-btn" onclick="closeCamera()"><i data-lucide="x"></i> Cerrar</button><button class="btn-photo" onclick="captureFoto()"><i data-lucide="camera"></i> Capturar</button></div></div>
-    <div id="photoModal" class="modal-enlarger" onclick="this.style.display='none'"><img class="modal-content-img" id="imgFull"></div>
+    <div id="camera-overlay">
+        <div id="camera-stream"><video id="camera-video" autoplay="true"></video></div>
+        <div class="camera-controls">
+            <button class="draft-btn" onclick="closeCamera()" style="padding:10px 20px; border-radius:8px; background:white; border:1px solid #ccc;">Cerrar</button>
+            <button class="btn-submit-order" onclick="captureFoto()" style="padding:10px 20px; border-radius:8px;">Capturar</button>
+        </div>
+    </div>
+    
+    <div id="photoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999;" onclick="this.style.display='none'">
+        <img id="imgFull" style="margin:auto; display:block; max-width:90%; max-height:90%; padding-top:50px;">
+    </div>
 
     <script>
         lucide.createIcons();
@@ -358,145 +567,189 @@
         // =========================================================
         // PEGA AQUÍ LA URL DE TU APLICACIÓN WEB DE APPS SCRIPT
         // =========================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
+        const APPS_SCRIPT_URL = 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT';
 
-        // LÓGICA DE INICIO DE SESIÓN
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
-            if (passwordInput.type === 'password') { passwordInput.type = 'text'; toggleIcon.textContent = 'visibility'; } 
-            else { passwordInput.type = 'password'; toggleIcon.textContent = 'visibility_off'; }
+        function togglePassword() { 
+            const p = document.getElementById('password'); 
+            const i = document.getElementById('toggleIcon'); 
+            if(p.type === 'password'){ p.type = 'text'; i.textContent = 'visibility';} 
+            else { p.type = 'password'; i.textContent = 'visibility_off';} 
         }
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            const alertMessage = document.getElementById('alertMessage');
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            const btn = document.getElementById('submitBtn');
+            const alertMsg = document.getElementById('alertMessage');
+            
+            if (APPS_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT') { 
+                window.alert("Falta pegar la URL del Script."); 
+                return; 
+            }
+            
+            alertMsg.style.display = 'none'; 
+            btn.innerText = 'Verificando...'; 
+            btn.disabled = true;
 
-            if (APPS_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT') { alert("Falta pegar la URL del Script."); return; }
-
-            alertMessage.style.display = 'none';
-            submitBtn.innerText = 'Verificando...';
-            submitBtn.disabled = true;
-
-            fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ username: username, password: password }),
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            fetch(APPS_SCRIPT_URL, { 
+                method: 'POST', 
+                body: JSON.stringify({ 
+                    username: username.value, 
+                    password: password.value 
+                }), 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
             })
-            .then(response => response.json())
-            .then(resultado => {
-                if (resultado.valido) { iniciarSesionExitosa(resultado.privilegio); } 
-                else { alertMessage.style.display = 'block'; restaurarBoton(); }
+            .then(res => res.json())
+            .then(data => {
+                if (data.valido) {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-screen').style.display = 'block';
+                    
+                    if(data.privilegio == 2) {
+                        document.getElementById('nav-inicio').style.display = 'none';
+                        document.getElementById('nav-crear-orden').style.display = 'none';
+                        document.getElementById('nav-seccion-admin').style.display = 'none';
+                        document.getElementById('nav-seccion-reportes').style.display = 'none';
+                    }
+                    
+                    inicializarFirma();
+                    cambiarVista(null, 'vista-mantenimiento');
+                } else { 
+                    alertMsg.style.display = 'block'; 
+                    btn.innerText = 'Iniciar Sesión'; 
+                    btn.disabled = false; 
+                }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alertMessage.innerText = "Error de conexión con la base de datos.";
-                alertMessage.style.display = 'block';
-                restaurarBoton();
+            .catch(err => { 
+                alertMsg.innerText = "Error de conexión."; 
+                alertMsg.style.display = 'block'; 
+                btn.innerText = 'Iniciar Sesión'; 
+                btn.disabled = false; 
             });
-                
-            function restaurarBoton() { submitBtn.innerText = 'Iniciar Sesión'; submitBtn.disabled = false; }
         });
 
-        function iniciarSesionExitosa(privilegio) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-screen').style.display = 'block';
-
-            if(privilegio == 2 || privilegio == "2") {
-                document.getElementById('nav-inicio').style.display = 'none';
-                document.getElementById('nav-crear-orden').style.display = 'none';
-                document.getElementById('nav-seccion-admin').style.display = 'none';
-                document.getElementById('nav-seccion-reportes').style.display = 'none';
-            }
-
-            inicializarFirma();
-            cambiarVista(null, 'vista-mantenimiento');
-        }
-
-        // NAVEGACIÓN
-        function cambiarVista(event, idVista) {
-            if(event) event.preventDefault();
+        function cambiarVista(e, id) {
+            if(e) e.preventDefault();
             document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('activa'));
-            document.getElementById(idVista).classList.add('activa');
-            if(event) event.currentTarget.classList.add('activa');
-            const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
+            document.getElementById(id).classList.add('activa');
+            if(e) e.currentTarget.classList.add('activa');
+            
+            const s = document.getElementById('sidebar');
+            if(window.innerWidth <= 1024 && s.classList.contains('open')) {
+                s.classList.remove('open');
+            }
         }
 
         const toggles = document.querySelectorAll('[data-sidebar-toggle]');
-        toggles.forEach(toggle => { toggle.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
+        toggles.forEach(t => t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')));
         document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
         // CÁMARA Y FOTOS
-        let fotosData = [null, null, null];
-        function countFotos() { return fotosData.filter(f => f !== null).length; }
-        function addPhotoData(dataUrl) { const slotVacio = fotosData.findIndex(f => f === null); if(slotVacio === -1) { alert("Máximo 3 fotos permitidas."); return; } fotosData[slotVacio] = dataUrl; renderSlots(); }
-        function triggerFile() { if(countFotos() < 3) document.getElementById('fileInput').click(); else alert("Máximo 3 fotos permitidas."); }
-        function addPhoto(input) { if (!input.files || input.files.length === 0) return; const file = input.files[0]; const reader = new FileReader(); reader.onload = function(e) { addPhotoData(e.target.result); input.value = ''; }; reader.readAsDataURL(file); }
-
-        const overlay = document.getElementById('camera-overlay');
-        const video = document.getElementById('camera-video');
-        const canvasT = document.getElementById('tempCanvas');
-        let currentStream;
-
-        async function triggerCamera() {
-            if(countFotos() >= 3) { alert("Máximo 3 fotos permitidas."); return; }
-            try { currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); video.srcObject = currentStream; overlay.style.display = 'flex'; } catch (err) { alert("No se pudo acceder a la cámara."); }
-        }
-        function closeCamera() { if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); } overlay.style.display = 'none'; }
-        function captureFoto() { const ctx = canvasT.getContext('2d'); canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); addPhotoData(canvasT.toDataURL('image/jpeg', 0.8)); closeCamera(); }
-        function removeFoto(index) { fotosData[index] = null; renderSlots(); }
-        function renderSlots() {
-            for (let i = 0; i < 3; i++) {
-                const slot = document.getElementById(`slot-${i}`);
-                if (fotosData[i]) { slot.innerHTML = `<img src="${fotosData[i]}" onclick="enlargePhoto(this.src)"><span class="remove-photo" onclick="removeFoto(${i})">&times;</span>`; slot.style.border = "1px solid #eee"; } 
-                else { slot.innerHTML = `<i data-lucide="image" class="slot-placeholder-icon"></i>`; slot.style.border = "2px dashed var(--gray-300)"; }
+        let fD = [null, null, null];
+        
+        function triggerFile() { 
+            if(fD.filter(f => f).length < 3) {
+                document.getElementById('fileInput').click(); 
+            } else {
+                window.alert("Máximo 3 fotos permitidas."); 
             }
-            lucide.createIcons();
         }
-        function enlargePhoto(src){ document.getElementById('photoModal').style.display = "block"; document.getElementById('imgFull').src = src; }
+        
+        function addPhoto(i) { 
+            if (!i.files || !i.files.length) return; 
+            const r = new FileReader(); 
+            r.onload = (e) => { 
+                const v = fD.findIndex(x => !x); 
+                if(v > -1) { 
+                    fD[v] = e.target.result; 
+                    rS(); 
+                } 
+            }; 
+            r.readAsDataURL(i.files[0]); 
+        }
+        
+        let cS;
+        async function triggerCamera() { 
+            if(fD.filter(f => f).length >= 3) return; 
+            try { 
+                cS = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}); 
+                document.getElementById('camera-video').srcObject = cS; 
+                document.getElementById('camera-overlay').style.display = 'flex'; 
+            } catch(e) {
+                window.alert("Permiso de cámara denegado.");
+            } 
+        }
+        
+        function closeCamera() { 
+            if(cS) cS.getTracks().forEach(t => t.stop()); 
+            document.getElementById('camera-overlay').style.display = 'none'; 
+        }
+        
+        function captureFoto() { 
+            const c = document.getElementById('tempCanvas'); 
+            const v = document.getElementById('camera-video'); 
+            c.width = v.videoWidth; 
+            c.height = v.videoHeight; 
+            c.getContext('2d').drawImage(v,0,0); 
+            
+            const v2 = fD.findIndex(x => !x); 
+            if(v2 > -1){ 
+                fD[v2] = c.toDataURL('image/jpeg', 0.8); 
+                rS(); 
+            } 
+            closeCamera(); 
+        }
+        
+        function rS() { 
+            for(let i=0; i<3; i++) { 
+                const s = document.getElementById('slot-'+i); 
+                if(fD[i]) { 
+                    s.innerHTML = `<img src="${fD[i]}" onclick="document.getElementById('photoModal').style.display='block'; document.getElementById('imgFull').src=this.src;" style="width:100%; height:100%; object-fit:cover; cursor:pointer; border-radius:12px;"><span class="remove-photo" onclick="fD[${i}]=null; rS();">&times;</span>`; 
+                    s.style.border="1px solid #e5e7eb"; 
+                } else { 
+                    s.innerHTML = `<i data-lucide="image" class="slot-placeholder-icon"></i>`; 
+                    s.style.border="2px dashed #d1d5db"; 
+                } 
+            } 
+            lucide.createIcons(); 
+        }
 
-        // FIRMA TÁCTIL (CORREGIDA)
-        let canvasFirma, ctxFirma;
+        // FIRMA TÁCTIL FUNCIONAL
+        let cF, cxF, isD = false;
         function inicializarFirma() {
-            canvasFirma = document.getElementById('firma_tecnico');
-            if(!canvasFirma) return;
-            ctxFirma = canvasFirma.getContext('2d');
-            canvasFirma.width = 600;
-            canvasFirma.height = 200;
-            ctxFirma.lineWidth = 3;
-            ctxFirma.lineCap = 'round';
-            ctxFirma.strokeStyle = '#000000';
-
-            let isDrawing = false;
-            function getCoordinates(e) {
-                const rect = canvasFirma.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                const scaleX = canvasFirma.width / rect.width;
-                const scaleY = canvasFirma.height / rect.height;
-                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+            cF = document.getElementById('firma_tecnico'); 
+            if(!cF) return;
+            
+            cxF = cF.getContext('2d'); 
+            cF.width = 600; 
+            cF.height = 200; 
+            cxF.lineWidth = 3; 
+            cxF.lineCap = 'round'; 
+            cxF.strokeStyle = '#000';
+            
+            function gC(e) { 
+                const r = cF.getBoundingClientRect(); 
+                return { 
+                    x: ((e.touches ? e.touches[0].clientX : e.clientX) - r.left) * (cF.width / r.width), 
+                    y: ((e.touches ? e.touches[0].clientY : e.clientY) - r.top) * (cF.height / r.height) 
+                }; 
             }
-
-            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); });
-            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } });
-            window.addEventListener('mouseup', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
-
-            canvasFirma.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); }, {passive: false});
-            canvasFirma.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } }, {passive: false});
-            window.addEventListener('touchend', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
+            
+            cF.addEventListener('mousedown', (e) => { isD = true; const p = gC(e); cxF.beginPath(); cxF.moveTo(p.x, p.y); });
+            cF.addEventListener('mousemove', (e) => { if(isD) { const p = gC(e); cxF.lineTo(p.x, p.y); cxF.stroke(); } });
+            window.addEventListener('mouseup', () => { if(isD) { isD = false; document.getElementById('firma_tecnico_data').value = cF.toDataURL(); } });
+            
+            cF.addEventListener('touchstart', (e) => { e.preventDefault(); isD = true; const p = gC(e); cxF.beginPath(); cxF.moveTo(p.x, p.y); }, {passive: false});
+            cF.addEventListener('touchmove', (e) => { e.preventDefault(); if(isD) { const p = gC(e); cxF.lineTo(p.x, p.y); cxF.stroke(); } }, {passive: false});
+            window.addEventListener('touchend', () => { if(isD) { isD = false; document.getElementById('firma_tecnico_data').value = cF.toDataURL(); } });
         }
-
-        function limpiarFirma(id) {
-            ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height);
-            document.getElementById(id+'_data').value = '';
+        
+        function limpiarFirma(id) { 
+            cxF.clearRect(0,0,cF.width,cF.height); 
+            document.getElementById(id+'_data').value = ''; 
         }
-
-        renderSlots();
+        
+        rS();
     </script>
 </body>
 </html>
