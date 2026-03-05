@@ -1,0 +1,224 @@
+<div id="vista-facturacion" class="modulo-vista">
+                    <div class="reporte-container" style="padding: 20px;">
+                        <header class="page-header-section"><h1>Facturación</h1><p style="color:var(--gray-500);">Vincula y gestiona los CFDI de las órdenes aprobadas</p></header>
+                        
+                        <div class="fc-stats">
+                            <div class="fc-stat-card"><div class="fc-stat-label">Órdenes pendientes</div><div class="fc-stat-value" style="color:#DC2626;">7</div></div>
+                            <div class="fc-stat-card"><div class="fc-stat-label">Facturas pendientes</div><div class="fc-stat-value" style="color:#854D0E;">0</div></div>
+                            <div class="fc-stat-card"><div class="fc-stat-label">Facturas pagadas</div><div class="fc-stat-value" style="color:#166534;">0</div></div>
+                            <div class="fc-stat-card"><div class="fc-stat-label">Total facturado</div><div class="fc-stat-value">$0.00</div></div>
+                        </div>
+
+                        <form class="filters-bar">
+                            <div class="filter-group"><label class="filter-label">Fecha inicio</label><input type="date" class="form-input"></div>
+                            <div class="filter-group"><label class="filter-label">Fecha fin</label><input type="date" class="form-input"></div>
+                            <div class="filter-group"><label class="filter-label">Estado</label><select class="form-select"><option value="">Todos</option><option value="sin_factura">Sin factura</option><option value="pendiente">Pago pendiente</option><option value="pagado">Pagado</option></select></div>
+                            <div class="filter-group"><label class="filter-label">Buscar</label><input type="text" class="form-input" placeholder="Folio, UUID..."></div>
+                            <button type="button" class="draft-btn" style="padding: 12px 24px; border-radius: 8px;"><i data-lucide="filter"></i> Filtrar</button>
+                            <button type="button" class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #166534;"><i data-lucide="download"></i> Exportar</button>
+                        </form>
+
+                        <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
+                            <div><span class="filter-label">Selección actual</span><h3 style="margin:0; font-size:16px;">0 folios <span style="color:var(--gray-500); font-weight:normal; font-size:14px;">($0.00 aprobados)</span></h3></div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="draft-btn" style="padding: 10px 20px; border-radius: 8px; font-size: 14px;"><i data-lucide="x-circle" style="width: 16px;"></i> Limpiar</button>
+                                <button class="btn-submit-order" style="padding: 10px 20px; border-radius: 8px; font-size: 14px; min-width: auto;"><i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar XML</button>
+                            </div>
+                        </div>
+
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead><tr><th style="width: 48px;">Sel.</th><th>Folio</th><th>Sucursal</th><th>Costo Aprobado</th><th>Facturas</th><th>Total XML</th><th style="text-align: right;">Acción</th></tr></thead>
+                                <tbody>
+                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00015</strong></td><td>20 de Noviembre</td><td><strong>$1,200.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00014</strong></td><td>Bernardo Quintana</td><td><strong>$2,100.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00013</strong></td><td>20 de Noviembre</td><td><strong>$1,750.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00008</strong></td><td>Santa Monica DTO</td><td><strong>$3,210.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00006</strong></td><td>Pabellon M</td><td><strong>$1,000.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00004</strong></td><td>Sentura</td><td><strong>$100.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00001</strong></td><td>Pabellon M</td><td><strong>$1,800.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vista-reportes" class="modulo-vista">
+                    <div class="reporte-container" style="padding: 20px;">
+                        <header class="page-header-section"><h1>Reportes</h1><p style="color:var(--gray-500);">Visualiza y descarga información operativa (Imagen 1)</p></header>
+                        <div class="reports-grid-enhanced">
+                            <div class="rpt-card"><div class="rpt-card-header"><i data-lucide="file-bar-chart"></i> Tipos de Reporte</div>
+                                <div class="report-options-list">
+                                    <button class="report-option active">Historial Completo OS<br><span style="font-size:12px; color:#666;">Todas las órdenes enviadas y estados</span></button>
+                                    <button class="report-option">Costos de reparación<br><span style="font-size:12px; color:#666;">Detalle completo de costos y facturación</span></button>
+                                </div>
+                            </div>
+                            <div class="rpt-card">
+                                <div class="rpt-card-header"><i data-lucide="filter"></i> Filtros</div>
+                                <button class="download-excel-btn"><i data-lucide="download"></i> Descargar Excel</button>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:20px;">
+                                    <div class="form-group"><label class="form-label">Fecha Inicio</label><input type="date" class="form-input"></div>
+                                    <div class="form-group"><label class="form-label">Fecha Fin</label><input type="date" class="form-input"></div>
+                                    <div class="form-group"><label class="form-label">Tipo</label><select class="form-select"><option>Todos</option><option>Mantenimiento</option></select></div>
+                                    <div class="form-group"><label class="form-label">Status</label><select class="form-select"><option>Todos</option><option>Aprobada</option></select></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="camera-overlay"><div id="camera-stream"><video id="camera-video" autoplay="true"></video></div><div class="camera-controls"><button class="draft-btn" onclick="closeCamera()"><i data-lucide="x"></i> Cerrar</button><button class="btn-photo" onclick="captureFoto()"><i data-lucide="camera"></i> Capturar</button></div></div>
+    <div id="photoModal" class="modal-enlarger" onclick="this.style.display='none'"><img class="modal-content-img" id="imgFull"></div>
+
+    <script>
+        lucide.createIcons();
+
+        // =========================================================
+        // PEGA AQUÍ LA URL DE TU APLICACIÓN WEB DE APPS SCRIPT
+        // =========================================================
+        const APPS_SCRIPT_URL = 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT';
+
+        // LÓGICA DE INICIO DE SESIÓN
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            if (passwordInput.type === 'password') { passwordInput.type = 'text'; toggleIcon.textContent = 'visibility'; } 
+            else { passwordInput.type = 'password'; toggleIcon.textContent = 'visibility_off'; }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const alertMessage = document.getElementById('alertMessage');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (APPS_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT') { alert("Falta pegar la URL del Script."); return; }
+
+            alertMessage.style.display = 'none';
+            submitBtn.innerText = 'Verificando...';
+            submitBtn.disabled = true;
+
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ username: username, password: password }),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            })
+            .then(response => response.json())
+            .then(resultado => {
+                if (resultado.valido) { iniciarSesionExitosa(resultado.privilegio); } 
+                else { alertMessage.style.display = 'block'; restaurarBoton(); }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alertMessage.innerText = "Error de conexión con la base de datos.";
+                alertMessage.style.display = 'block';
+                restaurarBoton();
+            });
+                
+            function restaurarBoton() { submitBtn.innerText = 'Iniciar Sesión'; submitBtn.disabled = false; }
+        });
+
+        function iniciarSesionExitosa(privilegio) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'block';
+
+            if(privilegio == 2 || privilegio == "2") {
+                document.getElementById('nav-inicio').style.display = 'none';
+                document.getElementById('nav-crear-orden').style.display = 'none';
+                document.getElementById('nav-seccion-admin').style.display = 'none';
+                document.getElementById('nav-seccion-reportes').style.display = 'none';
+            }
+
+            inicializarFirma();
+            cambiarVista(null, 'vista-mantenimiento');
+        }
+
+        // NAVEGACIÓN
+        function cambiarVista(event, idVista) {
+            if(event) event.preventDefault();
+            document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('activa'));
+            document.getElementById(idVista).classList.add('activa');
+            if(event) event.currentTarget.classList.add('activa');
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
+        }
+
+        const toggles = document.querySelectorAll('[data-sidebar-toggle]');
+        toggles.forEach(toggle => { toggle.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
+        document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+        // CÁMARA Y FOTOS
+        let fotosData = [null, null, null];
+        function countFotos() { return fotosData.filter(f => f !== null).length; }
+        function addPhotoData(dataUrl) { const slotVacio = fotosData.findIndex(f => f === null); if(slotVacio === -1) { alert("Máximo 3 fotos permitidas."); return; } fotosData[slotVacio] = dataUrl; renderSlots(); }
+        function triggerFile() { if(countFotos() < 3) document.getElementById('fileInput').click(); else alert("Máximo 3 fotos permitidas."); }
+        function addPhoto(input) { if (!input.files || input.files.length === 0) return; const file = input.files[0]; const reader = new FileReader(); reader.onload = function(e) { addPhotoData(e.target.result); input.value = ''; }; reader.readAsDataURL(file); }
+
+        const overlay = document.getElementById('camera-overlay');
+        const video = document.getElementById('camera-video');
+        const canvasT = document.getElementById('tempCanvas');
+        let currentStream;
+
+        async function triggerCamera() {
+            if(countFotos() >= 3) { alert("Máximo 3 fotos permitidas."); return; }
+            try { currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); video.srcObject = currentStream; overlay.style.display = 'flex'; } catch (err) { alert("No se pudo acceder a la cámara."); }
+        }
+        function closeCamera() { if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); } overlay.style.display = 'none'; }
+        function captureFoto() { const ctx = canvasT.getContext('2d'); canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); addPhotoData(canvasT.toDataURL('image/jpeg', 0.8)); closeCamera(); }
+        function removeFoto(index) { fotosData[index] = null; renderSlots(); }
+        function renderSlots() {
+            for (let i = 0; i < 3; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                if (fotosData[i]) { slot.innerHTML = `<img src="${fotosData[i]}" onclick="enlargePhoto(this.src)"><span class="remove-photo" onclick="removeFoto(${i})">&times;</span>`; slot.style.border = "1px solid #eee"; } 
+                else { slot.innerHTML = `<i data-lucide="image" class="slot-placeholder-icon"></i>`; slot.style.border = "2px dashed var(--gray-300)"; }
+            }
+            lucide.createIcons();
+        }
+        function enlargePhoto(src){ document.getElementById('photoModal').style.display = "block"; document.getElementById('imgFull').src = src; }
+
+        // FIRMA TÁCTIL (CORREGIDA)
+        let canvasFirma, ctxFirma;
+        function inicializarFirma() {
+            canvasFirma = document.getElementById('firma_tecnico');
+            if(!canvasFirma) return;
+            ctxFirma = canvasFirma.getContext('2d');
+            canvasFirma.width = 600;
+            canvasFirma.height = 200;
+            ctxFirma.lineWidth = 3;
+            ctxFirma.lineCap = 'round';
+            ctxFirma.strokeStyle = '#000000';
+
+            let isDrawing = false;
+            function getCoordinates(e) {
+                const rect = canvasFirma.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                const scaleX = canvasFirma.width / rect.width;
+                const scaleY = canvasFirma.height / rect.height;
+                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+            }
+
+            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); });
+            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } });
+            window.addEventListener('mouseup', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
+
+            canvasFirma.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); }, {passive: false});
+            canvasFirma.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } }, {passive: false});
+            window.addEventListener('touchend', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
+        }
+
+        function limpiarFirma(id) {
+            ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height);
+            document.getElementById(id+'_data').value = '';
+        }
+
+        renderSlots();
+    </script>
+</body>
+</html>
