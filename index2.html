@@ -1,224 +1,642 @@
-<div id="vista-facturacion" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section"><h1>Facturación</h1><p style="color:var(--gray-500);">Vincula y gestiona los CFDI de las órdenes aprobadas</p></header>
-                        
-                        <div class="fc-stats">
-                            <div class="fc-stat-card"><div class="fc-stat-label">Órdenes pendientes</div><div class="fc-stat-value" style="color:#DC2626;">7</div></div>
-                            <div class="fc-stat-card"><div class="fc-stat-label">Facturas pendientes</div><div class="fc-stat-value" style="color:#854D0E;">0</div></div>
-                            <div class="fc-stat-card"><div class="fc-stat-label">Facturas pagadas</div><div class="fc-stat-value" style="color:#166534;">0</div></div>
-                            <div class="fc-stat-card"><div class="fc-stat-label">Total facturado</div><div class="fc-stat-value">$0.00</div></div>
-                        </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Recepción de Trabajos - Tim Hortons</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-                        <form class="filters-bar">
-                            <div class="filter-group"><label class="filter-label">Fecha inicio</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Fecha fin</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label class="filter-label">Estado</label><select class="form-select"><option value="">Todos</option><option value="sin_factura">Sin factura</option><option value="pendiente">Pago pendiente</option><option value="pagado">Pagado</option></select></div>
-                            <div class="filter-group"><label class="filter-label">Buscar</label><input type="text" class="form-input" placeholder="Folio, UUID..."></div>
-                            <button type="button" class="draft-btn" style="padding: 12px 24px; border-radius: 8px;"><i data-lucide="filter"></i> Filtrar</button>
-                            <button type="button" class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #166534;"><i data-lucide="download"></i> Exportar</button>
-                        </form>
-
-                        <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--gray-200); display: flex; justify-content: space-between; align-items: center;">
-                            <div><span class="filter-label">Selección actual</span><h3 style="margin:0; font-size:16px;">0 folios <span style="color:var(--gray-500); font-weight:normal; font-size:14px;">($0.00 aprobados)</span></h3></div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="draft-btn" style="padding: 10px 20px; border-radius: 8px; font-size: 14px;"><i data-lucide="x-circle" style="width: 16px;"></i> Limpiar</button>
-                                <button class="btn-submit-order" style="padding: 10px 20px; border-radius: 8px; font-size: 14px; min-width: auto;"><i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar XML</button>
-                            </div>
-                        </div>
-
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead><tr><th style="width: 48px;">Sel.</th><th>Folio</th><th>Sucursal</th><th>Costo Aprobado</th><th>Facturas</th><th>Total XML</th><th style="text-align: right;">Acción</th></tr></thead>
-                                <tbody>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00015</strong></td><td>20 de Noviembre</td><td><strong>$1,200.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00014</strong></td><td>Bernardo Quintana</td><td><strong>$2,100.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00013</strong></td><td>20 de Noviembre</td><td><strong>$1,750.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00008</strong></td><td>Santa Monica DTO</td><td><strong>$3,210.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00006</strong></td><td>Pabellon M</td><td><strong>$1,000.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00004</strong></td><td>Sentura</td><td><strong>$100.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                    <tr><td><input type="checkbox" style="width:16px; height:16px; accent-color:#DC2626;"></td><td><strong>OS-2026-00001</strong></td><td>Pabellon M</td><td><strong>$1,800.00</strong></td><td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td style="text-align: right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="vista-reportes" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section"><h1>Reportes</h1><p style="color:var(--gray-500);">Visualiza y descarga información operativa (Imagen 1)</p></header>
-                        <div class="reports-grid-enhanced">
-                            <div class="rpt-card"><div class="rpt-card-header"><i data-lucide="file-bar-chart"></i> Tipos de Reporte</div>
-                                <div class="report-options-list">
-                                    <button class="report-option active">Historial Completo OS<br><span style="font-size:12px; color:#666;">Todas las órdenes enviadas y estados</span></button>
-                                    <button class="report-option">Costos de reparación<br><span style="font-size:12px; color:#666;">Detalle completo de costos y facturación</span></button>
-                                </div>
-                            </div>
-                            <div class="rpt-card">
-                                <div class="rpt-card-header"><i data-lucide="filter"></i> Filtros</div>
-                                <button class="download-excel-btn"><i data-lucide="download"></i> Descargar Excel</button>
-                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:20px;">
-                                    <div class="form-group"><label class="form-label">Fecha Inicio</label><input type="date" class="form-input"></div>
-                                    <div class="form-group"><label class="form-label">Fecha Fin</label><input type="date" class="form-input"></div>
-                                    <div class="form-group"><label class="form-label">Tipo</label><select class="form-select"><option>Todos</option><option>Mantenimiento</option></select></div>
-                                    <div class="form-group"><label class="form-label">Status</label><select class="form-select"><option>Todos</option><option>Aprobada</option></select></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </main>
-        </div>
-    </div>
-
-    <div id="camera-overlay"><div id="camera-stream"><video id="camera-video" autoplay="true"></video></div><div class="camera-controls"><button class="draft-btn" onclick="closeCamera()"><i data-lucide="x"></i> Cerrar</button><button class="btn-photo" onclick="captureFoto()"><i data-lucide="camera"></i> Capturar</button></div></div>
-    <div id="photoModal" class="modal-enlarger" onclick="this.style.display='none'"><img class="modal-content-img" id="imgFull"></div>
-
-    <script>
-        lucide.createIcons();
-
-        // =========================================================
-        // PEGA AQUÍ LA URL DE TU APLICACIÓN WEB DE APPS SCRIPT
-        // =========================================================
-        const APPS_SCRIPT_URL = 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT';
-
-        // LÓGICA DE INICIO DE SESIÓN
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const toggleIcon = document.getElementById('toggleIcon');
-            if (passwordInput.type === 'password') { passwordInput.type = 'text'; toggleIcon.textContent = 'visibility'; } 
-            else { passwordInput.type = 'password'; toggleIcon.textContent = 'visibility_off'; }
+    <style>
+        /* Variables y Configuración General */
+        :root {
+            --tm-red: #c8102e;
+            --tm-text: #000000;
+            --tm-border: #b3b3b3;
+            --tm-bg-gray: #f0f0f0;
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('submitBtn');
-            const alertMessage = document.getElementById('alertMessage');
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #555;
+            color: var(--tm-text);
+            font-size: 11px;
+            line-height: 1.3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-            if (APPS_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT') { alert("Falta pegar la URL del Script."); return; }
+        /* Botón de descarga PDF */
+        .btn-descargar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--tm-red);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
 
-            alertMessage.style.display = 'none';
-            submitBtn.innerText = 'Verificando...';
-            submitBtn.disabled = true;
+        .btn-descargar:hover {
+            background-color: #a00d24;
+        }
 
-            fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                body: JSON.stringify({ username: username, password: password }),
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-            })
-            .then(response => response.json())
-            .then(resultado => {
-                if (resultado.valido) { iniciarSesionExitosa(resultado.privilegio); } 
-                else { alertMessage.style.display = 'block'; restaurarBoton(); }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alertMessage.innerText = "Error de conexión con la base de datos.";
-                alertMessage.style.display = 'block';
-                restaurarBoton();
-            });
+        /* Contenedor de Página tipo A4 */
+        .page {
+            width: 210mm;
+            height: 297mm; /* Altura exacta para la vista web */
+            background: white;
+            margin: 0 auto 20px auto;
+            /* Relleno ajustado para dar espacio al footer en la hoja 1 */
+            padding: 8mm 15mm; 
+            box-sizing: border-box;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* CORTA CUALQUIER DESBORDAMIENTO */
+        }
+
+        .content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ================= ENCABEZADO ================= */
+        .header-container {
+            display: grid;
+            grid-template-columns: 55% 45%;
+            margin-bottom: 0px;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--tm-text);
+        }
+
+        .red-square {
+            width: 18px;
+            height: 18px;
+            background-color: var(--tm-red);
+            margin-right: 10px;
+        }
+
+        ul.info-list {
+            list-style: none;
+            padding: 0;
+            margin: 0; 
+        }
+
+        ul.info-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 11px;
+            color: #333;
+        }
+
+        /* Bolitas rojas personalizadas ⦿ */
+        .custom-bullet {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1px solid var(--tm-red);
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .custom-bullet::after {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background-color: var(--tm-red);
+            border-radius: 50%;
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding-top: 0; 
+        }
+
+        .logo-img { 
+            width: 140px; 
+            margin-bottom: 5px; 
+            margin-right: 15px; 
+            margin-top: -5px; 
+        }
+        .store-img { width: 220px; }
+
+        /* ================= FRANJAS ROJAS Y TÍTULOS ================= */
+        .red-divider {
+            height: 14px; 
+            background-color: var(--tm-red);
+            width: 100%;
+            margin: 8px 0 8px 0; 
+        }
+
+        .red-divider-bottom {
+            height: 14px; 
+            background-color: var(--tm-red);
+            width: 100%;
+            margin: 4px 0 4px 0; 
+        }
+
+        .red-divider-bottom-sheet2 {
+            height: 14px; 
+            background-color: var(--tm-red);
+            width: 100%;
+            margin: 2px 0 5px 0; 
+        }
+
+        .main-titles-container {
+            text-align: center;
+            position: relative; 
+            margin-bottom: 0px; 
+            padding-bottom: 2px; 
+        }
+
+        .title-red-centered {
+            color: var(--tm-red);
+            font-size: 16px;
+            font-weight: normal;
+            margin-bottom: 2px; 
+        }
+
+        .ticket-left { 
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            text-align: left;
+            font-size: 11px;
+        }
+
+        .ticket-right { 
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            text-align: right; 
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        /* ================= ÁREA Y SUB ÁREA ================= */
+        .area-container {
+            margin-top: 2px;
+            margin-bottom: 2px; 
+            padding-left: 0px; 
+        }
+
+        .area-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 11px;
+        }
+
+        .area-container .area-line:last-child {
+            margin-bottom: 2px; 
+        }
+
+        /* ================= BARRAS ROJAS DE SECCIÓN ================= */
+        .red-bar-full {
+            background-color: var(--tm-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+
+        .red-bar-full .left-col { width: 40%; display: flex; align-items: center;}
+        .red-bar-full .center-col { width: 20%; text-align: center; display: flex; justify-content: center; align-items: center; }
+        
+        .bullet-white {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid white;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .bullet-white::after {
+            content: '';
+            width: 3px;
+            height: 3px;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+        /* ================= SECCIÓN DE EVIDENCIA (HOJA 1) ================= */
+        .photo-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .photo-box {
+            border: 1px solid var(--tm-border);
+            height: 135px; /* Ligeramente ajustado para liberar espacio al footer */
+            background-color: white;
+        }
+
+        .red-bar-third {
+            background-color: var(--tm-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 4px 10px;
+            font-size: 11px;
+            width: calc(33.33% - 10px);
+            box-sizing: border-box;
+        }
+
+        .text-input-box {
+            border: 1px solid var(--tm-border);
+            padding: 6px 10px;
+            min-height: 30px; 
+            margin-top: 0;
+            margin-bottom: 10px; /* Margen inferior reducido para asegurar el footer */
+            background-color: white;
+        }
+
+        /* ================= EVALUACIÓN DE TRABAJO ================= */
+        .eval-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px; /* Margen drásticamente reducido para hacer espacio al footer */
+            align-items: stretch;
+        }
+        
+        .eval-left-box {
+            width: 33%;
+            border: 1px solid var(--tm-border);
+            background-color: white;
+        }
+
+        .eval-right-grid {
+            width: 67%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 10px;
+        }
+
+        .eval-card {
+            border: 1px solid var(--tm-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .empleado-card {
+            grid-column: span 2; 
+        }
+
+        .eval-card-header {
+            background-color: var(--tm-red);
+            color: white;
+            padding: 4px 8px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .eval-card-body {
+            padding: 6px 10px;
+            flex-grow: 1;
+            background-color: white;
+        }
+
+        .eval-card-body .area-line {
+            margin-bottom: 6px;
+            font-size: 10px;
+        }
+
+        /* ================= HOJA 2: DATOS DEL PROVEEDOR Y SOPORTE FISICO ================= */
+        .proveedor-grid {
+            display: grid;
+            grid-template-columns: 55% 45%; 
+            margin-top: 4px; 
+            margin-bottom: 4px; 
+            padding-left: 0px; 
+        }
+
+        .proveedor-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0px;
+        }
+
+        .proveedor-col .area-line {
+            margin-bottom: 2px;
+        }
+
+        .soporte-fisico-box {
+            background-color: white; 
+            border: 1px solid var(--tm-border); /* Contorno gris continuo */
+            flex-grow: 1; 
+            margin-top: 3px; 
+            margin-bottom: 3px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 14px;
+            font-weight: bold;
+            box-sizing: border-box;
+            overflow: hidden; 
+        }
+
+        .soporte-fisico-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer-divider {
+            border-top: 1px solid #ccc;
+            margin-bottom: 4px;
+            width: 100%;
+        }
+
+        .red-footer {
+            background-color: var(--tm-red);
+            color: white;
+            text-align: center;
+            padding: 5px 10px;
+            font-size: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+
+        /* Ocultar botón al imprimir */
+        @media print {
+            body { background-color: white; padding: 0; margin: 0; }
+            .page { box-shadow: none; margin: 0; padding: 10mm 15mm; border: none; }
+            .btn-descargar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="btn-descargar" id="btn-descargar" onclick="generarPDF()">Descargar PDF</button>
+
+    <div id="contenido-pdf">
+        
+        <div class="page">
+            <div class="content-wrapper">
+                <div class="header-container">
+                    <div>
+                        <div class="title-row">
+                            <div class="red-square"></div>
+                            <div>&lt;&lt;SUCURSAL UNICA&gt;&gt;</div>
+                        </div>
+                        <ul class="info-list">
+                            <li><i class="custom-bullet"></i> Dirección:</li>
+                            <li><i class="custom-bullet"></i> Colonia:</li>
+                            <li><i class="custom-bullet"></i> Ciudad:</li>
+                            <li><i class="custom-bullet"></i> C.P.:</li>
+                            <li><i class="custom-bullet"></i> Horario de servicio:</li>
+                            <li><i class="custom-bullet"></i> Teléfono:</li>
+                            <li><i class="custom-bullet"></i> Correo electrónico:</li>
+                        </ul>
+                    </div>
+                    <div class="header-right">
+                        <img src="https://i.ibb.co/FbxyGYSn/Tim-Hortons.jpg" alt="Tim Hortons Logo" class="logo-img">
+                        <img src="https://i.ibb.co/SDLR885x/T1.jpg" alt="Tim Hortons Store" class="store-img">
+                    </div>
+                </div>
+
+                <div class="red-divider"></div>
+
+                <div class="main-titles-container">
+                    <div class="title-red-centered">ATENCIÓN CORRECTIVA</div>
+                    <div class="title-red-centered">REPORTE DE RECEPCIÓN DE TRABAJOS</div>
+                    <div class="title-red-centered">MANTENIMIENTO</div>
+                    
+                    <div class="ticket-left">N° TIMCKET: &lt;&lt;N° TIMCKET&gt;&gt;</div>
+                    <div class="ticket-right">
+                        HORA: mporal&gt;&gt;<br>
+                        CDMX A &lt;&lt;Marca t
+                    </div>
+                </div>
+
+                <div class="red-divider-bottom"></div>
+
+                <div class="area-container">
+                    <div class="area-line"><i class="custom-bullet"></i> AREA DE TIMCKET: &lt;&lt;AREA DE TIMCKET&gt;&gt;</div>
+                    <div class="area-line"><i class="custom-bullet"></i> SUB AREA: &lt;&lt;SUBAREA UNICA&gt;&gt;</div>
+                </div>
+
+                <div class="red-bar-full">
+                    <div class="left-col"><span class="bullet-white"></span> EVIDENCIA FOTOGRÁFICA</div>
+                    <div class="center-col">FALLA</div>
+                </div>
                 
-            function restaurarBoton() { submitBtn.innerText = 'Iniciar Sesión'; submitBtn.disabled = false; }
-        });
+                <div class="photo-grid-3">
+                    <div class="photo-box"></div>
+                    <div class="photo-box"></div>
+                    <div class="photo-box"></div>
+                </div>
 
-        function iniciarSesionExitosa(privilegio) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-screen').style.display = 'block';
+                <div class="red-bar-third">
+                    <span class="bullet-white"></span> DESCRIPCIÓN DE FALLA
+                </div>
+                <div class="text-input-box">&lt;&lt;DESCRIPCION DE LA FALLA&gt;&gt;</div>
 
-            if(privilegio == 2 || privilegio == "2") {
-                document.getElementById('nav-inicio').style.display = 'none';
-                document.getElementById('nav-crear-orden').style.display = 'none';
-                document.getElementById('nav-seccion-admin').style.display = 'none';
-                document.getElementById('nav-seccion-reportes').style.display = 'none';
-            }
+                <div class="red-bar-full">
+                    <div class="left-col"><span class="bullet-white"></span> EVIDENCIA FOTOGRÁFICA</div>
+                    <div class="center-col">TRABAJO REALIZADOS</div>
+                </div>
+                
+                <div class="photo-grid-3">
+                    <div class="photo-box"></div>
+                    <div class="photo-box"></div>
+                    <div class="photo-box"></div>
+                </div>
 
-            inicializarFirma();
-            cambiarVista(null, 'vista-mantenimiento');
+                <div class="red-bar-third">
+                    <span class="bullet-white"></span> DESCRIPCIÓN DEL TRABAJO
+                </div>
+                <div class="text-input-box">&lt;&lt;DESCRIPCIÓN DE LA SOLUCIÓN&gt;&gt;</div>
+
+                <div class="red-bar-full">
+                    <span class="bullet-white"></span> EMPLEADO DEL PROVEDOR
+                </div>
+                <div class="eval-container">
+                    <div class="eval-left-box"></div>
+                    <div class="eval-right-grid">
+                        <div class="eval-card empleado-card">
+                            <div class="eval-card-header"><span class="bullet-white"></span> TECNICO DEL PROVEDOR</div>
+                            <div class="eval-card-body">
+                                <div class="area-line"><i class="custom-bullet"></i> NOMBRE:</div>
+                                <div class="area-line"><i class="custom-bullet"></i> CARGO:</div>
+                                <div class="area-line"><i class="custom-bullet"></i> CELULAR:</div>
+                            </div>
+                        </div>
+                        <div class="eval-card">
+                            <div class="eval-card-header"><span class="bullet-white"></span> COMENTARIO DE SALIDA</div>
+                            <div class="eval-card-body" style="min-height: 35px;"></div>
+                        </div>
+                        <div class="eval-card">
+                            <div class="eval-card-header"><span class="bullet-white"></span> FIRMA</div>
+                            <div class="eval-card-body" style="min-height: 35px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+            <div class="red-footer">
+                Contáctanos es: hola@timhortonsmx.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aviso Legal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Política de privacidad &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Promociones TYC &nbsp;&nbsp;&nbsp; ® &amp; 2017 TIM HORTONS. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TODOS LOS DERECHOS RESERVADOS.
+            </div>
+        </div>
+
+        <div class="page">
+            <div class="content-wrapper">
+                <div class="header-container">
+                    <div>
+                        <div class="title-row">
+                            <div class="red-square"></div>
+                            <div>&lt;&lt;SUCURSAL UNICA&gt;&gt;</div>
+                        </div>
+                        <ul class="info-list">
+                            <li><i class="custom-bullet"></i> Dirección:</li>
+                            <li><i class="custom-bullet"></i> Colonia:</li>
+                            <li><i class="custom-bullet"></i> Ciudad:</li>
+                            <li><i class="custom-bullet"></i> C.P.:</li>
+                            <li><i class="custom-bullet"></i> Horario de servicio:</li>
+                            <li><i class="custom-bullet"></i> Teléfono:</li>
+                            <li><i class="custom-bullet"></i> Correo electrónico:</li>
+                        </ul>
+                    </div>
+                    <div class="header-right">
+                        <img src="https://i.ibb.co/FbxyGYSn/Tim-Hortons.jpg" alt="Tim Hortons Logo" class="logo-img">
+                        <img src="https://i.ibb.co/SDLR885x/T1.jpg" alt="Tim Hortons Store" class="store-img">
+                    </div>
+                </div>
+
+                <div class="red-divider"></div>
+
+                <div class="main-titles-container">
+                    <div class="title-red-centered">ATENCIÓN CORRECTIVA</div>
+                    <div class="title-red-centered">REPORTE DE RECEPCIÓN DE TRABAJOS</div>
+                    <div class="title-red-centered">MANTENIMIENTO</div>
+                    
+                    <div class="ticket-left">N° TIMCKET: &lt;&lt;N° TIMCKET&gt;&gt;</div>
+                    <div class="ticket-right">
+                        HORA: mporal&gt;&gt;<br>
+                        CDMX A &lt;&lt;Marca t
+                    </div>
+                </div>
+
+                <div class="red-divider-bottom-sheet2"></div>
+
+                <div class="red-bar-full">
+                    <span class="bullet-white"></span> DATOS DEL PROVEDOR
+                </div>
+                
+                <div class="proveedor-grid">
+                    <div class="proveedor-col">
+                        <div class="area-line"><i class="custom-bullet"></i> PROVEDOR:</div>
+                        <div class="area-line"><i class="custom-bullet"></i> RFC:</div>
+                        <div class="area-line"><i class="custom-bullet"></i> PROVEDOR DE MANTENIMIENTO</div>
+                        <div class="area-line"><i class="custom-bullet"></i> DIRECCIÓN:</div>
+                    </div>
+                    <div class="proveedor-col">
+                        <div class="area-line"><i class="custom-bullet"></i> CONTACTO:</div>
+                        <div class="area-line"><i class="custom-bullet"></i> TELEFONO:</div>
+                        <div class="area-line"><i class="custom-bullet"></i> CORREO:</div>
+                    </div>
+                </div>
+
+                <div class="red-bar-full">
+                    <span class="bullet-white"></span> SOPORTE FÍSICO
+                </div>
+                <div class="soporte-fisico-box" id="caja-soporte-fisico">
+                    
+                </div>
+
+            </div>
+
+            <div class="footer-divider"></div>
+            <div class="red-footer">
+                Contáctanos es: hola@timhortonsmx.com &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Aviso Legal &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Política de privacidad &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Promociones TYC &nbsp;&nbsp;&nbsp; ® &amp; 2017 TIM HORTONS. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TODOS LOS DERECHOS RESERVADOS.
+            </div>
+        </div>
+
+    </div> <script>
+        function generarPDF() {
+            // Ocultar botón temporalmente para la foto
+            const btn = document.getElementById('btn-descargar');
+            btn.style.display = 'none';
+
+            // SOLUCIÓN AL ERROR DE HOJAS EN BLANCO: Forzar el scroll al inicio absoluto
+            window.scrollTo(0, 0);
+
+            const elemento = document.getElementById('contenido-pdf');
+            const pages = document.querySelectorAll('.page');
+            const originalStyles = [];
+            
+            // Quitamos márgenes visuales y reducimos milimétricamente la altura 
+            // para que NO desborde la hoja A4 interna del generador de PDF
+            pages.forEach((p) => {
+                originalStyles.push({
+                    margin: p.style.margin,
+                    boxShadow: p.style.boxShadow,
+                    height: p.style.height
+                });
+                p.style.margin = '0';
+                p.style.boxShadow = 'none';
+                p.style.height = '296.5mm'; 
+            });
+
+            // Configuración en milímetros
+            const opciones = {
+                margin:       0,
+                filename:     'Reporte_Mantenimiento_TimHortons.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 }, 
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generar PDF y restaurar la vista web normal
+            html2pdf().set(opciones).from(elemento).save().then(() => {
+                btn.style.display = 'block';
+                pages.forEach((p, index) => {
+                    p.style.margin = originalStyles[index].margin;
+                    p.style.boxShadow = originalStyles[index].boxShadow;
+                    p.style.height = originalStyles[index].height;
+                });
+            });
         }
-
-        // NAVEGACIÓN
-        function cambiarVista(event, idVista) {
-            if(event) event.preventDefault();
-            document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
-            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('activa'));
-            document.getElementById(idVista).classList.add('activa');
-            if(event) event.currentTarget.classList.add('activa');
-            const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
-        }
-
-        const toggles = document.querySelectorAll('[data-sidebar-toggle]');
-        toggles.forEach(toggle => { toggle.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
-        document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
-
-        // CÁMARA Y FOTOS
-        let fotosData = [null, null, null];
-        function countFotos() { return fotosData.filter(f => f !== null).length; }
-        function addPhotoData(dataUrl) { const slotVacio = fotosData.findIndex(f => f === null); if(slotVacio === -1) { alert("Máximo 3 fotos permitidas."); return; } fotosData[slotVacio] = dataUrl; renderSlots(); }
-        function triggerFile() { if(countFotos() < 3) document.getElementById('fileInput').click(); else alert("Máximo 3 fotos permitidas."); }
-        function addPhoto(input) { if (!input.files || input.files.length === 0) return; const file = input.files[0]; const reader = new FileReader(); reader.onload = function(e) { addPhotoData(e.target.result); input.value = ''; }; reader.readAsDataURL(file); }
-
-        const overlay = document.getElementById('camera-overlay');
-        const video = document.getElementById('camera-video');
-        const canvasT = document.getElementById('tempCanvas');
-        let currentStream;
-
-        async function triggerCamera() {
-            if(countFotos() >= 3) { alert("Máximo 3 fotos permitidas."); return; }
-            try { currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); video.srcObject = currentStream; overlay.style.display = 'flex'; } catch (err) { alert("No se pudo acceder a la cámara."); }
-        }
-        function closeCamera() { if (currentStream) { currentStream.getTracks().forEach(track => track.stop()); } overlay.style.display = 'none'; }
-        function captureFoto() { const ctx = canvasT.getContext('2d'); canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); addPhotoData(canvasT.toDataURL('image/jpeg', 0.8)); closeCamera(); }
-        function removeFoto(index) { fotosData[index] = null; renderSlots(); }
-        function renderSlots() {
-            for (let i = 0; i < 3; i++) {
-                const slot = document.getElementById(`slot-${i}`);
-                if (fotosData[i]) { slot.innerHTML = `<img src="${fotosData[i]}" onclick="enlargePhoto(this.src)"><span class="remove-photo" onclick="removeFoto(${i})">&times;</span>`; slot.style.border = "1px solid #eee"; } 
-                else { slot.innerHTML = `<i data-lucide="image" class="slot-placeholder-icon"></i>`; slot.style.border = "2px dashed var(--gray-300)"; }
-            }
-            lucide.createIcons();
-        }
-        function enlargePhoto(src){ document.getElementById('photoModal').style.display = "block"; document.getElementById('imgFull').src = src; }
-
-        // FIRMA TÁCTIL (CORREGIDA)
-        let canvasFirma, ctxFirma;
-        function inicializarFirma() {
-            canvasFirma = document.getElementById('firma_tecnico');
-            if(!canvasFirma) return;
-            ctxFirma = canvasFirma.getContext('2d');
-            canvasFirma.width = 600;
-            canvasFirma.height = 200;
-            ctxFirma.lineWidth = 3;
-            ctxFirma.lineCap = 'round';
-            ctxFirma.strokeStyle = '#000000';
-
-            let isDrawing = false;
-            function getCoordinates(e) {
-                const rect = canvasFirma.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                const scaleX = canvasFirma.width / rect.width;
-                const scaleY = canvasFirma.height / rect.height;
-                return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
-            }
-
-            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); });
-            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } });
-            window.addEventListener('mouseup', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
-
-            canvasFirma.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); }, {passive: false});
-            canvasFirma.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } }, {passive: false});
-            window.addEventListener('touchend', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
-        }
-
-        function limpiarFirma(id) {
-            ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height);
-            document.getElementById(id+'_data').value = '';
-        }
-
-        renderSlots();
     </script>
 </body>
 </html>
