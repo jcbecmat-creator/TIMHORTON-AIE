@@ -18,65 +18,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
+
     <script>
-        tailwind.config = {
-            darkMode: "class",
-            corePlugins: { preflight: false },
-            theme: {
-                extend: {
-                    colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", },
-                    fontFamily: { sans: ["Inter", "sans-serif"] }
-                }
-            }
-        };
+        tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
     </script>
 
     <style>
-        /* === ESTILOS GENERALES === */
         body { margin: 0; padding: 0; background-color: #f8fafc; }
-        #login-screen { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); background-attachment: fixed; }
-        
-        /* === NAVEGACIÓN SPA === */
+        #login-screen { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .modulo-vista { display: none; animation: fadeIn 0.3s ease-in-out; }
         .modulo-vista.activa { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
-
-        /* === ESTILO ACTIVO ROJO (TIM HORTONS) === */
         .sidebar-link.activa { background-color: #FFF1F1 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* === CAMPOS DE TEXTO Y SELECTORES (RESTAURADOS AL GRIS CLARO Y REDONDOS) === */
-        .form-input, .form-select, textarea.form-input {
-            width: 100% !important;
-            padding: 14px 16px !important;
-            background-color: #F3F4F6 !important; /* Fondo gris claro */
-            border: 1px solid transparent !important; /* Sin borde agresivo */
-            border-radius: 12px !important; /* Bordes muy redondos */
-            font-size: 14px !important;
-            color: #1F2937 !important;
-            box-sizing: border-box !important;
-            font-family: inherit !important;
-            outline: none !important;
-            transition: all 0.2s ease !important;
-        }
-        .form-input:focus, .form-select:focus, textarea.form-input:focus {
-            background-color: #FFFFFF !important;
-            border: 1px solid #DC2626 !important;
-            box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
-        }
-
-        /* === TARJETAS Y CONTENEDORES === */
-        .form-card, .data-table-container, .filters-bar, .fc-stat-card, .rpt-card {
-            background: #FFFFFF;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid #E5E7EB;
-            margin-bottom: 24px;
-        }
+        /* BORDES REDONDOS Y FONDOS GRISES */
+        .form-input, .form-select, textarea.form-input { width: 100% !important; padding: 14px 16px !important; background-color: #F3F4F6 !important; border: 1px solid transparent !important; border-radius: 12px !important; font-size: 14px !important; color: #1F2937 !important; box-sizing: border-box !important; font-family: inherit !important; outline: none !important; transition: all 0.2s ease !important; }
+        .form-input:focus, .form-select:focus, textarea.form-input:focus { background-color: #FFFFFF !important; border: 1px solid #DC2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important; }
+        .form-card, .data-table-container, .filters-bar, .fc-stat-card, .rpt-card { background: #FFFFFF; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #E5E7EB; margin-bottom: 24px; }
         .form-card { padding: 30px; width: 100%; }
         .data-table-container { overflow-x: auto; margin-bottom: 20px; padding: 0; }
         .filters-bar { padding: 16px; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
@@ -84,8 +50,6 @@
         .rpt-card { padding: 24px; margin-bottom: 0; }
         .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; color: #111827; margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
         .page-header-section { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
-        
-        /* === TABS Y TABLAS === */
         .tabs-segmented { display: inline-flex; background: #f3f4f6; border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 20px; overflow-x: auto; max-width: 100%; border: 1px solid #e5e7eb; }
         .tab-segment { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .tab-segment.active { background: white; color: #111827; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
@@ -100,13 +64,12 @@
         .empty-state i { width: 48px; height: 48px; color: #d1d5db; margin-bottom: 12px; }
         .fc-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
         
-        /* === BADGES DE ESTADO === */
         .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
         .status-danger { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
         .status-success { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
         .status-warning { background: #FEF9C3; color: #854D0E; border: 1px solid #FEF08A; }
         
-        /* === FOTOS Y CÁMARA === */
+        /* FOTOS Y CÁMARA */
         .photo-controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .btn-photo { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #DC2626; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
         .btn-photo-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
@@ -115,7 +78,6 @@
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
         .slot-placeholder-icon { color: #9ca3af; width: 30px; height: 30px; margin-bottom: 8px; }
         .remove-photo { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 22px; cursor: pointer; font-size: 16px; font-weight: bold; z-index: 10; }
-        
         #camera-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 11000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         #camera-stream { width: 100%; max-width: 600px; aspect-ratio: 4/3; background: black; border-radius: 12px; overflow: hidden; position: relative; }
         #camera-video { width: 100%; height: 100%; object-fit: cover; }
@@ -124,7 +86,6 @@
         .modal-content-img { margin: auto; display: block; max-width: 90%; max-height: 80%; border-radius: 8px; animation: zoomIn 0.3s; }
         @keyframes zoomIn { from {transform:scale(0)} to {transform:scale(1)} }
 
-        /* === FIRMA Y BOTONES INFERIORES === */
         .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
         .signature-pad { width: 100%; height: 200px; cursor: crosshair; touch-action: none; display: block; } 
         .submit-section { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid #e5e7eb; margin-top: 20px; margin-bottom: 50px; }
@@ -132,75 +93,65 @@
         .draft-btn { background: white; border: 1px solid #d1d5db; color: #111827; }
         .btn-submit-order { background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); }
 
-        /* === REPORTES === */
         .reports-grid-enhanced { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
         .rpt-card-header { font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         .report-option { display: block; width: 100%; text-align: left; padding: 14px 16px; border: 1px solid #d1d5db; background: white; color: #1f2937; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; }
         .report-option.active { border-color: #DC2626; color: #DC2626; background: #FFF1F1; font-weight: 600; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1); }
         .download-excel-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: #166534; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
-        @media (max-width: 900px) { .reports-grid-enhanced { grid-template-columns: 1fr; } }
+        
+        /* DATA CARDS (Para INFO SUCURSAL Y PROVEEDOR) */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
+        .info-item label { display: block; font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 2px; }
+        .info-item span { display: block; font-size: 13px; color: #111827; font-weight: 500; }
+        @media (max-width: 900px) { .reports-grid-enhanced { grid-template-columns: 1fr; } .info-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="has-sidebar">
 
-    <div id="login-screen" class="min-h-screen flex flex-col items-center justify-center p-4 antialiased">
-        <div class="w-full max-w-[420px] bg-surface rounded-2xl shadow-premium border border-slate-100 overflow-hidden" style="box-sizing: border-box; background: white;">
-            <div class="p-8">
-                <div class="flex flex-col items-center mb-4">
-                    <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
-                    <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
-                    <p class="text-[15px] text-text-sub mt-1" style="margin-top:5px;">Mesa de Servicio Operativo</p>
+    <div id="login-screen">
+        <div class="w-full max-w-[420px] bg-surface rounded-2xl shadow-premium border border-slate-100 overflow-hidden" style="box-sizing: border-box; background: white; padding: 32px;">
+            <div class="flex flex-col items-center mb-4">
+                <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
+                <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
+                <p class="text-[15px] text-text-sub mt-1" style="margin-top:5px;">Mesa de Servicio Operativo</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-5">
+                <div class="space-y-1.5" style="margin-bottom: 15px;">
+                    <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Usuario</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px; z-index: 10;">person</span>
+                        <input required autocomplete="username" autocapitalize="none" autocorrect="off" class="block w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 12px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; background:white !important;" id="username" type="text" placeholder="ID">
+                    </div>
                 </div>
                 
-                <form id="loginForm" class="space-y-5">
-                    <div class="space-y-1.5" style="margin-bottom: 15px;">
-                        <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;" for="username">Usuario</label>
-                        <div class="relative flex items-center">
-                            <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px; z-index: 10;">person</span>
-                            <input required autocomplete="username" autocapitalize="none" autocorrect="off" class="block w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 12px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; background:white !important;" id="username" name="username" placeholder="ID" type="text">
-                        </div>
+                <div class="space-y-1.5" style="margin-bottom: 15px;">
+                    <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Contraseña</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px; z-index: 10;">lock</span>
+                        <input required autocomplete="current-password" class="block w-full pl-12 pr-12 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 40px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; background:white !important;" id="password" type="password" placeholder="••••••••">
+                        <button class="absolute right-4 flex items-center text-slate-400 hover:text-primary transition-colors" style="position:absolute; right: 10px; background:none; border:none; cursor:pointer; z-index: 10;" onclick="togglePassword()" type="button">
+                            <span class="material-symbols-outlined text-xl" id="toggleIcon">visibility_off</span>
+                        </button>
                     </div>
-                    
-                    <div class="space-y-1.5" style="margin-bottom: 15px;">
-                        <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;" for="password">Contraseña</label>
-                        <div class="relative flex items-center">
-                            <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px; z-index: 10;">lock</span>
-                            <input required autocomplete="current-password" class="block w-full pl-12 pr-12 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 40px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; background:white !important;" id="password" name="password" placeholder="••••••••" type="password">
-                            <button class="absolute right-4 flex items-center text-slate-400 hover:text-primary transition-colors" style="position:absolute; right: 10px; background:none; border:none; cursor:pointer; z-index: 10;" onclick="togglePassword()" type="button">
-                                <span class="material-symbols-outlined text-xl" id="toggleIcon">visibility_off</span>
-                            </button>
-                        </div>
-                    </div>
+                </div>
 
-                    <div id="alertMessage" class="hidden py-2.5 px-3 bg-red-50 border border-red-200 text-red-600 text-[13px] font-medium rounded-lg text-center transition-all" style="display:none; padding:10px; background:#FEE2E2; color:#DC2626; border-radius:8px; text-align:center; border:1px solid #FECACA; margin-bottom: 15px;">
-                        Verifica tu usuario o contraseña
-                    </div>
-                    
-                    <button id="submitBtn" class="w-full flex justify-center items-center py-3.5 px-4 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-dark shadow-sm transition-all" style="width:100%; padding:14px; background:#DC2626; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px;" type="submit">
-                        Iniciar Sesión
-                    </button>
-                </form>
-            </div>
-        </div>
-        <div class="mt-6 text-center" style="margin-top: 20px;">
-            <p class="text-[12px] font-medium uppercase tracking-widest text-white/60" style="color:rgba(255,255,255,0.8); font-size:12px;">
-                © 2026 TIM HORTONS. Todos los derechos reservados.
-            </p>
+                <div id="alertMessage" class="hidden py-2.5 px-3 bg-red-50 border border-red-200 text-red-600 text-[13px] font-medium rounded-lg text-center transition-all" style="display:none; padding:10px; background:#FEE2E2; color:#DC2626; border-radius:8px; text-align:center; border:1px solid #FECACA; margin-bottom: 15px;">
+                    Verifica tu usuario o contraseña
+                </div>
+                <button id="submitBtn" class="w-full flex justify-center items-center py-3.5 px-4 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-dark shadow-sm transition-all" style="width:100%; padding:14px; background:#DC2626; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px;" type="submit">Iniciar Sesión</button>
+            </form>
+            <p style="text-align: center; color: rgba(255,255,255,0.8); font-size: 12px; margin-top: 20px;">© 2026 TIM HORTONS. Todos los derechos reservados.</p>
         </div>
     </div>
     <div id="app-screen" style="display: none;">
-        
         <header class="main-header">
             <div class="header-left">
-                <button class="header-hamburger" type="button" data-sidebar-toggle>
-                    <span class="hamburger"></span>
-                </button>
+                <button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button>
                 <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo">
                 <h1 class="system-title">Ordenes de Servicio</h1>
             </div>
-            <div class="header-right">
-                <div class="user-menu"><button class="user-circle-btn"><span class="user-circle-initial">U</span></button></div>
-            </div>
+            <div class="header-right"><div class="user-menu"><button class="user-circle-btn"><span class="user-circle-initial">U</span></button></div></div>
         </header>
 
         <div class="main-layout">
@@ -208,107 +159,71 @@
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')">
-                            <i data-lucide="home"></i> Inicio
-                        </a>
+                        <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')"><i data-lucide="home"></i> Inicio</a>
                         
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
-                            <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')">
-                                <i data-lucide="wrench"></i> Mantenimiento correctivo
-                            </a>
-                            <a href="#" class="sidebar-link" id="nav-crear-orden" onclick="cambiarVista(event, 'vista-ordenes-servicio')">
-                                <i data-lucide="file-plus-2"></i> Crear Nueva Orden
-                            </a>
+                            <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a href="#" class="sidebar-link" id="nav-crear-orden" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
                         
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-confirmacion')">
-                                <i data-lucide="check-circle-2"></i> Confirmación operativa
-                            </a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-costos')">
-                                <i data-lucide="calculator"></i> Costos de reparación
-                            </a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-aprobacion')">
-                                <i data-lucide="badge-check"></i> Aprobación de costos
-                            </a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-facturacion')">
-                                <i data-lucide="file-text"></i> Facturación
-                            </a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-confirmacion')"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-costos')"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-aprobacion')"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-facturacion')"><i data-lucide="file-text"></i> Facturación</a>
                         </div>
                         
                         <div class="sidebar-section" id="nav-seccion-reportes">
                             <div class="sidebar-section-title">Reportes</div>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')">
-                                <i data-lucide="bar-chart-3"></i> Reportes
-                            </a>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')"><i data-lucide="bar-chart-3"></i> Reportes</a>
                         </div>
                     </nav>
                 </div>
             </aside>
-            
             <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
 
             <main class="main-content app-content">
 
+                <div id="welcome-banner" style="text-align: center; padding: 20px 20px 0 20px; max-width: 900px; margin: 0 auto;">
+                    <h2 style="margin:0; font-size:18px; color:#6b7280; font-weight: 500;">Bienvenido</h2>
+                    <h1 id="vendor-name-display" style="margin:5px 0 0 0; font-size:24px; color:#DC2626; font-weight:bold; text-transform: uppercase;">PROVEEDOR</h1>
+                </div>
+
                 <div id="vista-inicio" class="modulo-vista">
-                    <div class="reporte-container" style="text-align: center; padding-top: 50px;">
+                    <div style="text-align: center; padding-top: 30px;">
                         <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
-                        <h2>Bienvenido al Sistema</h2>
-                        <p style="color: #666;">Selecciona una opción del menú lateral para comenzar.</p>
+                        <p style="color: #666;">Selecciona una opción del menú lateral.</p>
                     </div>
                 </div>
 
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 900px; margin: 0 auto; padding: 20px;">
-                        
                         <header class="page-header-section">
                             <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
                             <p style="color: #6b7280; margin: 0;">Registrar orden de servicio - Tim Hortons</p>
                         </header>
                         
-                        <form method="POST" id="ordenMttoForm">
+                        <form id="ordenMttoForm">
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="map-pin"></i> Ubicación</h3>
                                 <div class="form-group">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Sucursal Tim Hortons</label>
-                                    <input class="form-input" list="sucursales-list" placeholder="Seleccione sucursal..." required autocomplete="off">
-                                    <datalist id="sucursales-list">
-                                        <option value="Acoxpa"></option>
-                                        <option value="20 de Noviembre"></option>
-                                        <option value="Pabellon M"></option>
-                                        <option value="TESTJOYA"></option>
-                                        <option value="Parque Delta"></option>
-                                        <option value="Santa Fe"></option>
-                                        <option value="Reforma 222"></option>
-                                        <option value="Insurgentes"></option>
-                                        <option value="Perisur"></option>
-                                        <option value="Valle Oriente"></option>
-                                        <option value="Galerías Monterrey"></option>
-                                        <option value="Satélite"></option>
-                                        <option value="Polanco"></option>
-                                        <option value="San Ángel"></option>
-                                    </datalist>
+                                    <input class="form-input" id="sucursal-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." required autocomplete="off">
+                                    <datalist id="sucursales-list"></datalist>
+                                    
+                                    <div id="sucursal-details" class="info-grid" style="display:none;">
+                                        <div class="info-item"><label>Dirección</label><span id="suc-dir"></span></div>
+                                        <div class="info-item"><label>Colonia</label><span id="suc-col"></span></div>
+                                        <div class="info-item"><label>Ciudad / C.P.</label><span id="suc-city"></span></div>
+                                        <div class="info-item"><label>Horario</label><span id="suc-hor"></span></div>
+                                        <div class="info-item"><label>Teléfono</label><span id="suc-tel"></span></div>
+                                        <div class="info-item"><label>Correo</label><span id="suc-mail"></span></div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="form-card">
-                                <h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3>
-                                <div class="form-group" style="margin-bottom: 15px;">
-                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Nombre del técnico</label>
-                                    <input type="text" class="form-input" required placeholder="Nombre completo">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Proveedor</label>
-                                    <select class="form-select" required>
-                                        <option value="">Seleccione proveedor...</option>
-                                        <option>ALIMENTOS NUTRI-FACIL</option>
-                                        <option>TIM HORTONS</option>
-                                    </select>
-                                </div>
-                            </div>
-
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="ticket"></i> Tickets</h3>
                                 <div class="form-group">
@@ -318,299 +233,107 @@
                             </div>
 
                             <div class="form-card">
-                                <h3 class="section-title"><i data-lucide="file-text"></i> Descripción de la solución</h3>
+                                <h3 class="section-title"><i data-lucide="layers"></i> Área Afectada</h3>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Área</label>
+                                    <select class="form-select" id="area-select" required><option value="">Cargando áreas...</option></select>
+                                </div>
                                 <div class="form-group">
-                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Descripción</label>
-                                    <textarea class="form-input" rows="4" placeholder="Describe la solución (máx. 500 caracteres)" required></textarea>
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Sub Área</label>
+                                    <select class="form-select" id="subarea-select" required><option value="">Primero seleccione un área</option></select>
                                 </div>
                             </div>
 
                             <div class="form-card">
-                                <h3 class="section-title"><i data-lucide="camera"></i> Evidencia Fotográfica (Antes) (Máx 3)</h3>
-                                <div class="photo-controls">
-                                    <button type="button" class="btn-photo" onclick="triggerCamera()">
-                                        <i data-lucide="camera"></i> Tomar Foto (Cámara)
-                                    </button>
-                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile()">
-                                        <i data-lucide="upload"></i> Subir Archivo
-                                    </button>
-                                    <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="addPhoto(this)">
-                                    <canvas id="tempCanvas" style="display:none"></canvas>
+                                <h3 class="section-title"><i data-lucide="alert-triangle"></i> Descripción de la falla</h3>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <textarea class="form-input" rows="3" placeholder="Describe detalladamente la falla reportada..." required></textarea>
                                 </div>
-                                <div id="photoGrid" class="photo-grid-slots">
-                                    <div class="photo-slot" id="slot-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
-                                    <div class="photo-slot" id="slot-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
-                                    <div class="photo-slot" id="slot-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Falla - Máx 3)</label>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('falla')"><i data-lucide="camera"></i> Tomar Foto</button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('falla')"><i data-lucide="upload"></i> Subir Archivo</button>
+                                </div>
+                                <div id="photoGridFalla" class="photo-grid-slots">
+                                    <div class="photo-slot" id="slot-falla-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-falla-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-falla-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="wrench"></i> Descripción de la solución</h3>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <textarea class="form-input" rows="3" placeholder="Describe el trabajo realizado..." required></textarea>
+                                </div>
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Solución - Máx 3)</label>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('solucion')"><i data-lucide="camera"></i> Tomar Foto</button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('solucion')"><i data-lucide="upload"></i> Subir Archivo</button>
+                                </div>
+                                <div id="photoGridSolucion" class="photo-grid-slots">
+                                    <div class="photo-slot" id="slot-solucion-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-solucion-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-solucion-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3>
+                                
+                                <div class="info-grid" style="margin-bottom: 20px;">
+                                    <div class="info-item"><label>Proveedor Oficial</label><span id="prov-info-nombre" style="color:#DC2626; font-weight:bold;">-</span></div>
+                                    <div class="info-item"><label>RFC</label><span id="prov-info-rfc">-</span></div>
+                                    <div class="info-item"><label>Contacto</label><span id="prov-info-cont">-</span></div>
+                                    <div class="info-item"><label>Teléfono</label><span id="prov-info-tel">-</span></div>
+                                    <div class="info-item"><label>Correo</label><span id="prov-info-mail" style="word-break: break-all;">-</span></div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Nombre del técnico en sitio</label>
+                                    <input type="text" class="form-input" required placeholder="Nombre completo">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Celular del técnico</label>
+                                    <input type="text" class="form-input" required placeholder="10 dígitos">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida del técnico</label>
+                                    <textarea class="form-input" rows="2" placeholder="Observaciones finales..." required></textarea>
                                 </div>
                             </div>
 
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="pen-tool"></i> Firma Táctil</h3>
                                 <div class="form-group">
-                                    <div class="signature-container">
-                                        <canvas id="firma_tecnico" class="signature-pad"></canvas>
-                                    </div>
+                                    <div class="signature-container"><canvas id="firma_tecnico" class="signature-pad"></canvas></div>
                                     <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-                                        <button type="button" onclick="limpiarFirma('firma_tecnico')" class="draft-btn" style="padding: 6px 12px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #d1d5db; background: white; color: #4b5563;">
-                                            <i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar
-                                        </button>
+                                        <button type="button" onclick="limpiarFirma('firma_tecnico')" class="draft-btn" style="padding: 6px 12px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #d1d5db; background: white; color: #4b5563;"><i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar</button>
                                     </div>
                                     <input type="hidden" id="firma_tecnico_data" required>
                                 </div>
                             </div>
 
                             <div class="submit-section">
-                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado.')" style="border: 1px solid #d1d5db; color: #111827;">
-                                    <i data-lucide="save"></i> Guardar Borrador
-                                </button>
-                                <button type="submit" class="submit-btn btn-submit-order">
-                                    <i data-lucide="send"></i> Enviar Orden
-                                </button>
+                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado localmente.')" style="border: 1px solid #d1d5db; color: #111827;"><i data-lucide="save"></i> Guardar Borrador</button>
+                                <button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden</button>
                             </div>
                         </form>
                     </div>
                 </div>
-
-                <div id="vista-ordenes-servicio" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Crear Nueva Orden</h1>
-                        </header>
-                        <div class="form-card">
-                            <h3 class="section-title"><i data-lucide="map-pin"></i> Restaurante</h3>
-                            <div class="form-group">
-                                <label class="form-label" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Seleccione Sucursal</label>
-                                <select class="form-select"><option>Acoxpa</option><option>TESTJOYA</option></select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="vista-confirmacion" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Confirmación Operativa</h1>
-                            <p style="color:var(--gray-500); margin:0;">Revisa y aprueba las órdenes de servicio pendientes</p>
-                        </header>
-                        
-                        <div class="tabs-segmented">
-                            <span class="tab-segment active">Pendientes <span class="tab-segment-count">3</span></span>
-                            <span class="tab-segment">Confirmadas <span class="tab-segment-count">0</span></span>
-                        </div>
-                        
-                        <div class="filters-bar">
-                            <div class="filter-group">
-                                <label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA INICIO</label>
-                                <input type="date" class="form-input">
-                            </div>
-                            <div class="filter-group">
-                                <label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA FIN</label>
-                                <input type="date" class="form-input">
-                            </div>
-                            <div class="filter-group">
-                                <label style="font-size: 11px; color:#6b7280; font-weight:bold;">TIPO DE ORDEN</label>
-                                <select class="form-select"><option>Todos los tipos</option><option>Mantenimiento</option></select>
-                            </div>
-                            <button class="draft-btn" style="padding: 12px 24px; border-radius: 8px; border: 1px solid #d1d5db; display: flex; align-items: center; gap: 8px; font-weight: 600;">
-                                <i data-lucide="filter" style="width: 18px;"></i> Filtrar
-                            </button>
-                        </div>
-                        
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr><th>Folio</th><th>Sucursal</th><th>Tipo</th><th>Fecha</th><th style="text-align:right;">Acción</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>OS-2026-00012</strong></td><td>Acoxpa</td><td>Mantenimiento</td><td>10/02/2026</td>
-                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 16px; font-size: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;"><i data-lucide="check-circle" style="width: 14px;"></i> Revisar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>OS-2025-00008</strong></td><td>TESTJOYA</td><td>Capex Supply</td><td>12/12/2025</td>
-                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 16px; font-size: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;"><i data-lucide="check-circle" style="width: 14px;"></i> Revisar</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="vista-costos" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1>
-                            <p style="color:var(--gray-500); margin:0;">Gestiona los costos de conceptos empleados en órdenes aprobadas</p>
-                        </header>
-                        
-                        <div class="tabs-segmented">
-                            <span class="tab-segment active">Pendientes <span class="tab-segment-count" style="background:#DC2626; color:white;">3</span></span>
-                            <span class="tab-segment">Enviados <span class="tab-segment-count">0</span></span>
-                            <span class="tab-segment">Rechazados <span class="tab-segment-count">1</span></span>
-                        </div>
-                        
-                        <div class="filters-bar">
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA INICIO</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA FIN</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">BUSCAR</label><input type="text" class="form-input" placeholder="Folio o sucursal..."></div>
-                            <button class="draft-btn" style="padding: 12px 24px; border-radius: 8px; display: flex; align-items: center; gap: 8px; font-weight: 600;"><i data-lucide="search" style="width: 18px;"></i> Buscar</button>
-                            <button class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #16A34A; display: flex; align-items: center; gap: 8px;"><i data-lucide="download" style="width: 18px;"></i> Exportar</button>
-                        </div>
-                        
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr><th>Folio</th><th>Sucursal</th><th>Fecha Aprobación</th><th>Conceptos</th><th>Estado</th><th>Total</th><th style="text-align:right;">Acción</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>OS-2026-00010</strong></td><td>Anaxagoras</td><td>2026-02-03</td><td>—</td>
-                                        <td><span class="status-pill status-warning" style="background: #FFF7ED; border: none; color: #EA580C;">● Sin capturar</span></td><td>—</td>
-                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 16px; font-size: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;"><i data-lucide="plus-circle" style="width: 14px;"></i> Capturar</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>OS-2026-00007</strong></td><td>20 de Noviembre</td><td>2026-01-30</td><td>—</td>
-                                        <td><span class="status-pill status-warning" style="background: #FFF7ED; border: none; color: #EA580C;">● Sin capturar</span></td><td>—</td>
-                                        <td style="text-align:right;"><button class="btn-submit-order" style="padding: 6px 16px; font-size: 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px;"><i data-lucide="plus-circle" style="width: 14px;"></i> Capturar</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="vista-aprobacion" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1>
-                            <p style="color:var(--gray-500); margin:0;">Revisa y aprueba los costos de reparación enviados por proveedores</p>
-                        </header>
-                        
-                        <div class="tabs-segmented">
-                            <span class="tab-segment active">Pendientes <span class="tab-segment-count" style="background:#DC2626; color:white;">0</span></span>
-                            <span class="tab-segment">Aprobados <span class="tab-segment-count">7</span></span>
-                            <span class="tab-segment">Rechazados <span class="tab-segment-count">1</span></span>
-                        </div>
-                        
-                        <div class="filters-bar">
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA INICIO</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA FIN</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">BUSCAR</label><input type="text" class="form-input" placeholder="Folio o sucursal..."></div>
-                            <button class="draft-btn" style="padding: 12px 24px; border-radius: 8px; display: flex; align-items: center; gap: 8px; font-weight: 600;"><i data-lucide="search" style="width: 18px;"></i> Buscar</button>
-                            <button class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #16A34A; display: flex; align-items: center; gap: 8px;"><i data-lucide="download" style="width: 18px;"></i> Exportar</button>
-                        </div>
-
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr><th>Folio</th><th>Sucursal</th><th>Enviado por</th><th>Fecha envío</th><th>Total</th><th>Estado</th><th style="text-align:right;">Acción</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="7">
-                                            <div class="empty-state">
-                                                <i data-lucide="inbox" style="width: 64px; height: 64px; color: #d1d5db; margin: 0 auto 15px auto;"></i>
-                                                <h3 style="font-size: 18px; font-weight: 600; color: #374151;">No hay costos pendientes de aprobación</h3>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="vista-facturacion" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Facturación</h1>
-                            <p style="color:var(--gray-500); margin:0;">Vincula facturas fiscales (CFDI) a órdenes con costos aprobados</p>
-                        </header>
-                        
-                        <div class="fc-stats">
-                            <div class="fc-stat-card"><div style="font-size:12px; color:#6b7280; font-weight:bold; text-transform:uppercase; margin-bottom: 8px;">Órdenes Pendientes</div><div style="font-size:28px; font-weight:bold; color:#DC2626;">7</div></div>
-                            <div class="fc-stat-card"><div style="font-size:12px; color:#6b7280; font-weight:bold; text-transform:uppercase; margin-bottom: 8px;">Facturas Pendientes</div><div style="font-size:28px; font-weight:bold; color:#EA580C;">0</div></div>
-                            <div class="fc-stat-card"><div style="font-size:12px; color:#6b7280; font-weight:bold; text-transform:uppercase; margin-bottom: 8px;">Facturas Pagadas</div><div style="font-size:28px; font-weight:bold; color:#16A34A;">0</div></div>
-                            <div class="fc-stat-card"><div style="font-size:12px; color:#6b7280; font-weight:bold; text-transform:uppercase; margin-bottom: 8px;">Total Facturado</div><div style="font-size:28px; font-weight:bold; color:#111827;">$0.00</div></div>
-                        </div>
-
-                        <div class="filters-bar">
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA INICIO</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">FECHA FIN</label><input type="date" class="form-input"></div>
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">ESTADO</label><select class="form-select"><option>Todos</option></select></div>
-                            <div class="filter-group"><label style="font-size: 11px; color:#6b7280; font-weight:bold;">BUSCAR</label><input type="text" class="form-input" placeholder="Folio, UUID o sucursal..."></div>
-                            <button class="draft-btn" style="padding: 12px 24px; border-radius: 8px; display: flex; align-items: center; gap: 8px; font-weight: 600;"><i data-lucide="filter" style="width: 18px;"></i> Filtrar</button>
-                            <button class="btn-submit-order" style="padding: 12px 24px; border-radius: 8px; background: #DC2626; display: flex; align-items: center; gap: 8px;"><i data-lucide="download" style="width: 18px;"></i> Exportar Excel</button>
-                        </div>
-                        
-                        <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #E5E7EB; display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <span style="font-size: 12px; color:#6b7280; font-weight:bold; text-transform:uppercase; margin-right: 15px;">Selección actual</span>
-                                <span style="font-size:16px; font-weight:bold; color: #111827;">0 folios</span> <span style="color:#6b7280; font-size:14px;">$0.00 aprobados</span>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="draft-btn" style="padding: 10px 20px; border-radius: 8px; font-size: 14px; display: flex; align-items: center; gap: 8px;"><i data-lucide="x-circle" style="width: 16px;"></i> Limpiar</button>
-                                <button class="btn-submit-order" style="padding: 10px 20px; border-radius: 8px; font-size: 14px; background: #fca5a5; color: white; display: flex; align-items: center; gap: 8px;"><i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar XML</button>
-                            </div>
-                        </div>
-
-                        <div class="data-table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr><th style="width:40px;">Sel.</th><th>Folio</th><th>Sucursal</th><th>Centro de Costos</th><th>Costo Aprobado</th><th>Facturas</th><th>Total XML</th><th>% Pagado</th><th style="text-align:right;">Acción</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><input type="checkbox" style="width:16px;height:16px;"></td>
-                                        <td><strong>OS-2026-00015</strong></td><td>20 de Noviembre</td><td>—</td><td><strong>$1,200.00</strong></td>
-                                        <td><span style="color: #aaa;">Sin facturas</span></td><td>$0.00</td><td>—</td>
-                                        <td style="text-align:right;"><button class="draft-btn" style="padding: 6px 12px; font-size: 12px; border-radius: 8px; border: 1px solid #e5e7eb; color: #9ca3af; display: inline-flex; align-items: center; gap: 6px;"><i data-lucide="file-text" style="width: 14px;"></i> Sin factura</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="vista-reportes" class="modulo-vista">
-                    <div class="reporte-container" style="padding: 20px;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes Operativos</h1>
-                        </header>
-                        
-                        <div class="reports-grid-enhanced">
-                            <div class="rpt-card">
-                                <div class="rpt-card-header" style="color: #6b7280; font-size: 14px;"><i data-lucide="file-text"></i> Reportes disponibles</div>
-                                <button class="report-option active" style="display: flex; justify-content: space-between; align-items: center;">
-                                    <div>
-                                        <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;"><i data-lucide="clipboard-list" style="display:inline-block; vertical-align:middle; width:18px; margin-right: 8px;"></i> Historial de órdenes</div>
-                                        <span style="font-size:12px; color:#6b7280; font-weight: 400;">Órdenes enviadas, estados y fechas por rango de tiempo.</span>
-                                    </div>
-                                    <span style="font-size: 10px; font-weight: bold; color: #16A34A; text-transform: uppercase;">Activo</span>
-                                </button>
-                            </div>
-                            
-                            <div class="rpt-card">
-                                <div class="rpt-card-header" style="color: #6b7280; font-size: 14px; display: flex; justify-content: space-between;">
-                                    <span><i data-lucide="sliders-horizontal"></i> Filtros</span>
-                                    <span style="font-weight: 400;">Historial de órdenes</span>
-                                </div>
-                                <div style="display:flex; gap:16px; margin-top:20px; margin-bottom: 20px;">
-                                    <div style="flex:1;">
-                                        <label style="font-size: 11px; color:#6b7280; font-weight:bold; display:block; margin-bottom:6px;">FECHA INICIO</label>
-                                        <input type="date" class="form-input" style="width:100%;">
-                                    </div>
-                                </div>
-                                <button class="btn-submit-order" style="padding:14px 24px; border-radius:8px; display: inline-flex; align-items: center; gap: 8px;">
-                                    <i data-lucide="download"></i> Descargar Excel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="vista-ordenes-servicio" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1></header></div></div>
+                <div id="vista-confirmacion" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Confirmación Operativa</h1></header><div class="empty-state"><i data-lucide="clipboard-check"></i><h3>Sin registros pendientes</h3></div></div></div>
+                <div id="vista-costos" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1></header><div class="empty-state"><i data-lucide="calculator"></i><h3>Sin registros</h3></div></div></div>
+                <div id="vista-aprobacion" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1></header><div class="empty-state"><i data-lucide="badge-check"></i><h3>Sin registros</h3></div></div></div>
+                <div id="vista-facturacion" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Facturación</h1></header><div class="empty-state"><i data-lucide="file-text"></i><h3>Sin registros</h3></div></div></div>
+                <div id="vista-reportes" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes</h1></header></div></div>
 
             </main>
         </div>
     </div>
+
+    <input type="file" id="fileInputGlobal" accept="image/*" style="display:none" onchange="processFile(this)">
+    <canvas id="tempCanvas" style="display:none"></canvas>
 
     <div id="camera-overlay">
         <div id="camera-stream"><video id="camera-video" autoplay="true"></video></div>
@@ -628,19 +351,19 @@
         lucide.createIcons();
 
         // =========================================================
-        // PEGA AQUÍ LA URL DE TU APLICACIÓN WEB DE APPS SCRIPT
+        // PEGA AQUÍ LA NUEVA URL DE TU GOOGLE APPS SCRIPT (NUEVA IMPLEMENTACIÓN)
         // =========================================================
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
+
+        // Variable global para almacenar toda la info que llega del login
+        window.appData = null;
 
         // === 1. LÓGICA DE LOGIN ===
         function togglePassword() {
             const p = document.getElementById('password');
             const i = document.getElementById('toggleIcon');
-            if (p.type === 'password') { 
-                p.type = 'text'; i.textContent = 'visibility'; 
-            } else { 
-                p.type = 'password'; i.textContent = 'visibility_off'; 
-            }
+            if (p.type === 'password') { p.type = 'text'; i.textContent = 'visibility'; } 
+            else { p.type = 'password'; i.textContent = 'visibility_off'; }
         }
 
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -648,17 +371,16 @@
             const btn = document.getElementById('submitBtn');
             const alertMsg = document.getElementById('alertMessage');
             
-            // EL FIX PARA CELULARES: .trim() quita el espacio invisible que pone el teclado de Android/iOS al final
             const user = document.getElementById('username').value.trim();
             const pass = document.getElementById('password').value.trim();
 
-            if (APPS_SCRIPT_URL === 'PEGAR_AQUI_LA_URL_DE_TU_SCRIPT') {
-                window.alert("Falta pegar la URL del Script en la línea 480.");
+            if (APPS_SCRIPT_URL === 'PEGAR_NUEVA_URL_AQUI') {
+                window.alert("Falta pegar la NUEVA URL del Script en el código HTML.");
                 return;
             }
 
             alertMsg.style.display = 'none';
-            btn.innerText = 'Verificando...';
+            btn.innerText = 'Cargando plataforma...';
             btn.disabled = true;
 
             fetch(APPS_SCRIPT_URL, {
@@ -669,6 +391,38 @@
             .then(res => res.json())
             .then(data => {
                 if (data.valido) {
+                    // Guardar datos globales
+                    window.appData = data;
+
+                    // 1. Mostrar nombre del proveedor arriba
+                    document.getElementById('vendor-name-display').innerText = data.nombreProveedor;
+                    
+                    // 2. Llenar sección "Técnico Asignado" con info del proveedor
+                    document.getElementById('prov-info-nombre').innerText = data.nombreProveedor;
+                    document.getElementById('prov-info-rfc').innerText = data.proveedorInfo.rfc;
+                    document.getElementById('prov-info-cont').innerText = data.proveedorInfo.contacto;
+                    document.getElementById('prov-info-tel').innerText = data.proveedorInfo.telefono;
+                    document.getElementById('prov-info-mail').innerText = data.proveedorInfo.correo;
+
+                    // 3. Llenar datalist de Sucursales
+                    const listaSuc = document.getElementById('sucursales-list');
+                    listaSuc.innerHTML = '';
+                    data.sucursales.forEach(s => {
+                        let opt = document.createElement('option');
+                        opt.value = s.nombre;
+                        listaSuc.appendChild(opt);
+                    });
+
+                    // 4. Llenar Select de Áreas
+                    const selectArea = document.getElementById('area-select');
+                    selectArea.innerHTML = '<option value="">Seleccione un área...</option>';
+                    Object.keys(data.areas).forEach(a => {
+                        let opt = document.createElement('option');
+                        opt.value = a; opt.innerText = a;
+                        selectArea.appendChild(opt);
+                    });
+
+                    // Cambiar pantallas
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-screen').style.display = 'block';
                     
@@ -697,7 +451,43 @@
             });
         });
 
-        // === 2. NAVEGACIÓN ===
+        // === 2. EVENTOS DINÁMICOS DE LOS CAMPOS ===
+        
+        // Al escribir la sucursal, mostrar sus detalles
+        document.getElementById('sucursal-input').addEventListener('input', function(e) {
+            const val = e.target.value;
+            const container = document.getElementById('sucursal-details');
+            if(!window.appData) return;
+            
+            const suc = window.appData.sucursales.find(s => s.nombre === val);
+            if(suc) {
+                document.getElementById('suc-dir').innerText = suc.direccion;
+                document.getElementById('suc-col').innerText = suc.colonia;
+                document.getElementById('suc-city').innerText = suc.ciudad + " / C.P. " + suc.cp;
+                document.getElementById('suc-hor').innerText = suc.horario;
+                document.getElementById('suc-tel').innerText = suc.telefono;
+                document.getElementById('suc-mail').innerText = suc.correo;
+                container.style.display = 'grid';
+            } else {
+                container.style.display = 'none';
+            }
+        });
+
+        // Al cambiar de Área, cargar Subáreas correspondientes
+        document.getElementById('area-select').addEventListener('change', function(e) {
+            const val = e.target.value;
+            const subSelect = document.getElementById('subarea-select');
+            subSelect.innerHTML = '<option value="">Seleccione sub área...</option>';
+            if(val && window.appData.areas[val]) {
+                window.appData.areas[val].forEach(sub => {
+                    let opt = document.createElement('option');
+                    opt.value = sub; opt.innerText = sub;
+                    subSelect.appendChild(opt);
+                });
+            }
+        });
+
+        // === 3. NAVEGACIÓN ===
         function cambiarVista(event, idVista) {
             if(event) event.preventDefault();
             document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
@@ -706,50 +496,45 @@
             if(event) event.currentTarget.classList.add('activa');
             
             const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) {
-                sidebar.classList.remove('open');
-            }
+            if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
         }
-
         const toggles = document.querySelectorAll('[data-sidebar-toggle]');
-        toggles.forEach(t => { 
-            t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); 
-        });
+        toggles.forEach(t => { t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
         document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
-        // === 3. FOTOS Y CÁMARA ===
-        let fotosData = [null, null, null];
+        // === 4. FOTOS Y CÁMARA DOBLE (FALLA Y SOLUCIÓN) ===
+        let fotos = { falla: [null, null, null], solucion: [null, null, null] };
+        let activeTarget = 'falla';
         
-        function countFotos() { return fotosData.filter(f => f !== null).length; }
-        
-        function triggerFile() { 
-            if(countFotos() < 3) document.getElementById('fileInput').click(); 
-            else window.alert("Máximo 3 fotos permitidas."); 
+        function triggerFile(target) { 
+            activeTarget = target;
+            if(fotos[target].filter(f => f !== null).length < 3) document.getElementById('fileInputGlobal').click(); 
+            else window.alert("Máximo 3 fotos para esta sección."); 
         }
         
-        function addPhoto(input) { 
+        function processFile(input) { 
             if (!input.files || input.files.length === 0) return; 
-            const file = input.files[0]; 
             const reader = new FileReader(); 
             reader.onload = function(e) { 
-                const slotVacio = fotosData.findIndex(f => f === null);
+                const slotVacio = fotos[activeTarget].findIndex(f => f === null);
                 if(slotVacio > -1) {
-                    fotosData[slotVacio] = e.target.result; 
-                    renderSlots();
+                    fotos[activeTarget][slotVacio] = e.target.result; 
+                    renderSlots(activeTarget);
                 }
                 input.value = ''; 
             }; 
-            reader.readAsDataURL(file); 
+            reader.readAsDataURL(input.files[0]); 
         }
 
         let currentStream;
-        async function triggerCamera() {
-            if(countFotos() >= 3) { window.alert("Máximo 3 fotos."); return; }
+        async function triggerCamera(target) {
+            activeTarget = target;
+            if(fotos[target].filter(f => f !== null).length >= 3) { window.alert("Máximo 3 fotos."); return; }
             try { 
                 currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); 
                 document.getElementById('camera-video').srcObject = currentStream; 
                 document.getElementById('camera-overlay').style.display = 'flex'; 
-            } catch (err) { window.alert("Permiso de cámara denegado o no soportado en este celular."); }
+            } catch (err) { window.alert("Permiso denegado."); }
         }
         
         function closeCamera() { 
@@ -760,25 +545,24 @@
         function captureFoto() { 
             const canvasT = document.getElementById('tempCanvas');
             const video = document.getElementById('camera-video');
-            canvasT.width = video.videoWidth; 
-            canvasT.height = video.videoHeight; 
+            canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
             canvasT.getContext('2d').drawImage(video, 0, 0, canvasT.width, canvasT.height); 
             
-            const slotVacio = fotosData.findIndex(f => f === null);
+            const slotVacio = fotos[activeTarget].findIndex(f => f === null);
             if(slotVacio > -1) {
-                fotosData[slotVacio] = canvasT.toDataURL('image/jpeg', 0.8);
-                renderSlots();
+                fotos[activeTarget][slotVacio] = canvasT.toDataURL('image/jpeg', 0.8);
+                renderSlots(activeTarget);
             }
             closeCamera(); 
         }
         
-        function removeFoto(index) { fotosData[index] = null; renderSlots(); }
+        function removeFoto(target, index) { fotos[target][index] = null; renderSlots(target); }
         
-        function renderSlots() {
+        function renderSlots(target) {
             for (let i = 0; i < 3; i++) {
-                const slot = document.getElementById(`slot-${i}`);
-                if (fotosData[i]) { 
-                    slot.innerHTML = `<img src="${fotosData[i]}" onclick="enlargePhoto(this.src)" style="width:100%; height:100%; object-fit:cover; cursor:pointer; border-radius:12px;"><span class="remove-photo" onclick="removeFoto(${i})">&times;</span>`; 
+                const slot = document.getElementById(`slot-${target}-${i}`);
+                if (fotos[target][i]) { 
+                    slot.innerHTML = `<img src="${fotos[target][i]}" onclick="document.getElementById('photoModal').style.display='block'; document.getElementById('imgFull').src=this.src;" style="width:100%; height:100%; object-fit:cover; cursor:pointer; border-radius:12px;"><span class="remove-photo" onclick="removeFoto('${target}', ${i})">&times;</span>`; 
                     slot.style.border = "1px solid #e5e7eb"; 
                 } else { 
                     slot.innerHTML = `<i data-lucide="image" class="slot-placeholder-icon"></i>`; 
@@ -787,54 +571,31 @@
             }
             lucide.createIcons();
         }
-        
-        function enlargePhoto(src){ 
-            document.getElementById('photoModal').style.display = "block"; 
-            document.getElementById('imgFull').src = src; 
-        }
 
-        // === 4. FIRMA TÁCTIL (CORREGIDA) ===
+        // === 5. FIRMA TÁCTIL ===
         let canvasFirma, ctxFirma;
         function inicializarFirma() {
             canvasFirma = document.getElementById('firma_tecnico');
             if(!canvasFirma) return;
-            
-            ctxFirma = canvasFirma.getContext('2d');
-            canvasFirma.width = 600;
-            canvasFirma.height = 200;
-            ctxFirma.lineWidth = 3;
-            ctxFirma.lineCap = 'round';
-            ctxFirma.strokeStyle = '#000000';
-
+            ctxFirma = canvasFirma.getContext('2d'); canvasFirma.width = 600; canvasFirma.height = 200; ctxFirma.lineWidth = 3; ctxFirma.lineCap = 'round'; ctxFirma.strokeStyle = '#000000';
             let isDrawing = false;
-            
             function getCoordinates(e) {
-                const rect = canvasFirma.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                const scaleX = canvasFirma.width / rect.width;
-                const scaleY = canvasFirma.height / rect.height;
-                return { 
-                    x: (clientX - rect.left) * scaleX, 
-                    y: (clientY - rect.top) * scaleY 
-                };
+                const rect = canvasFirma.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: (cx - rect.left) * (canvasFirma.width / rect.width), y: (cy - rect.top) * (canvasFirma.height / rect.height) };
             }
-
-            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); });
-            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } });
+            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const p = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); });
+            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } });
             window.addEventListener('mouseup', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
-
-            canvasFirma.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const pos = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); }, {passive: false});
-            canvasFirma.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDrawing) { const pos = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } }, {passive: false});
+            canvasFirma.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const p = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(p.x, p.y); }, {passive: false});
+            canvasFirma.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDrawing) { const p = getCoordinates(e); ctxFirma.lineTo(p.x, p.y); ctxFirma.stroke(); } }, {passive: false});
             window.addEventListener('touchend', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
         }
+        function limpiarFirma(id) { ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
 
-        function limpiarFirma(id) {
-            ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height);
-            document.getElementById(id+'_data').value = '';
-        }
-
-        renderSlots();
+        // Inicializar iconos vacíos
+        renderSlots('falla');
+        renderSlots('solucion');
     </script>
 </body>
 </html>
+                
