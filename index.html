@@ -23,7 +23,16 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
 
     <script>
-        tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
+        tailwind.config = {
+            darkMode: "class",
+            corePlugins: { preflight: false },
+            theme: {
+                extend: {
+                    colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", },
+                    fontFamily: { sans: ["Inter", "sans-serif"] }
+                }
+            }
+        };
     </script>
 
     <style>
@@ -39,7 +48,7 @@
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* BORDES REDONDOS Y FONDOS GRISES */
+        /* BORDES REDONDOS Y FONDOS GRISES CLAROS */
         .form-input, .form-select, textarea.form-input { width: 100% !important; padding: 14px 16px !important; background-color: #F3F4F6 !important; border: 1px solid transparent !important; border-radius: 12px !important; font-size: 14px !important; color: #1F2937 !important; box-sizing: border-box !important; font-family: inherit !important; outline: none !important; transition: all 0.2s ease !important; }
         .form-input:focus, .form-select:focus, textarea.form-input:focus { background-color: #FFFFFF !important; border: 1px solid #DC2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important; }
         .form-card, .data-table-container, .filters-bar, .fc-stat-card, .rpt-card { background: #FFFFFF; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #E5E7EB; margin-bottom: 24px; }
@@ -99,7 +108,6 @@
         .report-option.active { border-color: #DC2626; color: #DC2626; background: #FFF1F1; font-weight: 600; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1); }
         .download-excel-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: #166534; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
         
-        /* DATA CARDS (Para INFO SUCURSAL Y PROVEEDOR) */
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
         .info-item label { display: block; font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 2px; }
         .info-item span { display: block; font-size: 13px; color: #111827; font-weight: 500; }
@@ -280,7 +288,6 @@
 
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3>
-                                
                                 <div class="info-grid" style="margin-bottom: 20px;">
                                     <div class="info-item"><label>Proveedor Oficial</label><span id="prov-info-nombre" style="color:#DC2626; font-weight:bold;">-</span></div>
                                     <div class="info-item"><label>RFC</label><span id="prov-info-rfc">-</span></div>
@@ -298,7 +305,7 @@
                                     <input type="text" class="form-input" required placeholder="10 dígitos">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida del técnico</label>
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida</label>
                                     <textarea class="form-input" rows="2" placeholder="Observaciones finales..." required></textarea>
                                 </div>
                             </div>
@@ -315,7 +322,7 @@
                             </div>
 
                             <div class="submit-section">
-                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado localmente.')" style="border: 1px solid #d1d5db; color: #111827;"><i data-lucide="save"></i> Guardar Borrador</button>
+                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado.')" style="border: 1px solid #d1d5db; color: #111827;"><i data-lucide="save"></i> Guardar Borrador</button>
                                 <button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden</button>
                             </div>
                         </form>
@@ -351,14 +358,12 @@
         lucide.createIcons();
 
         // =========================================================
-        // PEGA AQUÍ LA NUEVA URL DE TU GOOGLE APPS SCRIPT (NUEVA IMPLEMENTACIÓN)
+        // PEGA AQUÍ LA NUEVA URL DE TU GOOGLE APPS SCRIPT
         // =========================================================
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
 
-        // Variable global para almacenar toda la info que llega del login
         window.appData = null;
 
-        // === 1. LÓGICA DE LOGIN ===
         function togglePassword() {
             const p = document.getElementById('password');
             const i = document.getElementById('toggleIcon');
@@ -383,6 +388,7 @@
             btn.innerText = 'Cargando plataforma...';
             btn.disabled = true;
 
+            // LÓGICA FETCH CON EL NUEVO MANEJO DE ERRORES DEL SERVIDOR
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify({ username: user, password: pass }),
@@ -391,20 +397,17 @@
             .then(res => res.json())
             .then(data => {
                 if (data.valido) {
-                    // Guardar datos globales
                     window.appData = data;
 
-                    // 1. Mostrar nombre del proveedor arriba
+                    // Info del Proveedor
                     document.getElementById('vendor-name-display').innerText = data.nombreProveedor;
-                    
-                    // 2. Llenar sección "Técnico Asignado" con info del proveedor
                     document.getElementById('prov-info-nombre').innerText = data.nombreProveedor;
                     document.getElementById('prov-info-rfc').innerText = data.proveedorInfo.rfc;
                     document.getElementById('prov-info-cont').innerText = data.proveedorInfo.contacto;
                     document.getElementById('prov-info-tel').innerText = data.proveedorInfo.telefono;
                     document.getElementById('prov-info-mail').innerText = data.proveedorInfo.correo;
 
-                    // 3. Llenar datalist de Sucursales
+                    // Datalist Sucursales
                     const listaSuc = document.getElementById('sucursales-list');
                     listaSuc.innerHTML = '';
                     data.sucursales.forEach(s => {
@@ -413,7 +416,7 @@
                         listaSuc.appendChild(opt);
                     });
 
-                    // 4. Llenar Select de Áreas
+                    // Select Áreas
                     const selectArea = document.getElementById('area-select');
                     selectArea.innerHTML = '<option value="">Seleccione un área...</option>';
                     Object.keys(data.areas).forEach(a => {
@@ -422,11 +425,9 @@
                         selectArea.appendChild(opt);
                     });
 
-                    // Cambiar pantallas
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-screen').style.display = 'block';
                     
-                    // Control de Privilegios
                     if(data.privilegio == 2 || data.privilegio == "2") {
                         document.getElementById('nav-inicio').style.display = 'none';
                         document.getElementById('nav-crear-orden').style.display = 'none';
@@ -437,28 +438,27 @@
                     inicializarFirma();
                     cambiarVista(null, 'vista-mantenimiento');
                 } else {
+                    // Muestra el error exacto que nos envía Google Apps Script
+                    alertMsg.innerText = data.error || "Usuario o contraseña incorrectos.";
                     alertMsg.style.display = 'block';
                     btn.innerText = 'Iniciar Sesión';
                     btn.disabled = false;
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alertMsg.innerText = "Error de conexión con la base de datos.";
+                console.error('Error de red:', error);
+                alertMsg.innerText = "Error de conexión con el servidor de Google.";
                 alertMsg.style.display = 'block';
                 btn.innerText = 'Iniciar Sesión';
                 btn.disabled = false;
             });
         });
 
-        // === 2. EVENTOS DINÁMICOS DE LOS CAMPOS ===
-        
-        // Al escribir la sucursal, mostrar sus detalles
+        // Eventos Dinámicos
         document.getElementById('sucursal-input').addEventListener('input', function(e) {
             const val = e.target.value;
             const container = document.getElementById('sucursal-details');
             if(!window.appData) return;
-            
             const suc = window.appData.sucursales.find(s => s.nombre === val);
             if(suc) {
                 document.getElementById('suc-dir').innerText = suc.direccion;
@@ -468,12 +468,9 @@
                 document.getElementById('suc-tel').innerText = suc.telefono;
                 document.getElementById('suc-mail').innerText = suc.correo;
                 container.style.display = 'grid';
-            } else {
-                container.style.display = 'none';
-            }
+            } else { container.style.display = 'none'; }
         });
 
-        // Al cambiar de Área, cargar Subáreas correspondientes
         document.getElementById('area-select').addEventListener('change', function(e) {
             const val = e.target.value;
             const subSelect = document.getElementById('subarea-select');
@@ -487,14 +484,13 @@
             }
         });
 
-        // === 3. NAVEGACIÓN ===
+        // Navegación
         function cambiarVista(event, idVista) {
             if(event) event.preventDefault();
             document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('activa'));
             document.getElementById(idVista).classList.add('activa');
             if(event) event.currentTarget.classList.add('activa');
-            
             const sidebar = document.getElementById('sidebar');
             if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
         }
@@ -502,7 +498,7 @@
         toggles.forEach(t => { t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
         document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
-        // === 4. FOTOS Y CÁMARA DOBLE (FALLA Y SOLUCIÓN) ===
+        // FOTOS Y CÁMARA (Falla y Solución)
         let fotos = { falla: [null, null, null], solucion: [null, null, null] };
         let activeTarget = 'falla';
         
@@ -572,7 +568,7 @@
             lucide.createIcons();
         }
 
-        // === 5. FIRMA TÁCTIL ===
+        // FIRMA TÁCTIL
         let canvasFirma, ctxFirma;
         function inicializarFirma() {
             canvasFirma = document.getElementById('firma_tecnico');
@@ -583,8 +579,8 @@
                 const rect = canvasFirma.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY;
                 return { x: (cx - rect.left) * (canvasFirma.width / rect.width), y: (cy - rect.top) * (canvasFirma.height / rect.height) };
             }
-            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const p = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(pos.x, pos.y); });
-            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getCoordinates(e); ctxFirma.lineTo(pos.x, pos.y); ctxFirma.stroke(); } });
+            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const p = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(p.x, p.y); });
+            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getCoordinates(e); ctxFirma.lineTo(p.x, p.y); ctxFirma.stroke(); } });
             window.addEventListener('mouseup', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
             canvasFirma.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const p = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(p.x, p.y); }, {passive: false});
             canvasFirma.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDrawing) { const p = getCoordinates(e); ctxFirma.lineTo(p.x, p.y); ctxFirma.stroke(); } }, {passive: false});
@@ -592,10 +588,8 @@
         }
         function limpiarFirma(id) { ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
 
-        // Inicializar iconos vacíos
         renderSlots('falla');
         renderSlots('solucion');
     </script>
 </body>
 </html>
-                
