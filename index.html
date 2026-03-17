@@ -15,7 +15,7 @@
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
@@ -23,36 +23,15 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
 
     <script>
-        tailwind.config = {
-            darkMode: "class",
-            corePlugins: { preflight: false },
-            theme: {
-                extend: {
-                    colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", },
-                    fontFamily: { sans: ["Inter", "sans-serif"] }
-                }
-            }
-        };
+        tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
     </script>
 
     <style>
         body { margin: 0; padding: 0; background-color: #f8fafc; }
         
-        /* LOGIN MOBILE SPACING */
-        #login-screen { 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); 
-            background-attachment: fixed; 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 24px; 
-            box-sizing: border-box; 
-        }
-        #login-card { width: 100%; max-width: 420px; box-sizing: border-box; }
-
+        /* LOGIN MOBILE SPACING - Asegura franjas rojas a los lados */
+        #login-screen { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
         .modulo-vista { display: none; animation: fadeIn 0.3s ease-in-out; }
         .modulo-vista.activa { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
@@ -64,7 +43,7 @@
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* CAMPOS DE TEXTO Y SELECTORES GRISES REDONDOS */
+        /* CAMPOS DE TEXTO GRISES Y REDONDOS */
         .form-input, .form-select, textarea.form-input { width: 100% !important; padding: 14px 16px !important; background-color: #F3F4F6 !important; border: 1px solid transparent !important; border-radius: 12px !important; font-size: 14px !important; color: #1F2937 !important; box-sizing: border-box !important; font-family: inherit !important; outline: none !important; transition: all 0.2s ease !important; }
         .form-input:focus, .form-select:focus, textarea.form-input:focus { background-color: #FFFFFF !important; border: 1px solid #DC2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important; }
         
@@ -72,8 +51,6 @@
         .form-card, .data-table-container, .filters-bar, .fc-stat-card, .rpt-card { background: #FFFFFF; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #E5E7EB; margin-bottom: 24px; }
         .form-card { padding: 30px; width: 100%; }
         .data-table-container { overflow-x: auto; margin-bottom: 20px; padding: 0; border: 1px solid #E5E7EB; border-radius: 12px; overflow: hidden; }
-        
-        /* TÍTULOS DE SECCIÓN */
         .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px !important; font-weight: 600 !important; color: #111827 !important; margin: 0 0 20px 0 !important; padding-bottom: 12px !important; border-bottom: 1px solid #f3f4f6 !important; text-transform: none !important; }
         
         /* FOTOS Y CAMARA */
@@ -87,17 +64,26 @@
 
         .photo-grid-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
         .photo-slot { aspect-ratio: 1; border: 2px dashed #d1d5db; border-radius: 12px; background: #f9fafb; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-        .photo-slot img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
         .remove-photo { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 22px; cursor: pointer; font-size: 16px; font-weight: bold; z-index: 10; }
-        #camera-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 11000; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        
+        /* MODALES BLINDADOS - NO CAERÁN AL FONDO DE LA PÁGINA */
+        .modal-enlarger { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal-enlarger.show { display: flex !important; }
+        .modal-content-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; animation: zoomIn 0.3s ease-out; cursor: zoom-out; }
+        
+        #camera-overlay { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        #camera-overlay.show { display: flex !important; }
         #camera-stream { width: 100%; max-width: 600px; aspect-ratio: 4/3; background: black; border-radius: 12px; overflow: hidden; position: relative; }
         #camera-video { width: 100%; height: 100%; object-fit: cover; }
+        
+        @keyframes zoomIn { from {transform:scale(0.8); opacity: 0;} to {transform:scale(1); opacity: 1;} }
 
         /* FIRMA Y BOTONES INFERIORES */
         .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
         .signature-pad { width: 100%; height: 200px; cursor: crosshair; touch-action: none; display: block; } 
-        .submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 44px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; min-width: 220px; transition: all 0.2s; }
-        .btn-submit-order { background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); }
+        .submit-section { display: flex; justify-content: center; margin-top: 20px; margin-bottom: 50px; }
+        .btn-submit-order { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 44px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; min-width: 220px; background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); transition: all 0.2s; }
 
         /* DATA CARDS */
         .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
@@ -111,7 +97,7 @@
 <body class="has-sidebar">
 
     <div id="login-screen">
-        <div id="login-card" class="bg-surface rounded-2xl shadow-premium border border-slate-100 overflow-hidden p-8 sm:p-10" style="background: white;">
+        <div style="width: 90%; max-width: 420px; background: white; border-radius: 24px; box-sizing: border-box; padding: 32px 24px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2);">
             <div class="flex flex-col items-center mb-4">
                 <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
                 <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
@@ -146,7 +132,7 @@
             </form>
         </div>
         <div class="mt-8 text-center" style="margin-top: 2rem;">
-            <p class="text-[12px] font-medium uppercase tracking-widest text-white/80" style="color:rgba(255,255,255,0.8); font-size:12px; margin:0;">
+            <p class="text-[12px] font-medium uppercase tracking-widest text-white/80" style="color:rgba(255,255,255,0.9); font-size:12px; margin:0;">
                 © 2026 TIM HORTONS. Todos los derechos reservados.
             </p>
         </div>
@@ -171,13 +157,11 @@
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
                         <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')"><i data-lucide="home"></i> Inicio</a>
-                        
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
                             <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
                             <a href="#" class="sidebar-link" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
-                        
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
                             <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-confirmacion')"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
@@ -185,7 +169,6 @@
                             <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-aprobacion')"><i data-lucide="badge-check"></i> Aprobación de costos</a>
                             <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-facturacion')"><i data-lucide="file-text"></i> Facturación</a>
                         </div>
-                        
                         <div class="sidebar-section" id="nav-seccion-reportes">
                             <div class="sidebar-section-title">Reportes</div>
                             <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')"><i data-lucide="bar-chart-3"></i> Reportes</a>
@@ -228,7 +211,7 @@
                                 <h3 class="section-title"><i data-lucide="map-pin"></i> Ubicación</h3>
                                 <div class="form-group">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Sucursal Tim Hortons</label>
-                                    <input class="form-input" id="sucursal-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." required autocomplete="off">
+                                    <input class="form-input" id="sucursal-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." required>
                                     <datalist id="sucursales-list"></datalist>
                                     
                                     <div id="sucursal-details" class="info-grid" style="display:none;">
@@ -254,12 +237,12 @@
                                 <h3 class="section-title"><i data-lucide="layers"></i> Área Afectada</h3>
                                 <div class="form-group" style="margin-bottom: 15px;">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Área</label>
-                                    <input class="form-input" id="area-input" list="areas-list" placeholder="Escribe para buscar área..." required autocomplete="off">
+                                    <input class="form-input" id="area-input" list="areas-list" placeholder="Escribe para buscar área..." required>
                                     <datalist id="areas-list"></datalist>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Sub Área</label>
-                                    <select class="form-select" id="subarea-select" required><option value="">Primero escriba un área válida</option></select>
+                                    <select class="form-select" id="subarea-select" required><option value="">Primero escriba o seleccione un área válida</option></select>
                                 </div>
                             </div>
 
@@ -336,45 +319,28 @@
                                 </div>
                             </div>
 
-                            <div class="submit-section" style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px; align-items: stretch; max-width: 400px; margin-left: auto; margin-right: auto;">
-                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado localmente.')" style="border: 1px solid #d1d5db; color: #111827; background: white; width: 100%; display: flex; justify-content: center;">
-                                    <i data-lucide="save"></i> Guardar Borrador
-                                </button>
-                                <button type="submit" class="submit-btn btn-submit-order" style="width: 100%; display: flex; justify-content: center;">
-                                    <i data-lucide="send"></i> Enviar Orden
-                                </button>
+                            <div style="height: 12px; background-color: #DC2626; width: 100%; border-radius: 6px; margin-top: 25px; margin-bottom: 25px;"></div>
+
+                            <div class="submit-section">
+                                <button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden de Servicio</button>
                             </div>
                         </form>
                     </div>
                 </div>
                 <div id="vista-ordenes-servicio" class="modulo-vista">
                     <div style="max-width: 1000px; margin: 0 auto;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1>
-                            <p style="color: #6b7280; margin: 0;">Calendario y registro de preventivos.</p>
-                        </header>
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1></header>
                         <div class="empty-state"><i data-lucide="calendar-clock"></i><h3>Módulo en desarrollo</h3></div>
                     </div>
                 </div>
 
                 <div id="vista-confirmacion" class="modulo-vista">
                     <div style="max-width: 1000px; margin: 0 auto;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Confirmación Operativa</h1>
-                            <p style="color: #6b7280; margin: 0;">Revisa y aprueba las órdenes de servicio pendientes.</p>
-                        </header>
-                        
-                        <div class="tabs-segmented">
-                            <span class="tab-segment active">Pendientes <span class="tab-segment-count">3</span></span>
-                            <span class="tab-segment">Confirmadas <span class="tab-segment-count">0</span></span>
-                        </div>
-                        
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Confirmación Operativa</h1></header>
                         <div class="data-table-container">
                             <table class="data-table">
                                 <thead><tr><th>Folio</th><th>Sucursal</th><th>Tipo</th><th>Fecha</th><th style="text-align:right;">Acción</th></tr></thead>
-                                <tbody>
-                                    <tr><td>OS-2026-001</td><td>Acoxpa</td><td>Correctivo</td><td>10/02/2026</td><td style="text-align:right;"><button class="status-pill status-danger" style="cursor:pointer; padding: 6px 12px;"><i data-lucide="search" style="width:14px;"></i> Revisar</button></td></tr>
-                                </tbody>
+                                <tbody><tr><td>OS-2026-001</td><td>Acoxpa</td><td>Correctivo</td><td>10/02/2026</td><td style="text-align:right;"><button class="status-pill status-danger" style="cursor:pointer; padding: 6px 12px;"><i data-lucide="search" style="width:14px;"></i> Revisar</button></td></tr></tbody>
                             </table>
                         </div>
                     </div>
@@ -382,22 +348,11 @@
 
                 <div id="vista-costos" class="modulo-vista">
                     <div style="max-width: 1000px; margin: 0 auto;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1>
-                            <p style="color: #6b7280; margin: 0;">Gestión de costos y cotizaciones de proveedores.</p>
-                        </header>
-                        
-                        <div class="tabs-segmented">
-                            <span class="tab-segment active">Por Cotizar <span class="tab-segment-count">2</span></span>
-                            <span class="tab-segment">Enviados <span class="tab-segment-count">5</span></span>
-                        </div>
-
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1></header>
                         <div class="data-table-container">
                             <table class="data-table">
                                 <thead><tr><th>Folio</th><th>Sucursal</th><th>Estado</th><th style="text-align:right;">Acción</th></tr></thead>
-                                <tbody>
-                                    <tr><td>OS-2026-001</td><td>Acoxpa</td><td><td><span class="status-pill status-warning">Sin Costos</span></td><td style="text-align:right;"><button class="status-pill status-danger" style="cursor:pointer; padding: 6px 12px;"><i data-lucide="dollar-sign" style="width:14px;"></i> Capturar</button></td></tr>
-                                </tbody>
+                                <tbody><tr><td>OS-2026-001</td><td>Acoxpa</td><td><td><span class="status-pill status-warning">Sin Costos</span></td><td style="text-align:right;"><button class="status-pill status-danger" style="cursor:pointer; padding: 6px 12px;"><i data-lucide="dollar-sign" style="width:14px;"></i> Capturar</button></td></tr></tbody>
                             </table>
                         </div>
                     </div>
@@ -405,27 +360,24 @@
 
                 <div id="vista-aprobacion" class="modulo-vista">
                     <div style="max-width: 1000px; margin: 0 auto;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1>
-                            <p style="color: #6b7280; margin: 0;">Revisión y autorización final de costos.</p>
-                        </header>
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1></header>
                         <div class="empty-state"><i data-lucide="badge-check"></i><h3>Sin registros pendientes</h3></div>
                     </div>
                 </div>
 
                 <div id="vista-facturacion" class="modulo-vista">
                     <div style="max-width: 1000px; margin: 0 auto;">
-                        <header class="page-header-section">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Facturación</h1>
-                            <p style="color: #6b7280; margin: 0;">Vinculación de folios fiscales (CFDI).</p>
-                        </header>
-                        
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Facturación</h1></header>
                         <div class="empty-state"><i data-lucide="file-text"></i><h3>Sin facturas cargadas</h3></div>
                     </div>
                 </div>
 
-                <div id="vista-reportes" class="modulo-vista"><div style="max-width: 1000px; margin: 0 auto;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes</h1></header></div></div>
-
+                <div id="vista-reportes" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes</h1></header>
+                        <div class="empty-state"><i data-lucide="bar-chart-3"></i><h3>Módulo de reportes</h3></div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
@@ -441,7 +393,7 @@
         </div>
     </div>
     
-    <div id="photoModal" class="modal-enlarger" onclick="this.style.display='none'">
+    <div id="photoModal" class="modal-enlarger" onclick="closePhotoModal()">
         <img class="modal-content-img" id="imgFull">
     </div>
 
@@ -451,7 +403,7 @@
         // =========================================================
         // URL DE TU GOOGLE APPS SCRIPT
         // =========================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec'; // Pega tu URL real aquí
+        const APPS_SCRIPT_URL = 'PEGAR_AQUI_TU_NUEVA_URL_DE_APPS_SCRIPT'; // Pega tu URL real aquí
 
         window.appData = null;
 
@@ -473,7 +425,7 @@
             const pass = passRaw.trim();
 
             if (APPS_SCRIPT_URL === 'PEGAR_AQUI_TU_NUEVA_URL_DE_APPS_SCRIPT') {
-                window.alert("Falta pegar la URL real de tu Google Apps Script en el código HTML.");
+                window.alert("https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec");
                 return;
             }
 
@@ -495,6 +447,7 @@
                         const inicial = user.charAt(0).toUpperCase();
                         document.getElementById('user-initial-header').innerText = inicial;
                     }
+                    
                     document.getElementById('welcome-username-display').innerText = data.nombreProveedor;
 
                     document.getElementById('prov-info-nombre').innerText = data.nombreProveedor;
@@ -542,7 +495,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alertMsg.innerText = "Error fatal de conexión con la base de datos de Google.";
+                alertMsg.innerText = "Error fatal de conexión con la base de datos.";
                 alertMsg.style.display = 'block';
                 btn.innerText = 'Iniciar Sesión';
                 btn.disabled = false;
@@ -565,10 +518,10 @@
             } else { container.style.display = 'none'; }
         });
 
+        // FIX AREA: Actualización inteligente para no cerrar la lista nativa del celular
         document.getElementById('area-input').addEventListener('input', function(e) {
             const val = e.target.value;
             const subSelect = document.getElementById('subarea-select');
-            subSelect.innerHTML = '<option value="">Cargando sub áreas...</option>';
             
             if(!window.appData) return;
             
@@ -580,7 +533,9 @@
                     subSelect.appendChild(opt);
                 });
             } else {
-                subSelect.innerHTML = '<option value="">Primero escriba un área válida</option>';
+                if(subSelect.options.length !== 1 || subSelect.value !== "") {
+                    subSelect.innerHTML = '<option value="">Primero escriba o seleccione un área válida</option>';
+                }
             }
         });
 
@@ -624,11 +579,15 @@
             try { 
                 currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); 
                 document.getElementById('camera-video').srcObject = currentStream; 
-                document.getElementById('camera-overlay').style.display = 'flex'; 
+                document.getElementById('camera-overlay').classList.add('show'); 
             } catch (err) { window.alert("Permiso denegado."); }
         }
         
-        function closeCamera() { if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); } document.getElementById('camera-overlay').style.display = 'none'; }
+        function closeCamera() { 
+            if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); } 
+            document.getElementById('camera-overlay').classList.remove('show'); 
+        }
+        
         function captureFoto() { 
             const canvasT = document.getElementById('tempCanvas'); const video = document.getElementById('camera-video');
             canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
@@ -640,11 +599,21 @@
         
         function removeFoto(target, index) { fotos[target][index] = null; renderSlots(target); }
         
+        // FIX ZOOM FOTOS: Lógica y mapeo de clicks para abrir y cerrar fotos
+        function enlargePhoto(src) {
+            const modal = document.getElementById('photoModal');
+            document.getElementById('imgFull').src = src;
+            modal.classList.add('show');
+        }
+        function closePhotoModal() {
+            document.getElementById('photoModal').classList.remove('show');
+        }
+
         function renderSlots(target) {
             for (let i = 0; i < 3; i++) {
                 const slot = document.getElementById(`slot-${target}-${i}`);
                 if (fotos[target][i]) { 
-                    slot.innerHTML = `<img src="${fotos[target][i]}" onclick="document.getElementById('photoModal').style.display='block'; document.getElementById('imgFull').src=this.src;" style="width:100%; height:100%; object-fit:cover; cursor:pointer; border-radius:12px;"><span class="remove-photo" onclick="removeFoto('${target}', ${i})">&times;</span>`; 
+                    slot.innerHTML = `<img src="${fotos[target][i]}" onclick="enlargePhoto(this.src)" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in; border-radius:12px;"><span class="remove-photo" onclick="removeFoto('${target}', ${i})">&times;</span>`; 
                     slot.style.border = "1px solid #e5e7eb"; 
                 } else { 
                     slot.innerHTML = `<i data-lucide="image" class="slot-placeholder-icon"></i>`; 
@@ -678,4 +647,4 @@
     </script>
 </body>
 </html>
-                
+    
