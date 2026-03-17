@@ -413,9 +413,7 @@
     <script>
         lucide.createIcons();
 
-        // LA URL YA ESTÁ AQUÍ. ELIMINÉ EL BLOQUEO POR SEGURIDAD.
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
-
         window.appData = null;
 
         function togglePassword() {
@@ -557,13 +555,11 @@
         toggles.forEach(t => { t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
         document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
-        // ACTUALIZADO: fotos tiene ahora soporte (un arreglo de 1)
         let fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null] };
         let activeTarget = 'falla';
         
         function triggerFile(target) { 
             activeTarget = target;
-            // Dinámico según el largo del arreglo
             if(fotos[target].filter(f => f !== null).length < fotos[target].length) document.getElementById('fileInputGlobal').click(); 
             else window.alert("Límite de fotos alcanzado para esta sección."); 
         }
@@ -582,7 +578,6 @@
         let currentStream;
         async function triggerCamera(target) {
             activeTarget = target;
-            // Dinámico según el largo del arreglo
             if(fotos[target].filter(f => f !== null).length >= fotos[target].length) { window.alert("Límite de fotos alcanzado."); return; }
             try { 
                 currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); 
@@ -617,7 +612,6 @@
         }
 
         function renderSlots(target) {
-            // Dinámico: itera según el largo de fotos[target]
             for (let i = 0; i < fotos[target].length; i++) {
                 const slot = document.getElementById(`slot-${target}-${i}`);
                 if (fotos[target][i]) { 
@@ -652,11 +646,8 @@
 
         renderSlots('falla');
         renderSlots('solucion');
-        renderSlots('soporte'); // Inicializar el slot de soporte
+        renderSlots('soporte'); 
 
-        // ==========================================
-        // ACTUALIZADO: ENVIAR ORDEN (Incluye Soporte Físico)
-        // ==========================================
         document.getElementById('ordenMttoForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
 
@@ -685,17 +676,13 @@
                 tec_celular: document.getElementById('celular_tecnico').value,
                 comentario: document.getElementById('comentario_salida').value,
                 firma: document.getElementById('firma_tecnico_data').value,
-                
-                // AGREGADO: La única foto de soporte físico
                 foto_soporte: fotos.soporte[0], 
-                
                 fecha_hora: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })
             };
 
             sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
             window.location.href = 'index2.html';
         });
-
     </script>
 </body>
 </html>
