@@ -38,7 +38,7 @@
     <style>
         body { margin: 0; padding: 0; background-color: #f8fafc; }
         
-        /* --- FIX PRIORIDAD (Imagen 1 vs 2): Spacing Mobile Login --- */
+        /* LOGIN MOBILE SPACING */
         #login-screen { 
             font-family: 'Inter', sans-serif; 
             background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); 
@@ -48,11 +48,9 @@
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            /* Agregamos padding para que la tarjeta blanca no toque las orillas en celular */
             padding: 24px; 
             box-sizing: border-box; 
         }
-        /* Aseguramos que la tarjeta tenga ancho completo pero respete el padding del padre */
         #login-card { width: 100%; max-width: 420px; box-sizing: border-box; }
 
         .modulo-vista { display: none; animation: fadeIn 0.3s ease-in-out; }
@@ -75,7 +73,7 @@
         .form-card { padding: 30px; width: 100%; }
         .data-table-container { overflow-x: auto; margin-bottom: 20px; padding: 0; border: 1px solid #E5E7EB; border-radius: 12px; overflow: hidden; }
         
-        /* TÍTULOS DE SECCIÓN - DISEÑO INTACTO */
+        /* TÍTULOS DE SECCIÓN */
         .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px !important; font-weight: 600 !important; color: #111827 !important; margin: 0 0 20px 0 !important; padding-bottom: 12px !important; border-bottom: 1px solid #f3f4f6 !important; text-transform: none !important; }
         
         /* FOTOS Y CAMARA */
@@ -98,7 +96,6 @@
         /* FIRMA Y BOTONES INFERIORES */
         .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
         .signature-pad { width: 100%; height: 200px; cursor: crosshair; touch-action: none; display: block; } 
-        .submit-section { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid #e5e7eb; margin-top: 20px; margin-bottom: 50px; }
         .submit-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 44px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; min-width: 220px; transition: all 0.2s; }
         .btn-submit-order { background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); }
 
@@ -220,7 +217,8 @@
 
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 1000px; margin: 0 auto; position: relative; padding-bottom: 20px;">
-                        <header class="page-header-section">
+                        
+                        <header class="page-header-section" style="margin-bottom: 35px; border-bottom: 1px solid #e5e7eb; padding-bottom: 16px;">
                             <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
                             <p style="color: #6b7280; margin: 0;">Registrar orden de servicio - Tim Hortons México</p>
                         </header>
@@ -338,10 +336,13 @@
                                 </div>
                             </div>
 
-                            <div style="height: 12px; background-color: #DC2626; width: 100%; border-radius: 6px; margin-top: 25px; margin-bottom: 25px;"></div>
-
-                            <div class="submit-section">
-                                <button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden de Servicio</button>
+                            <div class="submit-section" style="display: flex; flex-direction: column; gap: 15px; margin-top: 30px; align-items: stretch; max-width: 400px; margin-left: auto; margin-right: auto;">
+                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado localmente.')" style="border: 1px solid #d1d5db; color: #111827; background: white; width: 100%; display: flex; justify-content: center;">
+                                    <i data-lucide="save"></i> Guardar Borrador
+                                </button>
+                                <button type="submit" class="submit-btn btn-submit-order" style="width: 100%; display: flex; justify-content: center;">
+                                    <i data-lucide="send"></i> Enviar Orden
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -450,7 +451,7 @@
         // =========================================================
         // URL DE TU GOOGLE APPS SCRIPT
         // =========================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec'; // Asegúrate de pegar tu URL real aquí
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec'; // Pega tu URL real aquí
 
         window.appData = null;
 
@@ -461,13 +462,11 @@
             else { p.type = 'password'; i.textContent = 'visibility_off'; }
         }
 
-        // --- MANEJO DE LOGIN ---
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const alertMsg = document.getElementById('alertMessage');
             
-            // Fix anti-espacios celular
             const userRaw = document.getElementById('username').value;
             const user = userRaw.trim(); 
             const passRaw = document.getElementById('password').value;
@@ -492,23 +491,19 @@
                 if (data.valido) {
                     window.appData = data;
 
-                    // --- Header: Poner inicial y nombre completo del proveedor ---
                     if (user && user.length > 0) {
                         const inicial = user.charAt(0).toUpperCase();
                         document.getElementById('user-initial-header').innerText = inicial;
                     }
-                    // Pone el nombre del proveedor en la sección Bienvenido central (estilos aplicados en HTML)
                     document.getElementById('welcome-username-display').innerText = data.nombreProveedor;
 
-                    // --- Técnico asignado: Llenar info del proveedor dinámicamente ---
                     document.getElementById('prov-info-nombre').innerText = data.nombreProveedor;
                     document.getElementById('prov-info-rfc').innerText = data.proveedorInfo.rfc || 'N/A';
                     document.getElementById('prov-info-dir').innerText = data.proveedorInfo.direccion || 'N/A';
                     document.getElementById('prov-info-cont').innerText = data.proveedorInfo.contacto || 'N/A';
                     document.getElementById('prov-info-tel').innerText = data.proveedorInfo.telefono || 'N/A';
-                    document.getElementById('prov-info-mail').innerText = data.proveedorInfo.correo || 'N/A';
+                    document.getElementById('prov-info-mail').innerText = data.proveedorInfo.correo || 'N/A'; 
 
-                    // Llenar datalist sucursales
                     const listaSuc = document.getElementById('sucursales-list');
                     listaSuc.innerHTML = '';
                     data.sucursales.forEach(s => {
@@ -517,7 +512,6 @@
                         listaSuc.appendChild(opt);
                     });
 
-                    // --- FIX Imagen 4: Llenar datalist ÁREAS (Searchable) ---
                     const listaAreas = document.getElementById('areas-list');
                     listaAreas.innerHTML = '';
                     Object.keys(data.areas).forEach(a => {
@@ -526,12 +520,10 @@
                         listaAreas.appendChild(opt);
                     });
 
-                    // Cambiar pantallas
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-screen').style.display = 'block';
-                    lucide.createIcons(); // Re-render icons en header
+                    lucide.createIcons();
 
-                    // Control Privilegios
                     if(data.privilegio == 2 || data.privilegio == "2") {
                         document.getElementById('nav-inicio').style.display = 'none';
                         document.getElementById('nav-preventivo').style.display = 'none';
@@ -557,7 +549,6 @@
             });
         });
 
-        // Eventos Dinámicos Sucursales
         document.getElementById('sucursal-input').addEventListener('input', function(e) {
             const val = e.target.value;
             const container = document.getElementById('sucursal-details');
@@ -574,7 +565,6 @@
             } else { container.style.display = 'none'; }
         });
 
-        // --- FIX Imagen 4: Lógica ÁREA (Input Searchable) ---
         document.getElementById('area-input').addEventListener('input', function(e) {
             const val = e.target.value;
             const subSelect = document.getElementById('subarea-select');
@@ -582,7 +572,6 @@
             
             if(!window.appData) return;
             
-            // Verificamos si el valor escrito coincide exactamente con un área válida
             if(val && window.appData.areas[val]) {
                 subSelect.innerHTML = '<option value="">Seleccione sub área...</option>';
                 window.appData.areas[val].forEach(sub => {
@@ -595,7 +584,6 @@
             }
         });
 
-        // Navegación SPA
         function cambiarVista(event, idVista) {
             if(event) event.preventDefault();
             document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
@@ -609,7 +597,6 @@
         toggles.forEach(t => { t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
         document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
-        // CÁMARA Y FOTOS (Lógica unificada Falla/Solución)
         let fotos = { falla: [null, null, null], solucion: [null, null, null] };
         let activeTarget = 'falla';
         
@@ -667,7 +654,6 @@
             lucide.createIcons();
         }
 
-        // FIRMA
         let canvasFirma, ctxFirma;
         function inicializarFirma() {
             canvasFirma = document.getElementById('firma_tecnico');
@@ -687,9 +673,9 @@
         }
         function limpiarFirma(id) { ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
 
-        // Inicialización icons
         renderSlots('falla');
         renderSlots('solucion');
     </script>
 </body>
 </html>
+                
