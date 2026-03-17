@@ -86,7 +86,7 @@
         .status-success { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
         .status-warning { background: #FEF9C3; color: #854D0E; border: 1px solid #FEF08A; }
         
-        /* CÁMARA Y FOTOS - Fix Botones del mismo tamaño */
+        /* FOTOS Y CAMARA */
         .photo-controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
         @media (min-width: 640px) { .photo-controls { display: flex; grid-template-columns: none; } }
         
@@ -123,7 +123,7 @@
         .report-option.active { border-color: #DC2626; color: #DC2626; background: #FFF1F1; font-weight: 600; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1); }
         .download-excel-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: #166534; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
         
-        /* DATA CARDS - Fix Margen en celular (Imágenes 1 y 2) */
+        /* DATA CARDS - Diseño unificado para todos los info grids */
         .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
         @media (min-width: 768px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .info-grid { grid-template-columns: repeat(3, 1fr); } }
@@ -221,11 +221,15 @@
             <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
 
             <main class="main-content app-content p-4 sm:p-6">
+                
+                <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px;">
+                    <h1 style="margin: 0; font-size: 24px; color: black; font-weight: 700;">Bienvenido</h1>
+                    <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 20px; color: #DC2626; font-weight: 600; text-transform: uppercase;">PROVEEDOR</h2>
+                </div>
 
                 <div id="vista-inicio" class="modulo-vista">
                     <div style="text-align: center; padding-top: 30px; padding-bottom: 50px;">
                         <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
-                        <h2>Bienvenido al Sistema</h2>
                         <p style="color: #666; margin-bottom: 40px;">Selecciona una opción del menú lateral para comenzar.</p>
                         
                         <div style="border-top: 1px solid #e5e7eb; pt-8; mt-10; max-width: 400px; margin: 50px auto 0 auto;">
@@ -237,7 +241,7 @@
                 </div>
 
                 <div id="vista-mantenimiento" class="modulo-vista activa">
-                    <div class="reporte-container" style="max-width: 1000px; margin: 0 auto;">
+                    <div class="reporte-container" style="max-width: 1000px; margin: 0 auto; position: relative; padding-bottom: 20px;">
                         <header class="page-header-section">
                             <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
                             <p style="color: #6b7280; margin: 0;">Registrar orden de servicio - Tim Hortons México</p>
@@ -322,9 +326,10 @@
                                 <h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3>
                                 
                                 <div class="info-grid" style="margin-bottom: 20px; background-color: #f0fdf4; border-color: #bbf7d0;">
-                                    <div class="info-item"><label>Proveedor</label><span id="prov-info-nombre" style="color:#166534; font-weight:bold;">-</span></div>
+                                    <div class="info-item"><label>Proveedor Oficial</label><span id="prov-info-nombre" style="color:#166534; font-weight:bold;">-</span></div>
                                     <div class="info-item"><label>Contacto</label><span id="prov-info-cont">-</span></div>
                                     <div class="info-item"><label>Teléfono</label><span id="prov-info-tel">-</span></div>
+                                    <div class="info-item"><label>Correo</label><span id="prov-info-mail" style="word-break: break-all;">-</span></div>
                                 </div>
 
                                 <div class="form-group" style="margin-bottom: 15px;">
@@ -336,7 +341,7 @@
                                     <input type="text" class="form-input" id="celular_tecnico" required placeholder="10 dígitos">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida</label>
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida del técnico</label>
                                     <textarea class="form-input" id="comentario_salida" rows="2" placeholder="Observaciones finales antes de retirarse..." required></textarea>
                                 </div>
                             </div>
@@ -352,13 +357,15 @@
                                 </div>
                             </div>
 
+                            <div style="height: 12px; background-color: #DC2626; width: 100%; border-radius: 6px; margin-top: 25px; margin-bottom: 25px;"></div>
+
                             <div class="submit-section">
                                 <button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden de Servicio</button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <div id="vista-ordenes-servicio" class="modulo-vista">
+    <div id="vista-ordenes-servicio" class="modulo-vista">
                     <div style="max-width: 1000px; margin: 0 auto;">
                         <header class="page-header-section">
                             <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1>
@@ -480,9 +487,9 @@
         lucide.createIcons();
 
         // =========================================================
-        // URL DE TU GOOGLE APPS SCRIPT (Mantenemos la que ya funciona)
+        // URL DE TU GOOGLE APPS SCRIPT
         // =========================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec'; // Tu URL real aquí
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec'; // Asegúrate de pegar tu URL real aquí
 
         window.appData = null;
 
@@ -493,7 +500,7 @@
             else { p.type = 'password'; i.textContent = 'visibility_off'; }
         }
 
-        // --- MANEJO DE LOGIN (Con Fix de Letra B dinámico) ---
+        // --- MANEJO DE LOGIN ---
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -504,6 +511,11 @@
             const user = userRaw.trim(); 
             const passRaw = document.getElementById('password').value;
             const pass = passRaw.trim();
+
+            if (APPS_SCRIPT_URL === 'PEGAR_AQUI_TU_NUEVA_URL_DE_APPS_SCRIPT') {
+                window.alert("Falta pegar la URL real de tu Google Apps Script en el código HTML.");
+                return;
+            }
 
             alertMsg.style.display = 'none';
             btn.innerText = 'Verificando...';
@@ -519,16 +531,19 @@
                 if (data.valido) {
                     window.appData = data;
 
-                    // --- FIX IMAGEN 4 y 5: Obtener inicial del usuario (ej. BDN -> B) y ponerla en el header ---
+                    // --- FIX Imagen 3 y Header: Poner inicial y nombre completo del proveedor ---
                     if (user && user.length > 0) {
                         const inicial = user.charAt(0).toUpperCase();
                         document.getElementById('user-initial-header').innerText = inicial;
                     }
+                    // Pone el nombre del proveedor en la sección Bienvenido central
+                    document.getElementById('welcome-username-display').innerText = data.nombreProveedor;
 
-                    // Llenar info del proveedor en la forma
+                    // --- FIX Imagen 4: Llenar info del proveedor en la forma (Técnico asignado) ---
                     document.getElementById('prov-info-nombre').innerText = data.nombreProveedor;
                     document.getElementById('prov-info-cont').innerText = data.proveedorInfo.contacto;
                     document.getElementById('prov-info-tel').innerText = data.proveedorInfo.telefono;
+                    document.getElementById('prov-info-mail').innerText = data.proveedorInfo.correo; // Correo recuperado
 
                     // Llenar datalist sucursales
                     const listaSuc = document.getElementById('sucursales-list');
@@ -555,6 +570,8 @@
 
                     // Control Privilegios
                     if(data.privilegio == 2 || data.privilegio == "2") {
+                        document.getElementById('nav-inicio').style.display = 'none';
+                        document.getElementById('nav-preventivo').style.display = 'none';
                         document.getElementById('nav-seccion-admin').style.display = 'none';
                         document.getElementById('nav-seccion-reportes').style.display = 'none';
                     }
@@ -570,7 +587,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alertMsg.innerText = "Error de conexión con la base de datos.";
+                alertMsg.innerText = "Error fatal de conexión con la base de datos de Google.";
                 alertMsg.style.display = 'block';
                 btn.innerText = 'Iniciar Sesión';
                 btn.disabled = false;
@@ -705,4 +722,3 @@
     </script>
 </body>
 </html>
-    
