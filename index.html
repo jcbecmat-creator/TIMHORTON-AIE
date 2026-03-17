@@ -42,23 +42,30 @@
         .modulo-vista.activa { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
+        
         .sidebar-link.activa { background-color: #FFF1F1 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* BORDES REDONDOS Y FONDOS GRISES CLAROS */
+        /* CAMPOS DE TEXTO Y SELECTORES GRISES REDONDOS */
         .form-input, .form-select, textarea.form-input { width: 100% !important; padding: 14px 16px !important; background-color: #F3F4F6 !important; border: 1px solid transparent !important; border-radius: 12px !important; font-size: 14px !important; color: #1F2937 !important; box-sizing: border-box !important; font-family: inherit !important; outline: none !important; transition: all 0.2s ease !important; }
         .form-input:focus, .form-select:focus, textarea.form-input:focus { background-color: #FFFFFF !important; border: 1px solid #DC2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important; }
+        
+        /* TARJETAS Y CONTENEDORES */
         .form-card, .data-table-container, .filters-bar, .fc-stat-card, .rpt-card { background: #FFFFFF; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #E5E7EB; margin-bottom: 24px; }
         .form-card { padding: 30px; width: 100%; }
-        .data-table-container { overflow-x: auto; margin-bottom: 20px; padding: 0; }
+        .data-table-container { overflow-x: auto; margin-bottom: 20px; padding: 0; border: 1px solid #E5E7EB; border-radius: 12px; overflow: hidden; }
         .filters-bar { padding: 16px; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px; }
         .fc-stat-card { padding: 20px; margin-bottom: 0; }
         .rpt-card { padding: 24px; margin-bottom: 0; }
-        .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 600; color: #111827; margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6; }
+        
+        /* TÍTULOS DE SECCIÓN - DISEÑO INTACTO */
+        .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px !important; font-weight: 600 !important; color: #111827 !important; margin: 0 0 20px 0 !important; padding-bottom: 12px !important; border-bottom: 1px solid #f3f4f6 !important; text-transform: none !important; }
         .page-header-section { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
+        
+        /* TABS Y TABLAS */
         .tabs-segmented { display: inline-flex; background: #f3f4f6; border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 20px; overflow-x: auto; max-width: 100%; border: 1px solid #e5e7eb; }
         .tab-segment { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .tab-segment.active { background: white; color: #111827; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
@@ -73,15 +80,21 @@
         .empty-state i { width: 48px; height: 48px; color: #d1d5db; margin-bottom: 12px; }
         .fc-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
         
+        /* BADGES DE ESTADO */
         .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
         .status-danger { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; }
         .status-success { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
         .status-warning { background: #FEF9C3; color: #854D0E; border: 1px solid #FEF08A; }
         
-        /* FOTOS Y CÁMARA */
-        .photo-controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .btn-photo { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #DC2626; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
-        .btn-photo-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: white; color: #374151; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; }
+        /* CÁMARA Y FOTOS - Fix Botones del mismo tamaño */
+        .photo-controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        @media (min-width: 640px) { .photo-controls { display: flex; grid-template-columns: none; } }
+        
+        .btn-photo, .btn-photo-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; width: 100%; box-sizing: border-box; }
+        .btn-photo { background: #DC2626; color: white; border: none; }
+        .btn-photo-secondary { background: white; color: #374151; border: 1px solid #d1d5db; }
+        @media (min-width: 640px) { .btn-photo, .btn-photo-secondary { width: auto; } }
+
         .photo-grid-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
         .photo-slot { aspect-ratio: 1; border: 2px dashed #d1d5db; border-radius: 12px; background: #f9fafb; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
@@ -95,6 +108,7 @@
         .modal-content-img { margin: auto; display: block; max-width: 90%; max-height: 80%; border-radius: 8px; animation: zoomIn 0.3s; }
         @keyframes zoomIn { from {transform:scale(0)} to {transform:scale(1)} }
 
+        /* FIRMA Y BOTONES INFERIORES */
         .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
         .signature-pad { width: 100%; height: 200px; cursor: crosshair; touch-action: none; display: block; } 
         .submit-section { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid #e5e7eb; margin-top: 20px; margin-bottom: 50px; }
@@ -102,22 +116,27 @@
         .draft-btn { background: white; border: 1px solid #d1d5db; color: #111827; }
         .btn-submit-order { background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); }
 
+        /* REPORTES */
         .reports-grid-enhanced { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
         .rpt-card-header { font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
         .report-option { display: block; width: 100%; text-align: left; padding: 14px 16px; border: 1px solid #d1d5db; background: white; color: #1f2937; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; }
         .report-option.active { border-color: #DC2626; color: #DC2626; background: #FFF1F1; font-weight: 600; box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1); }
         .download-excel-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px; background: #166534; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; margin-bottom: 20px; }
         
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
+        /* DATA CARDS - Fix Margen en celular (Imágenes 1 y 2) */
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
+        @media (min-width: 768px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .info-grid { grid-template-columns: repeat(3, 1fr); } }
+
         .info-item label { display: block; font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 2px; }
         .info-item span { display: block; font-size: 13px; color: #111827; font-weight: 500; }
-        @media (max-width: 900px) { .reports-grid-enhanced { grid-template-columns: 1fr; } .info-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .reports-grid-enhanced { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body class="has-sidebar">
 
     <div id="login-screen">
-        <div class="w-full max-w-[420px] bg-surface rounded-2xl shadow-premium border border-slate-100 overflow-hidden" style="box-sizing: border-box; background: white; padding: 32px;">
+        <div class="w-full max-w-[420px] bg-surface rounded-2xl shadow-premium border border-slate-100 overflow-hidden p-8 sm:p-10" style="box-sizing: border-box; background: white;">
             <div class="flex flex-col items-center mb-4">
                 <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
                 <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
@@ -147,9 +166,14 @@
                 <div id="alertMessage" class="hidden py-2.5 px-3 bg-red-50 border border-red-200 text-red-600 text-[13px] font-medium rounded-lg text-center transition-all" style="display:none; padding:10px; background:#FEE2E2; color:#DC2626; border-radius:8px; text-align:center; border:1px solid #FECACA; margin-bottom: 15px;">
                     Verifica tu usuario o contraseña
                 </div>
+                
                 <button id="submitBtn" class="w-full flex justify-center items-center py-3.5 px-4 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-dark shadow-sm transition-all" style="width:100%; padding:14px; background:#DC2626; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px;" type="submit">Iniciar Sesión</button>
             </form>
-            <p style="text-align: center; color: rgba(255,255,255,0.8); font-size: 12px; margin-top: 20px;">© 2026 TIM HORTONS. Todos los derechos reservados.</p>
+        </div>
+        <div class="mt-8 text-center" style="margin-top: 2rem;">
+            <p class="text-[12px] font-medium uppercase tracking-widest text-white/80" style="color:rgba(255,255,255,0.8); font-size:12px; margin:0;">
+                © 2026 TIM HORTONS. Todos los derechos reservados.
+            </p>
         </div>
     </div>
     <div id="app-screen" style="display: none;">
@@ -159,7 +183,11 @@
                 <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo">
                 <h1 class="system-title">Ordenes de Servicio</h1>
             </div>
-            <div class="header-right"><div class="user-menu"><button class="user-circle-btn"><span class="user-circle-initial">U</span></button></div></div>
+            <div class="header-right">
+                <div class="user-menu">
+                    <button class="user-circle-btn"><span class="user-circle-initial" id="user-initial-header">U</span></button>
+                </div>
+            </div>
         </header>
 
         <div class="main-layout">
@@ -172,7 +200,7 @@
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
                             <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
-                            <a href="#" class="sidebar-link" id="nav-crear-orden" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                            <a href="#" class="sidebar-link" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
                         
                         <div class="sidebar-section" id="nav-seccion-admin">
@@ -192,25 +220,27 @@
             </aside>
             <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
 
-            <main class="main-content app-content">
-
-                <div id="welcome-banner" style="text-align: center; padding: 20px 20px 0 20px; max-width: 900px; margin: 0 auto;">
-                    <h2 style="margin:0; font-size:18px; color:#6b7280; font-weight: 500;">Bienvenido</h2>
-                    <h1 id="vendor-name-display" style="margin:5px 0 0 0; font-size:24px; color:#DC2626; font-weight:bold; text-transform: uppercase;">PROVEEDOR</h1>
-                </div>
+            <main class="main-content app-content p-4 sm:p-6">
 
                 <div id="vista-inicio" class="modulo-vista">
-                    <div style="text-align: center; padding-top: 30px;">
+                    <div style="text-align: center; padding-top: 30px; padding-bottom: 50px;">
                         <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
-                        <p style="color: #666;">Selecciona una opción del menú lateral.</p>
+                        <h2>Bienvenido al Sistema</h2>
+                        <p style="color: #666; margin-bottom: 40px;">Selecciona una opción del menú lateral para comenzar.</p>
+                        
+                        <div style="border-top: 1px solid #e5e7eb; pt-8; mt-10; max-width: 400px; margin: 50px auto 0 auto;">
+                           <p style="color:#94a3b8; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-top:20px;">
+                               © 2026 TIM HORTONS - TODOS LOS DERECHOS RESERVADOS.
+                           </p>
+                        </div>
                     </div>
                 </div>
 
                 <div id="vista-mantenimiento" class="modulo-vista activa">
-                    <div class="reporte-container" style="max-width: 900px; margin: 0 auto; padding: 20px;">
+                    <div class="reporte-container" style="max-width: 1000px; margin: 0 auto;">
                         <header class="page-header-section">
                             <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
-                            <p style="color: #6b7280; margin: 0;">Registrar orden de servicio - Tim Hortons</p>
+                            <p style="color: #6b7280; margin: 0;">Registrar orden de servicio - Tim Hortons México</p>
                         </header>
                         
                         <form id="ordenMttoForm">
@@ -236,7 +266,7 @@
                                 <h3 class="section-title"><i data-lucide="ticket"></i> Tickets</h3>
                                 <div class="form-group">
                                     <label class="form-label" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Número de Ticket GLPI / Interno</label>
-                                    <input type="text" class="form-input" placeholder="Ej. 10293">
+                                    <input type="text" class="form-input" id="ticket_glpi" placeholder="Ej. 10293">
                                 </div>
                             </div>
 
@@ -255,11 +285,12 @@
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="alert-triangle"></i> Descripción de la falla</h3>
                                 <div class="form-group" style="margin-bottom: 15px;">
-                                    <textarea class="form-input" rows="3" placeholder="Describe detalladamente la falla reportada..." required></textarea>
+                                    <textarea class="form-input" id="desc_falla" rows="3" placeholder="Describe detalladamente la falla reportada..." required></textarea>
                                 </div>
+                                
                                 <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Falla - Máx 3)</label>
                                 <div class="photo-controls">
-                                    <button type="button" class="btn-photo" onclick="triggerCamera('falla')"><i data-lucide="camera"></i> Tomar Foto</button>
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('falla')"><i data-lucide="camera"></i> Toma Foto</button>
                                     <button type="button" class="btn-photo-secondary" onclick="triggerFile('falla')"><i data-lucide="upload"></i> Subir Archivo</button>
                                 </div>
                                 <div id="photoGridFalla" class="photo-grid-slots">
@@ -272,11 +303,12 @@
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="wrench"></i> Descripción de la solución</h3>
                                 <div class="form-group" style="margin-bottom: 15px;">
-                                    <textarea class="form-input" rows="3" placeholder="Describe el trabajo realizado..." required></textarea>
+                                    <textarea class="form-input" id="desc_solucion" rows="3" placeholder="Describe el trabajo realizado..." required></textarea>
                                 </div>
+                                
                                 <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Solución - Máx 3)</label>
                                 <div class="photo-controls">
-                                    <button type="button" class="btn-photo" onclick="triggerCamera('solucion')"><i data-lucide="camera"></i> Tomar Foto</button>
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('solucion')"><i data-lucide="camera"></i> Toma Foto</button>
                                     <button type="button" class="btn-photo-secondary" onclick="triggerFile('solucion')"><i data-lucide="upload"></i> Subir Archivo</button>
                                 </div>
                                 <div id="photoGridSolucion" class="photo-grid-slots">
@@ -288,25 +320,24 @@
 
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3>
-                                <div class="info-grid" style="margin-bottom: 20px;">
-                                    <div class="info-item"><label>Proveedor Oficial</label><span id="prov-info-nombre" style="color:#DC2626; font-weight:bold;">-</span></div>
-                                    <div class="info-item"><label>RFC</label><span id="prov-info-rfc">-</span></div>
+                                
+                                <div class="info-grid" style="margin-bottom: 20px; background-color: #f0fdf4; border-color: #bbf7d0;">
+                                    <div class="info-item"><label>Proveedor</label><span id="prov-info-nombre" style="color:#166534; font-weight:bold;">-</span></div>
                                     <div class="info-item"><label>Contacto</label><span id="prov-info-cont">-</span></div>
                                     <div class="info-item"><label>Teléfono</label><span id="prov-info-tel">-</span></div>
-                                    <div class="info-item"><label>Correo</label><span id="prov-info-mail" style="word-break: break-all;">-</span></div>
                                 </div>
 
                                 <div class="form-group" style="margin-bottom: 15px;">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Nombre del técnico en sitio</label>
-                                    <input type="text" class="form-input" required placeholder="Nombre completo">
+                                    <input type="text" class="form-input" id="nombre_tecnico" required placeholder="Nombre completo">
                                 </div>
                                 <div class="form-group" style="margin-bottom: 15px;">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Celular del técnico</label>
-                                    <input type="text" class="form-input" required placeholder="10 dígitos">
+                                    <input type="text" class="form-input" id="celular_tecnico" required placeholder="10 dígitos">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida</label>
-                                    <textarea class="form-input" rows="2" placeholder="Observaciones finales..." required></textarea>
+                                    <textarea class="form-input" id="comentario_salida" rows="2" placeholder="Observaciones finales antes de retirarse..." required></textarea>
                                 </div>
                             </div>
 
@@ -322,18 +353,109 @@
                             </div>
 
                             <div class="submit-section">
-                                <button type="button" class="draft-btn submit-btn" onclick="alert('Borrador guardado.')" style="border: 1px solid #d1d5db; color: #111827;"><i data-lucide="save"></i> Guardar Borrador</button>
-                                <button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden</button>
+                                <button type="submit" class="submit-btn btn-submit-order"><i data-lucide="send"></i> Enviar Orden de Servicio</button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <div id="vista-ordenes-servicio" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1></header></div></div>
-                <div id="vista-confirmacion" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Confirmación Operativa</h1></header><div class="empty-state"><i data-lucide="clipboard-check"></i><h3>Sin registros pendientes</h3></div></div></div>
-                <div id="vista-costos" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1></header><div class="empty-state"><i data-lucide="calculator"></i><h3>Sin registros</h3></div></div></div>
-                <div id="vista-aprobacion" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1></header><div class="empty-state"><i data-lucide="badge-check"></i><h3>Sin registros</h3></div></div></div>
-                <div id="vista-facturacion" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Facturación</h1></header><div class="empty-state"><i data-lucide="file-text"></i><h3>Sin registros</h3></div></div></div>
-                <div id="vista-reportes" class="modulo-vista"><div style="padding: 20px;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes</h1></header></div></div>
+                <div id="vista-ordenes-servicio" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1>
+                            <p style="color: #6b7280; margin: 0;">Calendario y registro de preventivos.</p>
+                        </header>
+                        <div class="empty-state"><i data-lucide="calendar-clock"></i><h3>Módulo en desarrollo</h3></div>
+                    </div>
+                </div>
+
+                <div id="vista-confirmacion" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Confirmación Operativa</h1>
+                            <p style="color: #6b7280; margin: 0;">Revisa y aprueba las órdenes de servicio pendientes.</p>
+                        </header>
+                        
+                        <div class="tabs-segmented">
+                            <span class="tab-segment active">Pendientes <span class="tab-segment-count">3</span></span>
+                            <span class="tab-segment">Confirmadas <span class="tab-segment-count">0</span></span>
+                        </div>
+                        
+                        <div class="filters-bar">
+                            <div class="filter-group"><label style="font-size:11px; font-weight:bold; color:#6b7280;">FECHA INICIO</label><input type="date" class="form-input"></div>
+                            <div class="filter-group"><label style="font-size:11px; font-weight:bold; color:#6b7280;">FECHA FIN</label><input type="date" class="form-input"></div>
+                            <button class="draft-btn" style="padding:12px 20px; border-radius:8px;"><i data-lucide="filter"></i> Filtrar</button>
+                        </div>
+                        
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead><tr><th>Folio</th><th>Sucursal</th><th>Tipo</th><th>Fecha</th><th style="text-align:right;">Acción</th></tr></thead>
+                                <tbody>
+                                    <tr><td>OS-2026-001</td><td>Acoxpa</td><td>Correctivo</td><td>10/02/2026</td><td style="text-align:right;"><button class="status-pill status-danger" style="cursor:pointer; padding: 6px 12px;"><i data-lucide="search" style="width:14px;"></i> Revisar</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vista-costos" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1>
+                            <p style="color: #6b7280; margin: 0;">Gestión de costos y cotizaciones de proveedores.</p>
+                        </header>
+                        
+                        <div class="tabs-segmented">
+                            <span class="tab-segment active">Por Cotizar <span class="tab-segment-count">2</span></span>
+                            <span class="tab-segment">Enviados <span class="tab-segment-count">5</span></span>
+                        </div>
+                        
+                        <div class="filters-bar">
+                            <div class="filter-group"><input type="text" class="form-input" placeholder="Buscar folio o sucursal..."></div>
+                            <button class="draft-btn" style="padding:12px 20px; border-radius:8px;"><i data-lucide="search"></i> Buscar</button>
+                        </div>
+
+                        <div class="data-table-container">
+                            <table class="data-table">
+                                <thead><tr><th>Folio</th><th>Sucursal</th><th>Estado</th><th style="text-align:right;">Acción</th></tr></thead>
+                                <tbody>
+                                    <tr><td>OS-2026-001</td><td>Acoxpa</td><td><td><span class="status-pill status-warning">Sin Costos</span></td><td style="text-align:right;"><button class="status-pill status-danger" style="cursor:pointer; padding: 6px 12px;"><i data-lucide="dollar-sign" style="width:14px;"></i> Capturar</button></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vista-aprobacion" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1>
+                            <p style="color: #6b7280; margin: 0;">Revisión y autorización final de costos.</p>
+                        </header>
+                        <div class="tabs-segmented">
+                            <span class="tab-segment active">Pendientes TH <span class="tab-segment-count">0</span></span>
+                            <span class="tab-segment">Aprobados <span class="tab-segment-count">10</span></span>
+                        </div>
+                        <div class="empty-state"><i data-lucide="badge-check"></i><h3>Sin registros pendientes</h3></div>
+                    </div>
+                </div>
+
+                <div id="vista-facturacion" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Facturación</h1>
+                            <p style="color: #6b7280; margin: 0;">Vinculación de folios fiscales (CFDI).</p>
+                        </header>
+                        
+                        <div class="fc-stats">
+                            <div class="fc-stat-card"><div style="font-size:12px; color:#6b7280; font-weight:bold; margin-bottom:5px;">POR FACTURAR</div><div style="font-size:28px; font-weight:bold; color:#DC2626;">7</div></div>
+                            <div class="fc-stat-card"><div style="font-size:12px; color:#6b7280; font-weight:bold; margin-bottom:5px;">TOTAL</div><div style="font-size:28px; font-weight:bold;">$0.00</div></div>
+                        </div>
+                        
+                        <div class="empty-state"><i data-lucide="file-text"></i><h3>Sin facturas cargadas</h3></div>
+                    </div>
+                </div>
+
+                <div id="vista-reportes" class="modulo-vista"><div style="max-width: 1000px; margin: 0 auto;"><header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes</h1></header></div></div>
 
             </main>
         </div>
@@ -358,9 +480,9 @@
         lucide.createIcons();
 
         // =========================================================
-        // PEGA AQUÍ LA NUEVA URL DE TU GOOGLE APPS SCRIPT
+        // URL DE TU GOOGLE APPS SCRIPT (Mantenemos la que ya funciona)
         // =========================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec'; // Tu URL real aquí
 
         window.appData = null;
 
@@ -371,24 +493,22 @@
             else { p.type = 'password'; i.textContent = 'visibility_off'; }
         }
 
+        // --- MANEJO DE LOGIN (Con Fix de Letra B dinámico) ---
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
             const alertMsg = document.getElementById('alertMessage');
             
-            const user = document.getElementById('username').value.trim();
-            const pass = document.getElementById('password').value.trim();
-
-            if (APPS_SCRIPT_URL === 'PEGAR_NUEVA_URL_AQUI') {
-                window.alert("Falta pegar la NUEVA URL del Script en el código HTML.");
-                return;
-            }
+            // Fix anti-espacios celular
+            const userRaw = document.getElementById('username').value;
+            const user = userRaw.trim(); 
+            const passRaw = document.getElementById('password').value;
+            const pass = passRaw.trim();
 
             alertMsg.style.display = 'none';
-            btn.innerText = 'Cargando plataforma...';
+            btn.innerText = 'Verificando...';
             btn.disabled = true;
 
-            // LÓGICA FETCH CON EL NUEVO MANEJO DE ERRORES DEL SERVIDOR
             fetch(APPS_SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify({ username: user, password: pass }),
@@ -399,15 +519,18 @@
                 if (data.valido) {
                     window.appData = data;
 
-                    // Info del Proveedor
-                    document.getElementById('vendor-name-display').innerText = data.nombreProveedor;
+                    // --- FIX IMAGEN 4 y 5: Obtener inicial del usuario (ej. BDN -> B) y ponerla en el header ---
+                    if (user && user.length > 0) {
+                        const inicial = user.charAt(0).toUpperCase();
+                        document.getElementById('user-initial-header').innerText = inicial;
+                    }
+
+                    // Llenar info del proveedor en la forma
                     document.getElementById('prov-info-nombre').innerText = data.nombreProveedor;
-                    document.getElementById('prov-info-rfc').innerText = data.proveedorInfo.rfc;
                     document.getElementById('prov-info-cont').innerText = data.proveedorInfo.contacto;
                     document.getElementById('prov-info-tel').innerText = data.proveedorInfo.telefono;
-                    document.getElementById('prov-info-mail').innerText = data.proveedorInfo.correo;
 
-                    // Datalist Sucursales
+                    // Llenar datalist sucursales
                     const listaSuc = document.getElementById('sucursales-list');
                     listaSuc.innerHTML = '';
                     data.sucursales.forEach(s => {
@@ -416,7 +539,7 @@
                         listaSuc.appendChild(opt);
                     });
 
-                    // Select Áreas
+                    // Llenar select áreas
                     const selectArea = document.getElementById('area-select');
                     selectArea.innerHTML = '<option value="">Seleccione un área...</option>';
                     Object.keys(data.areas).forEach(a => {
@@ -425,12 +548,13 @@
                         selectArea.appendChild(opt);
                     });
 
+                    // Cambiar pantallas
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-screen').style.display = 'block';
-                    
+                    lucide.createIcons(); // Re-render icons en header
+
+                    // Control Privilegios
                     if(data.privilegio == 2 || data.privilegio == "2") {
-                        document.getElementById('nav-inicio').style.display = 'none';
-                        document.getElementById('nav-crear-orden').style.display = 'none';
                         document.getElementById('nav-seccion-admin').style.display = 'none';
                         document.getElementById('nav-seccion-reportes').style.display = 'none';
                     }
@@ -438,16 +562,15 @@
                     inicializarFirma();
                     cambiarVista(null, 'vista-mantenimiento');
                 } else {
-                    // Muestra el error exacto que nos envía Google Apps Script
-                    alertMsg.innerText = data.error || "Usuario o contraseña incorrectos.";
+                    alertMsg.innerText = data.error || "Verifica tu usuario o contraseña";
                     alertMsg.style.display = 'block';
                     btn.innerText = 'Iniciar Sesión';
                     btn.disabled = false;
                 }
             })
             .catch(error => {
-                console.error('Error de red:', error);
-                alertMsg.innerText = "Error de conexión con el servidor de Google.";
+                console.error('Error:', error);
+                alertMsg.innerText = "Error de conexión con la base de datos.";
                 alertMsg.style.display = 'block';
                 btn.innerText = 'Iniciar Sesión';
                 btn.disabled = false;
@@ -484,7 +607,7 @@
             }
         });
 
-        // Navegación
+        // Navegación SPA
         function cambiarVista(event, idVista) {
             if(event) event.preventDefault();
             document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
@@ -498,14 +621,14 @@
         toggles.forEach(t => { t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
         document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
-        // FOTOS Y CÁMARA (Falla y Solución)
+        // CÁMARA Y FOTOS (Lógica unificada Falla/Solución)
         let fotos = { falla: [null, null, null], solucion: [null, null, null] };
         let activeTarget = 'falla';
         
         function triggerFile(target) { 
             activeTarget = target;
             if(fotos[target].filter(f => f !== null).length < 3) document.getElementById('fileInputGlobal').click(); 
-            else window.alert("Máximo 3 fotos para esta sección."); 
+            else window.alert("Máximo 3 fotos."); 
         }
         
         function processFile(input) { 
@@ -513,10 +636,7 @@
             const reader = new FileReader(); 
             reader.onload = function(e) { 
                 const slotVacio = fotos[activeTarget].findIndex(f => f === null);
-                if(slotVacio > -1) {
-                    fotos[activeTarget][slotVacio] = e.target.result; 
-                    renderSlots(activeTarget);
-                }
+                if(slotVacio > -1) { fotos[activeTarget][slotVacio] = e.target.result; renderSlots(activeTarget); }
                 input.value = ''; 
             }; 
             reader.readAsDataURL(input.files[0]); 
@@ -533,22 +653,13 @@
             } catch (err) { window.alert("Permiso denegado."); }
         }
         
-        function closeCamera() { 
-            if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); } 
-            document.getElementById('camera-overlay').style.display = 'none'; 
-        }
-        
+        function closeCamera() { if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); } document.getElementById('camera-overlay').style.display = 'none'; }
         function captureFoto() { 
-            const canvasT = document.getElementById('tempCanvas');
-            const video = document.getElementById('camera-video');
+            const canvasT = document.getElementById('tempCanvas'); const video = document.getElementById('camera-video');
             canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
             canvasT.getContext('2d').drawImage(video, 0, 0, canvasT.width, canvasT.height); 
-            
             const slotVacio = fotos[activeTarget].findIndex(f => f === null);
-            if(slotVacio > -1) {
-                fotos[activeTarget][slotVacio] = canvasT.toDataURL('image/jpeg', 0.8);
-                renderSlots(activeTarget);
-            }
+            if(slotVacio > -1) { fotos[activeTarget][slotVacio] = canvasT.toDataURL('image/jpeg', 0.8); renderSlots(activeTarget); }
             closeCamera(); 
         }
         
@@ -568,7 +679,7 @@
             lucide.createIcons();
         }
 
-        // FIRMA TÁCTIL
+        // FIRMA
         let canvasFirma, ctxFirma;
         function inicializarFirma() {
             canvasFirma = document.getElementById('firma_tecnico');
@@ -588,8 +699,10 @@
         }
         function limpiarFirma(id) { ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
 
+        // Inicialización icons
         renderSlots('falla');
         renderSlots('solucion');
     </script>
 </body>
 </html>
+    
