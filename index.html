@@ -29,9 +29,10 @@
     <style>
         body { margin: 0; padding: 0; background-color: #f8fafc; }
         
-        /* LOGIN MOBILE SPACING - Asegura franjas rojas a los lados en celular */
-        #login-screen { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; box-sizing: border-box; }
-        #login-card { width: 100%; max-width: 420px; box-sizing: border-box; }
+        /* FIX CELULAR: Fondo rojo siempre visible con padding */
+        #login-screen { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        /* La tarjeta toma el 100% del espacio PERO respetando el padding de 20px (franjas rojas) */
+        #login-card { width: 100%; max-width: 420px; background: white; border-radius: 24px; box-sizing: border-box; padding: 32px 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
         
         .modulo-vista { display: none; animation: fadeIn 0.3s ease-in-out; }
         .modulo-vista.activa { display: block; }
@@ -44,17 +45,14 @@
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* CAMPOS DE TEXTO GRISES Y REDONDOS */
         .form-input, .form-select, textarea.form-input { width: 100% !important; padding: 14px 16px !important; background-color: #F3F4F6 !important; border: 1px solid transparent !important; border-radius: 12px !important; font-size: 14px !important; color: #1F2937 !important; box-sizing: border-box !important; font-family: inherit !important; outline: none !important; transition: all 0.2s ease !important; }
         .form-input:focus, .form-select:focus, textarea.form-input:focus { background-color: #FFFFFF !important; border: 1px solid #DC2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important; }
         
-        /* TARJETAS Y CONTENEDORES */
         .form-card, .data-table-container, .filters-bar, .fc-stat-card, .rpt-card { background: #FFFFFF; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #E5E7EB; margin-bottom: 24px; }
         .form-card { padding: 30px; width: 100%; }
         .data-table-container { overflow-x: auto; margin-bottom: 20px; padding: 0; border: 1px solid #E5E7EB; border-radius: 12px; overflow: hidden; }
         .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px !important; font-weight: 600 !important; color: #111827 !important; margin: 0 0 20px 0 !important; padding-bottom: 12px !important; border-bottom: 1px solid #f3f4f6 !important; text-transform: none !important; }
         
-        /* FOTOS Y CAMARA */
         .photo-controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
         @media (min-width: 640px) { .photo-controls { display: flex; grid-template-columns: none; } }
         
@@ -68,7 +66,6 @@
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; transition: transform 0.2s; }
         .remove-photo { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 22px; cursor: pointer; font-size: 16px; font-weight: bold; z-index: 10; }
         
-        /* MODALES BLINDADOS */
         .modal-enlarger { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
         .modal-enlarger.show { display: flex !important; }
         .modal-content-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; animation: zoomIn 0.3s ease-out; cursor: zoom-out; }
@@ -80,18 +77,12 @@
         
         @keyframes zoomIn { from {transform:scale(0.8); opacity: 0;} to {transform:scale(1); opacity: 1;} }
 
-        /* FIRMA Y BOTONES INFERIORES */
         .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
         .signature-pad { width: 100%; height: 200px; cursor: crosshair; touch-action: none; display: block; } 
-        .submit-section { display: flex; flex-direction: column; gap: 15px; margin-top: 30px; align-items: stretch; max-width: 400px; margin-left: auto; margin-right: auto; padding-bottom: 50px; }
-        .btn-submit-order { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 44px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); transition: all 0.2s; width: 100%; }
-        .draft-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 44px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: white; border: 1px solid #d1d5db; color: #111827; width: 100%; }
 
-        /* DATA CARDS */
         .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
         @media (min-width: 768px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .info-grid { grid-template-columns: repeat(3, 1fr); } }
-
         .info-item label { display: block; font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 2px; }
         .info-item span { display: block; font-size: 13px; color: #111827; font-weight: 500; }
     </style>
@@ -99,7 +90,7 @@
 <body class="has-sidebar">
 
     <div id="login-screen">
-        <div id="login-card" class="bg-surface rounded-2xl shadow-premium border border-slate-100 overflow-hidden p-8 sm:p-10" style="background: white;">
+        <div id="login-card">
             <div class="flex flex-col items-center mb-4">
                 <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
                 <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
@@ -192,7 +183,7 @@
                         <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
                         <p style="color: #666; margin-bottom: 40px;">Selecciona una opción del menú lateral para comenzar.</p>
                         
-                        <div style="border-top: 1px solid #e5e7eb; padding-top: 32px; mt-10; max-width: 400px; margin: 50px auto 0 auto;">
+                        <div style="border-top: 1px solid #e5e7eb; padding-top: 32px; max-width: 400px; margin: 50px auto 0 auto;">
                            <p style="color:#94a3b8; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-top:20px;">
                                © 2026 TIM HORTONS - TODOS LOS DERECHOS RESERVADOS.
                            </p>
@@ -203,7 +194,7 @@
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 1000px; margin: 0 auto; position: relative; padding-bottom: 20px;">
                         
-                        <header class="page-header-section" style="margin-bottom: 35px; border-bottom: 1px solid #e5e7eb; padding-bottom: 16px;">
+                        <header class="page-header-section" style="margin-bottom: 40px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px;">
                             <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
                             <p style="color: #6b7280; margin: 0;">Registrar orden de servicio - Tim Hortons México</p>
                         </header>
@@ -213,7 +204,7 @@
                                 <h3 class="section-title"><i data-lucide="map-pin"></i> Ubicación</h3>
                                 <div class="form-group">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Sucursal Tim Hortons</label>
-                                    <input class="form-input" id="sucursal-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." required>
+                                    <input class="form-input" id="sucursal-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." required autocomplete="off">
                                     <datalist id="sucursales-list"></datalist>
                                     
                                     <div id="sucursal-details" class="info-grid" style="display:none;">
@@ -239,7 +230,7 @@
                                 <h3 class="section-title"><i data-lucide="layers"></i> Área Afectada</h3>
                                 <div class="form-group" style="margin-bottom: 15px;">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Área</label>
-                                    <input class="form-input" id="area-input" list="areas-list" placeholder="Escribe para buscar área..." required>
+                                    <input class="form-input" id="area-input" list="areas-list" placeholder="Escribe para buscar área..." required autocomplete="off">
                                     <datalist id="areas-list"></datalist>
                                 </div>
                                 <div class="form-group">
@@ -315,19 +306,19 @@
                                 <div class="form-group">
                                     <div class="signature-container"><canvas id="firma_tecnico" class="signature-pad"></canvas></div>
                                     <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
-                                        <button type="button" onclick="limpiarFirma('firma_tecnico')" class="draft-btn" style="padding: 6px 12px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #d1d5db; background: white; color: #4b5563; width: auto;"><i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar</button>
+                                        <button type="button" onclick="limpiarFirma('firma_tecnico')" style="padding: 6px 12px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #d1d5db; background: white; color: #4b5563; cursor:pointer;"><i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar</button>
                                     </div>
                                     <input type="hidden" id="firma_tecnico_data" required>
                                 </div>
                             </div>
 
-                            <div style="height: 12px; background-color: #DC2626; width: 100%; border-radius: 6px; margin-top: 25px; margin-bottom: 25px;"></div>
+                            <div style="height: 12px; background-color: #DC2626; width: 100%; border-radius: 6px; margin-top: 35px; margin-bottom: 25px;"></div>
 
-                            <div class="submit-section">
-                                <button type="button" class="draft-btn" onclick="alert('Borrador guardado localmente.')">
+                            <div class="submit-section" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: stretch; max-width: 400px; margin-left: auto; margin-right: auto; padding-bottom: 40px;">
+                                <button type="button" onclick="alert('Borrador guardado localmente.')" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: white; border: 1px solid #d1d5db; color: #111827; width: 100%;">
                                     <i data-lucide="save"></i> Guardar Borrador
                                 </button>
-                                <button type="submit" class="btn-submit-order">
+                                <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); width: 100%;">
                                     <i data-lucide="send"></i> Enviar Orden
                                 </button>
                             </div>
@@ -395,8 +386,8 @@
     <div id="camera-overlay">
         <div id="camera-stream"><video id="camera-video" autoplay="true"></video></div>
         <div class="camera-controls">
-            <button class="draft-btn" onclick="closeCamera()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:white; width: auto;">Cerrar</button>
-            <button class="btn-submit-order" onclick="captureFoto()" style="padding:10px 20px; border-radius:8px; width: auto;">Capturar</button>
+            <button onclick="closeCamera()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer;">Cerrar</button>
+            <button onclick="captureFoto()" style="padding:10px 20px; border-radius:8px; background:#DC2626; color:white; border:none; cursor:pointer;">Capturar</button>
         </div>
     </div>
     
@@ -407,9 +398,7 @@
     <script>
         lucide.createIcons();
 
-        // =========================================================
-        // URL DE TU GOOGLE APPS SCRIPT
-        // =========================================================
+        // LA URL YA ESTÁ AQUÍ. ELIMINÉ EL BLOQUEO POR SEGURIDAD.
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
 
         window.appData = null;
@@ -497,7 +486,7 @@
             })
             .catch(error => {
                 console.error('Error:', error);
-                alertMsg.innerText = "Error de conexión con la base de datos.";
+                alertMsg.innerText = "Error fatal de conexión con la base de datos.";
                 alertMsg.style.display = 'block';
                 btn.innerText = 'Iniciar Sesión';
                 btn.disabled = false;
