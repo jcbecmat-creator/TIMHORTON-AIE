@@ -265,7 +265,7 @@
 
     <script>
         // ==========================================
-        // AUTO-RELLENADO AL ABRIR LA PÁGINA
+        // ACTUALIZADO: LOGICA DE RELLENADO Y SOPORTE
         // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             const dataStr = sessionStorage.getItem('DatosOrdenPDF');
@@ -273,7 +273,7 @@
             if(dataStr) {
                 const data = JSON.parse(dataStr);
                 
-                // Textos Página 1
+                // --- Rellenado de textos (Página 1 y 2) ---
                 document.getElementById('pdf-sucursal').innerText = data.sucursal;
                 document.getElementById('pdf-dir').innerText = data.suc_dir;
                 document.getElementById('pdf-col').innerText = data.suc_col;
@@ -281,21 +281,18 @@
                 document.getElementById('pdf-hor').innerText = data.suc_hor;
                 document.getElementById('pdf-tel').innerText = data.suc_tel;
                 document.getElementById('pdf-mail').innerText = data.suc_mail;
-                
                 document.getElementById('pdf-ticket').innerText = data.ticket;
                 document.getElementById('pdf-fecha').innerText = data.fecha_hora;
                 document.getElementById('pdf-area').innerText = data.area;
                 document.getElementById('pdf-subarea').innerText = data.subarea;
-                
                 document.getElementById('pdf-desc-falla').innerText = data.desc_falla;
                 document.getElementById('pdf-desc-sol').innerText = data.desc_solucion;
-                
                 document.getElementById('pdf-tec-nom').innerText = data.tec_nombre;
                 document.getElementById('pdf-tec-cel').innerText = data.tec_celular;
                 document.getElementById('pdf-tec-empresa').innerText = data.prov_nombre;
                 document.getElementById('pdf-comentario').innerText = data.comentario;
 
-                // Textos Página 2
+                // Página 2 textos
                 document.getElementById('pdf-sucursal-2').innerText = data.sucursal;
                 document.getElementById('pdf-dir-2').innerText = data.suc_dir;
                 document.getElementById('pdf-col-2').innerText = data.suc_col;
@@ -305,7 +302,6 @@
                 document.getElementById('pdf-mail-2').innerText = data.suc_mail;
                 document.getElementById('pdf-ticket-2').innerText = data.ticket;
                 document.getElementById('pdf-fecha-2').innerText = data.fecha_hora;
-
                 document.getElementById('pdf-prov-nombre').innerText = data.prov_nombre;
                 document.getElementById('pdf-prov-rfc').innerText = data.prov_rfc;
                 document.getElementById('pdf-prov-dir').innerText = data.prov_dir;
@@ -333,13 +329,14 @@
                     document.getElementById('pdf-firma').innerHTML = `<img src="${data.firma}">`;
                 }
 
-                // Puedes inyectar la Foto 1 de la falla en la foto del técnico si lo deseas, o dejarlo en blanco.
-                if(data.fotos_solucion[0]) {
-                    // document.getElementById('pdf-foto-tecnico').innerHTML = `<img src="${data.fotos_solucion[0]}">`;
+                // NUEVO AGREGADO: Inyectar foto de Soporte Físico en la Página 2
+                if(data.foto_soporte) {
+                    // caja-soporte-fisico es el ID del recuadro gris en la pág 2
+                    document.getElementById('pdf-soporte-fisico').innerHTML = `<img src="${data.foto_soporte}">`;
                 }
 
             } else {
-                alert("No se encontraron datos. Por favor regresa a la aplicación y llena la orden nuevamente.");
+                alert("No se encontraron datos. Por favor regresa a la aplicación.");
             }
         });
 
