@@ -396,14 +396,13 @@
     <div id="photoModal" class="modal-enlarger" onclick="closePhotoModal()">
         <img class="modal-content-img" id="imgFull">
     </div>
-
-    <script>
+<script>
         lucide.createIcons();
 
         // =========================================================
-        // URL DE TU GOOGLE APPS SCRIPT
+        // URL DE TU GOOGLE APPS SCRIPT (Pegada una sola vez)
         // =========================================================
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec'; // Pega tu URL real aquí
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
 
         window.appData = null;
 
@@ -423,11 +422,6 @@
             const user = userRaw.trim(); 
             const passRaw = document.getElementById('password').value;
             const pass = passRaw.trim();
-
-            if (APPS_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec') {
-                window.alert("Falta pegar la URL real de tu Google Apps Script en el código HTML.");
-                return;
-            }
 
             alertMsg.style.display = 'none';
             btn.innerText = 'Verificando...';
@@ -518,7 +512,6 @@
             } else { container.style.display = 'none'; }
         });
 
-        // FIX AREA: Actualización inteligente para no cerrar la lista nativa del celular
         document.getElementById('area-input').addEventListener('input', function(e) {
             const val = e.target.value;
             const subSelect = document.getElementById('subarea-select');
@@ -599,7 +592,6 @@
         
         function removeFoto(target, index) { fotos[target][index] = null; renderSlots(target); }
         
-        // FIX ZOOM FOTOS: Lógica y mapeo de clicks para abrir y cerrar fotos
         function enlargePhoto(src) {
             const modal = document.getElementById('photoModal');
             document.getElementById('imgFull').src = src;
