@@ -170,7 +170,7 @@
             </aside>
             <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
 
-            <main class="main-content app-content p-4 sm:p-6">
+            <main class="main-content app-content p-4 sm:p-6" id="main-scroll-area">
                 
                 <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px;">
                     <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
@@ -293,11 +293,26 @@
                                 </div>
                                 <div class="form-group" style="margin-bottom: 15px;">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Celular del técnico</label>
-                                    <input type="text" class="form-input" id="celular_tecnico" required placeholder="10 dígitos (Sin espacios/letras)">
+                                    <input type="tel" class="form-input" id="celular_tecnico" required placeholder="10 dígitos (Sin espacios/letras)">
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida del técnico</label>
                                     <textarea class="form-input" id="comentario_salida" rows="2" placeholder="Observaciones finales antes de retirarse..." required></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="user-check"></i> Selfie del técnico en sitio</h3>
+                                
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Selfie - Máx 1)</label>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('selfie')"><i data-lucide="camera"></i> Toma Foto</button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('selfie')"><i data-lucide="upload"></i> Subir Archivo</button>
+                                </div>
+                                <div style="display: flex; justify-content: center; margin-top: 15px;">
+                                    <div class="photo-slot" id="slot-selfie-0" style="width: 150px; height: 150px;">
+                                        <i data-lucide="image" class="slot-placeholder-icon"></i>
+                                    </div>
                                 </div>
                             </div>
 
@@ -322,21 +337,6 @@
                                 </div>
                                 <div style="display: flex; justify-content: center; margin-top: 15px;">
                                     <div class="photo-slot" id="slot-soporte-0" style="width: 150px; height: 150px;">
-                                        <i data-lucide="image" class="slot-placeholder-icon"></i>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-card">
-                                <h3 class="section-title"><i data-lucide="user-check"></i> Selfie del técnico en sitio</h3>
-                                
-                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Selfie - Máx 1)</label>
-                                <div class="photo-controls">
-                                    <button type="button" class="btn-photo" onclick="triggerCamera('selfie')"><i data-lucide="camera"></i> Toma Foto</button>
-                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('selfie')"><i data-lucide="upload"></i> Subir Archivo</button>
-                                </div>
-                                <div style="display: flex; justify-content: center; margin-top: 15px;">
-                                    <div class="photo-slot" id="slot-selfie-0" style="width: 150px; height: 150px;">
                                         <i data-lucide="image" class="slot-placeholder-icon"></i>
                                     </div>
                                 </div>
@@ -422,15 +422,28 @@
     <canvas id="tempCanvas" style="display:none"></canvas>
 
     <div id="camera-overlay">
-        <div id="camera-stream"><video id="camera-video" autoplay="true"></video></div>
+        <div id="camera-stream"><video id="camera-video" autoplay="true" playsinline></video></div>
         <div class="camera-controls">
-            <button onclick="closeCamera()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer;">Cerrar</button>
-            <button onclick="captureFoto()" style="padding:10px 20px; border-radius:8px; background:#DC2626; color:white; border:none; cursor:pointer;">Capturar</button>
+            <button onclick="closeCamera()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; color:#374151; font-weight:bold;">Cerrar</button>
+            <button onclick="switchCamera()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:#f3f4f6; cursor:pointer; color:#374151; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="refresh-cw"></i> Girar</button>
+            <button onclick="captureFoto()" style="padding:10px 20px; border-radius:8px; background:#DC2626; color:white; border:none; cursor:pointer; font-weight:bold;">Capturar</button>
         </div>
     </div>
     
     <div id="photoModal" class="modal-enlarger" onclick="closePhotoModal()">
         <img class="modal-content-img" id="imgFull">
+    </div>
+
+    <div id="custom-confirm" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:9999999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+        <div style="background:white; border-radius:16px; padding:24px; width:100%; max-width:320px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+            <div style="margin-bottom:16px; color:#DC2626; display:flex; justify-content:center;"><i data-lucide="alert-circle" style="width:48px; height:48px;"></i></div>
+            <h3 id="confirm-title" style="margin:0 0 8px 0; font-size:18px; color:#111827; font-family:'Inter', sans-serif;">Confirmar</h3>
+            <p id="confirm-msg" style="margin:0 0 20px 0; font-size:14px; color:#4b5563; font-family:'Inter', sans-serif;">¿Estás seguro?</p>
+            <div style="display:flex; gap:12px;">
+                <button onclick="closeConfirm()" style="flex:1; padding:12px; border-radius:8px; background:white; border:1px solid #d1d5db; color:#374151; font-weight:600; cursor:pointer;">Cancelar</button>
+                <button id="confirm-btn-action" style="flex:1; padding:12px; border-radius:8px; background:#DC2626; border:none; color:white; font-weight:600; cursor:pointer;">Aceptar</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -513,6 +526,7 @@
                     
                     inicializarFirma();
                     cambiarVista(null, 'vista-mantenimiento');
+                    document.querySelector('.app-content').scrollTo({top: 0, behavior: 'instant'});
                 } else {
                     alertMsg.innerText = data.error || "Verifica tu usuario o contraseña";
                     alertMsg.style.display = 'block';
@@ -589,6 +603,7 @@
 
         let fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
         let activeTarget = 'falla';
+        let currentFacingMode = 'environment';
         
         function triggerFile(target) { 
             activeTarget = target;
@@ -611,11 +626,24 @@
         async function triggerCamera(target) {
             activeTarget = target;
             if(fotos[target].filter(f => f !== null).length >= fotos[target].length) { window.alert("Límite de fotos alcanzado."); return; }
+            
+            // LÓGICA DE CÁMARA FRONTAL AUTOMÁTICA PARA SELFIE
+            currentFacingMode = (target === 'selfie') ? 'user' : 'environment';
+            await startCamera();
+        }
+
+        async function startCamera() {
+            if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); }
             try { 
-                currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } }); 
+                currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } }); 
                 document.getElementById('camera-video').srcObject = currentStream; 
                 document.getElementById('camera-overlay').classList.add('show'); 
-            } catch (err) { window.alert("Permiso denegado."); }
+            } catch (err) { window.alert("Permiso denegado o cámara no disponible."); }
+        }
+
+        function switchCamera() {
+            currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
         }
         
         function closeCamera() { 
@@ -626,7 +654,17 @@
         function captureFoto() { 
             const canvasT = document.getElementById('tempCanvas'); const video = document.getElementById('camera-video');
             canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
-            canvasT.getContext('2d').drawImage(video, 0, 0, canvasT.width, canvasT.height); 
+            
+            // Efecto espejo si usamos la frontal, para que la foto se guarde bien
+            const ctx = canvasT.getContext('2d');
+            if (currentFacingMode === 'user') {
+                ctx.translate(canvasT.width, 0);
+                ctx.scale(-1, 1);
+            }
+            ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); 
+            // Reset transforms for next time
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+
             const slotVacio = fotos[activeTarget].findIndex(f => f === null);
             if(slotVacio > -1) { fotos[activeTarget][slotVacio] = canvasT.toDataURL('image/jpeg', 0.8); renderSlots(activeTarget); }
             closeCamera(); 
@@ -676,70 +714,94 @@
         }
         function limpiarFirma(id) { ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
 
+        // Inicializar slots
         renderSlots('falla');
         renderSlots('solucion');
         renderSlots('soporte'); 
         renderSlots('selfie'); 
 
+        // ENVIAR ORDEN: Blindado con try-catch para no fallar
         document.getElementById('ordenMttoForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
+            
+            try {
+                const ordenData = {
+                    sucursal: document.getElementById('sucursal-input').value || '',
+                    suc_dir: document.getElementById('suc-dir').innerText || '',
+                    suc_col: document.getElementById('suc-col').innerText || '',
+                    suc_city: document.getElementById('suc-city').innerText || '',
+                    suc_cp: document.getElementById('suc-cp').innerText || '',
+                    suc_hor: document.getElementById('suc-hor').innerText || '',
+                    suc_tel: document.getElementById('suc-tel').innerText || '',
+                    suc_mail: document.getElementById('suc-mail').innerText || '',
+                    ticket: document.getElementById('ticket_glpi').value || 'S/N',
+                    area: document.getElementById('area-input').value || '',
+                    subarea: document.getElementById('subarea-select').value || '',
+                    desc_falla: document.getElementById('desc_falla').value || '',
+                    fotos_falla: fotos.falla,
+                    desc_solucion: document.getElementById('desc_solucion').value || '',
+                    fotos_solucion: fotos.solucion,
+                    prov_nombre: document.getElementById('prov-info-nombre').innerText || '',
+                    prov_rfc: document.getElementById('prov-info-rfc').innerText || '',
+                    prov_dir: document.getElementById('prov-info-dir').innerText || '',
+                    prov_cont: document.getElementById('prov-info-cont').innerText || '',
+                    prov_tel: document.getElementById('prov-info-tel').innerText || '',
+                    prov_mail: document.getElementById('prov-info-mail').innerText || '',
+                    tec_nombre: document.getElementById('nombre_tecnico').value || '',
+                    tec_celular: document.getElementById('celular_tecnico').value || '',
+                    comentario: document.getElementById('comentario_salida').value || '',
+                    firma: document.getElementById('firma_tecnico_data').value || '',
+                    foto_soporte: fotos.soporte[0], 
+                    foto_selfie: fotos.selfie[0], 
+                    fecha_hora: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })
+                };
 
-            const ordenData = {
-                sucursal: document.getElementById('sucursal-input').value,
-                suc_dir: document.getElementById('suc-dir').innerText,
-                suc_col: document.getElementById('suc-col').innerText,
-                suc_city: document.getElementById('suc-city').innerText,
-                suc_cp: document.getElementById('suc-cp').innerText,
-                suc_hor: document.getElementById('suc-hor').innerText,
-                suc_tel: document.getElementById('suc-tel').innerText,
-                suc_mail: document.getElementById('suc-mail').innerText,
-                ticket: document.getElementById('ticket_glpi').value || 'S/N',
-                area: document.getElementById('area-input').value,
-                subarea: document.getElementById('subarea-select').value,
-                desc_falla: document.getElementById('desc_falla').value,
-                fotos_falla: fotos.falla,
-                desc_solucion: document.getElementById('desc_solucion').value,
-                fotos_solucion: fotos.solucion,
-                prov_nombre: document.getElementById('prov-info-nombre').innerText,
-                prov_rfc: document.getElementById('prov-info-rfc').innerText,
-                prov_dir: document.getElementById('prov-info-dir').innerText,
-                prov_cont: document.getElementById('prov-info-cont').innerText,
-                prov_tel: document.getElementById('prov-info-tel').innerText,
-                prov_mail: document.getElementById('prov-info-mail').innerText,
-                tec_nombre: document.getElementById('nombre_tecnico').value,
-                tec_celular: document.getElementById('celular_tecnico').value,
-                comentario: document.getElementById('comentario_salida').value,
-                firma: document.getElementById('firma_tecnico_data').value,
-                foto_soporte: fotos.soporte[0], 
-                foto_selfie: fotos.selfie[0], 
-                fecha_hora: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })
-            };
-
-            sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
-            window.location.href = 'index2.html';
+                sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
+                window.location.href = 'index2.html';
+            } catch(err) {
+                console.error("Error recolectando datos:", err);
+                alert("Error al procesar la orden. Revisa que todos los campos requeridos estén llenos.");
+            }
         });
 
+        // MODALES DE CONFIRMACIÓN ELEGANTES
+        let confirmCallback = null;
+        function showConfirm(title, msg, callback) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-msg').innerText = msg;
+            confirmCallback = callback;
+            document.getElementById('custom-confirm').style.display = 'flex';
+            lucide.createIcons();
+        }
+        function closeConfirm() {
+            document.getElementById('custom-confirm').style.display = 'none';
+        }
+        document.getElementById('confirm-btn-action').addEventListener('click', function() {
+            closeConfirm();
+            if(confirmCallback) confirmCallback();
+        });
+
+        // BOTÓN NUEVA ORDEN
         document.getElementById('btnNuevaOrden').addEventListener('click', function() {
-            if (window.confirm("¿Seguro que quieres borrar todo y generar una nueva orden? Se perderá la información actual.")) {
+            showConfirm("Nueva Orden", "¿Seguro que quieres borrar todo y generar una nueva orden? Se perderá la información actual.", function() {
                 document.getElementById('ordenMttoForm').reset();
                 document.getElementById('sucursal-details').style.display = 'none';
                 fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
-                renderSlots('falla');
-                renderSlots('solucion');
-                renderSlots('soporte');
-                renderSlots('selfie');
+                renderSlots('falla'); renderSlots('solucion'); renderSlots('soporte'); renderSlots('selfie');
                 limpiarFirma('firma_tecnico');
                 sessionStorage.removeItem('DatosOrdenPDF');
-                alert("Formulario limpio. Ya puedes generar una nueva orden.");
                 cambiarVista(null, 'vista-mantenimiento');
-            }
+                document.querySelector('.app-content').scrollTo({top: 0, behavior: 'smooth'}); // Scroll arriba
+            });
         });
 
+        // BOTÓN CERRAR SESIÓN
         document.getElementById('btnCerrarSesion').addEventListener('click', function() {
-            if (window.confirm("¿Seguro que quieres cerrar sesión? Se borrará la información actual.")) {
+            showConfirm("Cerrar Sesión", "¿Seguro que quieres cerrar sesión? Se borrará la información actual.", function() {
                 sessionStorage.removeItem('DatosOrdenPDF');
-                window.location.reload(); 
-            }
+                window.scrollTo(0,0);
+                window.location.href = window.location.pathname; // Recarga limpia desde arriba
+            });
         });
 
     </script>
