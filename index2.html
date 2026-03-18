@@ -8,19 +8,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
+        /* Variables y Configuración General */
         :root { --tm-red: #c8102e; --tm-green: #15803d; --tm-text: #000000; --tm-border: #b3b3b3; --tm-bg-gray: #f0f0f0; }
         body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 20px; background-color: #555; color: var(--tm-text); font-size: 11px; line-height: 1.3; display: flex; flex-direction: column; align-items: center; }
         
+        /* BOTONES FIJOS EN PARTE SUPERIOR SOBRE EL PDF */
         .btn-descargar { position: fixed; top: 15px; right: 15px; background-color: var(--tm-red); color: white; border: none; padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 1000; }
         .btn-descargar:hover { background-color: #a00d24; }
         
+        /* BOTÓN VERDE SOLICITADO */
         .btn-regresar { position: fixed; top: 15px; left: 15px; background-color: var(--tm-green); color: white; border: none; padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 1000; }
         .btn-regresar:hover { background-color: #106631; }
 
+        /* VISTA ADAPTABLE PARA CELULAR SIN ZOOM (Blindado para no afectar el PDF) */
         @media (max-width: 767px) {
-            body { padding: 60px 0 0 0; } 
-            #contenido-pdf { transform: scale(0.48); transform-origin: top center; margin-top: 10px; width: 210mm; } 
-            .page { box-shadow: none; margin: 0 0 10px 0; padding: 8mm 15mm; border: none; height: auto; } 
+            body:not(.pdf-generating) { padding: 60px 0 0 0; } 
+            body:not(.pdf-generating) #contenido-pdf { transform: scale(0.48); transform-origin: top center; margin-top: 10px; width: 210mm; } 
+            body:not(.pdf-generating) .page { box-shadow: none; margin: 0 0 10px 0; padding: 8mm 15mm; border: none; height: auto; } 
         }
 
         .page { width: 210mm; height: 297mm; background: white; margin: 0 auto 20px auto; padding: 8mm 15mm; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.5); position: relative; display: flex; flex-direction: column; overflow: hidden; }
@@ -31,7 +35,7 @@
         .red-square { width: 18px; height: 18px; background-color: var(--tm-red); margin-right: 10px; }
         
         ul.info-list { list-style: none; padding: 0; margin: 0; }
-        ul.info-list li { display: flex; align-items: center; margin-bottom: 5px; font-size: 11px; color: #333; font-weight: normal; } 
+        ul.info-list li { display: flex; align-items: center; margin-bottom: 5px; font-size: 11px; color: #333; font-weight: normal; } /* Respuestas sin negritas */
         .custom-bullet { display: inline-flex; justify-content: center; align-items: center; width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--tm-red); margin-right: 8px; flex-shrink: 0; }
         .custom-bullet::after { content: ''; width: 4px; height: 4px; background-color: var(--tm-red); border-radius: 50%; }
 
@@ -45,14 +49,14 @@
 
         .main-titles-container { text-align: center; position: relative; margin-bottom: 0px; padding-bottom: 2px; }
         .title-red-centered { color: var(--tm-red); font-size: 16px; font-weight: normal; margin-bottom: 2px; }
-        .ticket-left { position: absolute; bottom: 0; left: 0; text-align: left; font-size: 11px; font-weight: bold; } 
-        .ticket-right { position: absolute; bottom: 0; right: 0; text-align: right; font-size: 11px; line-height: 1.3; font-weight: normal; } 
+        .ticket-left { position: absolute; bottom: 0; left: 0; text-align: left; font-size: 11px; font-weight: bold; } /* Folio en negrita */
+        .ticket-right { position: absolute; bottom: 0; right: 0; text-align: right; font-size: 11px; line-height: 1.3; font-weight: normal; } /* Fecha normal */
 
         .area-container { margin-top: 2px; margin-bottom: 2px; padding-left: 0px; }
-        .area-line { display: flex; align-items: center; margin-bottom: 6px; font-size: 11px; font-weight: bold; } 
+        .area-line { display: flex; align-items: center; margin-bottom: 6px; font-size: 11px; font-weight: bold; } /* Etiquetas en negrita */
         .area-container .area-line:last-child { margin-bottom: 2px; }
 
-        .red-bar-full { background-color: var(--tm-red); color: white; display: flex; align-items: center; padding: 4px 10px; font-size: 11px; font-weight: bold; } 
+        .red-bar-full { background-color: var(--tm-red); color: white; display: flex; align-items: center; padding: 4px 10px; font-size: 11px; font-weight: bold; } /* Barras en negrita */
         .red-bar-full .left-col { width: 40%; display: flex; align-items: center;}
         .red-bar-full .center-col { width: 20%; text-align: center; display: flex; justify-content: center; align-items: center; }
         .bullet-white { display: inline-flex; justify-content: center; align-items: center; width: 8px; height: 8px; border-radius: 50%; border: 1px solid white; margin-right: 8px; flex-shrink: 0; }
@@ -63,7 +67,7 @@
         .photo-box img { width: 100%; height: 100%; object-fit: contain; }
 
         .red-bar-third { background-color: var(--tm-red); color: white; display: flex; align-items: center; padding: 4px 10px; font-size: 11px; width: calc(33.33% - 10px); box-sizing: border-box; font-weight: bold; }
-        .text-input-box { border: 1px solid var(--tm-border); padding: 6px 10px; min-height: 30px; margin-top: 0; margin-bottom: 10px; background-color: white; font-weight: normal; } 
+        .text-input-box { border: 1px solid var(--tm-border); padding: 6px 10px; min-height: 30px; margin-top: 0; margin-bottom: 10px; background-color: white; font-weight: normal; } /* Respuestas sin negritas */
 
         .eval-container { display: flex; gap: 10px; margin-top: 5px; margin-bottom: 10px; align-items: stretch; }
         .eval-left-box { width: 33%; border: 1px solid var(--tm-border); background-color: white; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #ccc; font-size: 10px; }
@@ -72,13 +76,13 @@
         .eval-card { border: 1px solid var(--tm-border); display: flex; flex-direction: column; }
         .empleado-card { grid-column: span 2; }
         .eval-card-header { background-color: var(--tm-red); color: white; padding: 4px 8px; font-size: 10px; display: flex; align-items: center; font-weight: bold; }
-        .eval-card-body { padding: 6px 10px; flex-grow: 1; background-color: white; font-weight: normal; } 
-        .eval-card-body .area-line { margin-bottom: 6px; font-size: 10px; font-weight: normal; } 
+        .eval-card-body { padding: 6px 10px; flex-grow: 1; background-color: white; font-weight: normal; } /* Respuestas sin negritas */
+        .eval-card-body .area-line { margin-bottom: 6px; font-size: 10px; font-weight: normal; } /* Respuestas sin negritas */
         .eval-card-body img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
         .proveedor-grid { display: grid; grid-template-columns: 55% 45%; margin-top: 4px; margin-bottom: 4px; padding-left: 0px; }
         .proveedor-col { display: flex; flex-direction: column; gap: 0px; }
-        .proveedor-col .area-line { margin-bottom: 2px; font-weight: bold; } 
+        .proveedor-col .area-line { margin-bottom: 2px; font-weight: bold; } /* Etiquetas en negrita */
 
         .soporte-fisico-box { background-color: white; border: 1px solid var(--tm-border); flex-grow: 1; margin-top: 3px; margin-bottom: 3px; display: flex; align-items: center; justify-content: center; color: #999; font-size: 14px; font-weight: bold; box-sizing: border-box; overflow: hidden; padding: 10px; }
         .soporte-fisico-box img { width: auto; height: 100%; object-fit: contain; }
@@ -96,7 +100,7 @@
 </head>
 <body>
 
-    <button class="btn-regresar" onclick="window.history.back();">Volver a la App</button>
+    <button class="btn-regresar" onclick="window.location.href='index.html';">Volver a la App</button>
     <button class="btn-descargar" id="btn-descargar" onclick="generarPDF()">Descargar PDF</button>
 
     <div id="contenido-pdf">
@@ -112,7 +116,10 @@
                         <ul class="info-list">
                             <li><i class="custom-bullet"></i> Dirección: <span id="pdf-dir" style="margin-left: 5px; font-weight: normal;"></span></li>
                             <li><i class="custom-bullet"></i> Colonia: <span id="pdf-col" style="margin-left: 5px; font-weight: normal;"></span></li>
+                            
                             <li><i class="custom-bullet"></i> Ciudad / C.P.: <span id="pdf-city" style="margin-left: 5px; font-weight: normal;"></span></li>
+                            <li><i class="custom-bullet"></i> C.P.: <span id="pdf-cp" style="margin-left: 5px; font-weight: normal;"></span></li>
+                            
                             <li><i class="custom-bullet"></i> Horario de servicio: <span id="pdf-hor" style="margin-left: 5px; font-weight: normal;"></span></li>
                             <li><i class="custom-bullet"></i> Teléfono: <span id="pdf-tel" style="margin-left: 5px; font-weight: normal;"></span></li>
                             <li><i class="custom-bullet"></i> Correo electrónico: <span id="pdf-mail" style="margin-left: 5px; font-weight: normal;"></span></li>
@@ -132,6 +139,7 @@
                     <div class="title-red-centered">MANTENIMIENTO</div>
                     
                     <div class="ticket-left">FOLIO: OS-<strong id="pdf-ticket"></strong></div>
+                    
                     <div class="ticket-right">
                         FECHA: <span id="pdf-fecha" style="font-weight: normal;"></span>
                     </div>
@@ -214,7 +222,10 @@
                         <ul class="info-list">
                             <li><i class="custom-bullet"></i> Dirección: <span id="pdf-dir-2" style="margin-left: 5px; font-weight: normal;"></span></li>
                             <li><i class="custom-bullet"></i> Colonia: <span id="pdf-col-2" style="margin-left: 5px; font-weight: normal;"></span></li>
+                            
                             <li><i class="custom-bullet"></i> Ciudad / C.P.: <span id="pdf-city-2" style="margin-left: 5px; font-weight: normal;"></span></li>
+                            <li><i class="custom-bullet"></i> C.P.: <span id="pdf-cp-2" style="margin-left: 5px; font-weight: normal;"></span></li>
+                            
                             <li><i class="custom-bullet"></i> Horario de servicio: <span id="pdf-hor-2" style="margin-left: 5px; font-weight: normal;"></span></li>
                             <li><i class="custom-bullet"></i> Teléfono: <span id="pdf-tel-2" style="margin-left: 5px; font-weight: normal;"></span></li>
                             <li><i class="custom-bullet"></i> Correo electrónico: <span id="pdf-mail-2" style="margin-left: 5px; font-weight: normal;"></span></li>
@@ -233,6 +244,7 @@
                     <div class="title-red-centered">REPORTE DE RECEPCIÓN DE TRABAJOS</div>
                     <div class="title-red-centered">MANTENIMIENTO</div>
                     <div class="ticket-left">FOLIO: OS-<strong id="pdf-ticket-2"></strong></div>
+                    
                     <div class="ticket-right">
                         FECHA: <span id="pdf-fecha-2" style="font-weight: normal;"></span>
                     </div>
@@ -269,16 +281,20 @@
     </div>
 
     <script>
+        // LÓGICA DE RELLENADO Y SOPORTE
         document.addEventListener('DOMContentLoaded', () => {
             const dataStr = sessionStorage.getItem('DatosOrdenPDF');
             
             if(dataStr) {
                 const data = JSON.parse(dataStr);
                 
+                // --- Rellenado de textos (Página 1 y 2) ---
                 document.getElementById('pdf-sucursal').innerText = data.sucursal;
                 document.getElementById('pdf-dir').innerText = data.suc_dir;
                 document.getElementById('pdf-col').innerText = data.suc_col;
-                document.getElementById('pdf-city').innerText = data.suc_city + ' / C.P. ' + data.suc_cp; // Ciudad y luego CP
+                
+                document.getElementById('pdf-city').innerText = data.suc_city.split(" / C.P. ")[0]; // Solo Ciudad
+                document.getElementById('pdf-cp').innerText = data.suc_cp;
                 document.getElementById('pdf-hor').innerText = data.suc_hor;
                 document.getElementById('pdf-tel').innerText = data.suc_tel;
                 document.getElementById('pdf-mail').innerText = data.suc_mail;
@@ -293,11 +309,12 @@
                 document.getElementById('pdf-tec-empresa').innerText = data.prov_nombre;
                 document.getElementById('pdf-comentario').innerText = data.comentario;
 
+                // Página 2 textos
                 document.getElementById('pdf-sucursal-2').innerText = data.sucursal;
                 document.getElementById('pdf-dir-2').innerText = data.suc_dir;
                 document.getElementById('pdf-col-2').innerText = data.suc_col;
-                document.getElementById('pdf-city-2').innerText = data.suc_city + ' / C.P. ' + data.suc_cp; // Ciudad y luego CP
-                document.getElementById('pdf-hor-2').innerText = data.suc_hor;
+                document.getElementById('pdf-city-2').innerText = data.suc_city.split(" / C.P. ")[0]; // Solo Ciudad
+                document.getElementById('pdf-cp-2').innerText = data.suc_cp;
                 document.getElementById('pdf-tel-2').innerText = data.suc_tel;
                 document.getElementById('pdf-mail-2').innerText = data.suc_mail;
                 document.getElementById('pdf-ticket-2').innerText = data.ticket;
@@ -309,22 +326,34 @@
                 document.getElementById('pdf-prov-tel').innerText = data.prov_tel;
                 document.getElementById('pdf-prov-mail').innerText = data.prov_mail;
 
+                // --- Inyección de Imágenes Base64 ---
+                // Fotos Falla
                 data.fotos_falla.forEach((fotoBase64, index) => {
                     if(fotoBase64) { document.getElementById(`pdf-falla-${index}`).innerHTML = `<img src="${fotoBase64}">`; }
                 });
 
+                // Fotos Solución
                 data.fotos_solucion.forEach((fotoBase64, index) => {
                     if(fotoBase64) { document.getElementById(`pdf-sol-${index}`).innerHTML = `<img src="${fotoBase64}">`; }
                 });
 
+                // Firma Táctil
                 if(data.firma) { document.getElementById('pdf-firma').innerHTML = `<img src="${data.firma}">`; }
+
+                // NUEVO: Selfie del Técnico (reemplaza texto en pág 1) blindado
                 if(data.foto_selfie) { document.getElementById('pdf-foto-tecnico').innerHTML = `<img src="${data.foto_selfie}">`; }
+
+                // Soporte Físico (Página 2)
                 if(data.foto_soporte) { document.getElementById('pdf-soporte-fisico').innerHTML = `<img src="${data.foto_soporte}">`; }
 
             } else { alert("No se encontraron datos. Por favor regresa a la aplicación."); }
         });
 
+        // GENERACIÓN DEL PDF AUTOMÁTICO blindado
         function generarPDF() {
+            // Añade la clase que desactiva el modo teléfono
+            document.body.classList.add('pdf-generating');
+
             const btn = document.getElementById('btn-descargar');
             const btnR = document.querySelector('.btn-regresar');
             btn.style.display = 'none';
@@ -344,12 +373,13 @@
             });
 
             const sucursalRaw = document.getElementById('pdf-sucursal').innerText;
-            const sucursal = sucursalRaw.replace(/\s+/g, '_'); 
+            const sucursal = sucursalRaw.replace(/\s+/g, '_'); // Reemplazar espacios por guiones bajos
             const fechaHoraRaw = document.getElementById('pdf-fecha').innerText;
-            const fechaHora = fechaHoraRaw.replace(/[\s\/:]/g, '_'); // Reemplaza espacios, barras y dos puntos
+            const fechaHora = fechaHoraRaw.replace(/[\s\/:,]/g, '_'); // Reemplazar espacios por guiones bajos
             
             const opciones = {
                 margin:       0,
+                // NOMBRE AUTOMÁTICO blindado
                 filename:     `MTTO_CORR_${sucursal}_${fechaHora}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, scrollY: 0 }, 
@@ -364,6 +394,9 @@
                     p.style.boxShadow = originalStyles[index].boxShadow;
                     p.style.height = originalStyles[index].height;
                 });
+                
+                // Devuelve el modo teléfono una vez descargado
+                document.body.classList.remove('pdf-generating');
             });
         }
     </script>
