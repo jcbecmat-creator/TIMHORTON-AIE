@@ -459,6 +459,110 @@
             else { p.type = 'password'; i.textContent = 'visibility_off'; }
         }
 
+        // LÓGICA DE AUTO-LOGIN (Recupera la sesión si vuelves desde el PDF)
+        document.addEventListener('DOMContentLoaded', () => {
+            if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+            
+            const savedSession = sessionStorage.getItem('loginSession');
+            const savedUser = sessionStorage.getItem('loginUser');
+            
+            if (savedSession && savedUser) {
+                window.appData = JSON.parse(savedSession);
+                
+                const inicial = savedUser.charAt(0).toUpperCase();
+                document.getElementById('user-initial-header').innerText = inicial;
+                document.getElementById('welcome-username-display').innerText = window.appData.nombreProveedor;
+
+                document.getElementById('prov-info-nombre').innerText = window.appData.nombreProveedor;
+                document.getElementById('prov-info-rfc').innerText = window.appData.proveedorInfo.rfc || 'N/A';
+                document.getElementById('prov-info-dir').innerText = window.appData.proveedorInfo.direccion || 'N/A';
+                document.getElementById('prov-info-cont').innerText = window.appData.proveedorInfo.contacto || 'N/A';
+                document.getElementById('prov-info-tel').innerText = window.appData.proveedorInfo.telefono || 'N/A';
+                document.getElementById('prov-info-mail').innerText = window.appData.proveedorInfo.correo || 'N/A'; 
+
+                const listaSuc = document.getElementById('sucursales-list');
+                listaSuc.innerHTML = '';
+                window.appData.sucursales.forEach(s => {
+                    let opt = document.createElement('option');
+                    opt.value = s.nombre;
+                    listaSuc.appendChild(opt);
+                });
+
+                const listaAreas = document.getElementById('areas-list');
+                listaAreas.innerHTML = '';
+                Object.keys(window.appData.areas).forEach(a => {
+                    let opt = document.createElement('option');
+                    opt.value = a;
+                    listaAreas.appendChild(opt);
+                });
+
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'block';
+                lucide.createIcons();
+
+                if(window.appData.privilegio == 2 || window.appData.privilegio == "2") {
+                    document.getElementById('nav-inicio').style.display = 'none';
+                    document.getElementById('nav-preventivo').style.display = 'none';
+                    document.getElementById('nav-seccion-admin').style.display = 'none';
+                    document.getElementById('nav-seccion-reportes').style.display = 'none';
+                }
+                
+                inicializarFirma();
+                cambiarVista(null, 'vista-mantenimiento');
+                
+                // RESTAURAR FORMULARIO EXACTAMENTE COMO LO DEJÓ
+                const savedForm = sessionStorage.getItem('DatosOrdenPDF');
+                if (savedForm) {
+                    try {
+                        const data = JSON.parse(savedForm);
+                        
+                        document.getElementById('sucursal-input').value = data.sucursal;
+                        document.getElementById('ticket_glpi').value = data.ticket === 'S/N' ? '' : data.ticket;
+                        document.getElementById('area-input').value = data.area;
+                        
+                        document.getElementById('sucursal-input').dispatchEvent(new Event('input'));
+                        document.getElementById('area-input').dispatchEvent(new Event('input'));
+                        
+                        setTimeout(() => {
+                            if (document.getElementById('subarea-select')) {
+                                document.getElementById('subarea-select').value = data.subarea;
+                            }
+                        }, 100);
+                        
+                        document.getElementById('desc_falla').value = data.desc_falla;
+                        document.getElementById('desc_solucion').value = data.desc_solucion;
+                        document.getElementById('nombre_tecnico').value = data.tec_nombre;
+                        document.getElementById('celular_tecnico').value = data.tec_celular;
+                        document.getElementById('comentario_salida').value = data.comentario;
+                        
+                        fotos.falla = data.fotos_falla && data.fotos_falla.length ? data.fotos_falla : [null, null, null];
+                        fotos.solucion = data.fotos_solucion && data.fotos_solucion.length ? data.fotos_solucion : [null, null, null];
+                        fotos.soporte = data.foto_soporte ? [data.foto_soporte] : [null];
+                        fotos.selfie = data.foto_selfie ? [data.foto_selfie] : [null];
+                        
+                        renderSlots('falla');
+                        renderSlots('solucion');
+                        renderSlots('soporte');
+                        renderSlots('selfie');
+                        
+                        if(data.firma) {
+                            document.getElementById('firma_tecnico_data').value = data.firma;
+                            const img = new Image();
+                            img.onload = () => { if(ctxFirma) ctxFirma.drawImage(img, 0, 0); };
+                            img.src = data.firma;
+                        }
+                        
+                        // Scroll top upon restore
+                        window.scrollTo(0,0);
+                        document.querySelector('.app-content').scrollTo(0,0);
+                        
+                    } catch (err) { console.error('Error restaurando form', err); }
+                }
+            } else {
+                window.scrollTo(0,0);
+            }
+        });
+
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -481,6 +585,11 @@
             .then(res => res.json())
             .then(data => {
                 if (data.valido) {
+                    
+                    // GUARDA SESIÓN EN MEMORIA PARA NO PERDERLA
+                    sessionStorage.setItem('loginSession', JSON.stringify(data));
+                    sessionStorage.setItem('loginUser', user);
+                    
                     window.appData = data;
 
                     if (user && user.length > 0) {
@@ -563,9 +672,7 @@
         document.getElementById('area-input').addEventListener('input', function(e) {
             const val = e.target.value;
             const subSelect = document.getElementById('subarea-select');
-            
             if(!window.appData) return;
-            
             if(val && window.appData.areas[val]) {
                 subSelect.innerHTML = '<option value="">Seleccione sub área...</option>';
                 window.appData.areas[val].forEach(sub => {
@@ -580,12 +687,9 @@
             }
         });
 
-        // VALIDACIÓN DE CELULAR (Solo 10 números limpios)
         document.getElementById('celular_tecnico').addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            if (e.target.value.length > 10) {
-                e.target.value = e.target.value.slice(0, 10);
-            }
+            if (e.target.value.length > 10) { e.target.value = e.target.value.slice(0, 10); }
         });
 
         function cambiarVista(event, idVista) {
@@ -626,8 +730,6 @@
         async function triggerCamera(target) {
             activeTarget = target;
             if(fotos[target].filter(f => f !== null).length >= fotos[target].length) { window.alert("Límite de fotos alcanzado."); return; }
-            
-            // LÓGICA DE CÁMARA FRONTAL AUTOMÁTICA PARA SELFIE
             currentFacingMode = (target === 'selfie') ? 'user' : 'environment';
             await startCamera();
         }
@@ -654,17 +756,10 @@
         function captureFoto() { 
             const canvasT = document.getElementById('tempCanvas'); const video = document.getElementById('camera-video');
             canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
-            
-            // Efecto espejo si usamos la frontal, para que la foto se guarde bien
             const ctx = canvasT.getContext('2d');
-            if (currentFacingMode === 'user') {
-                ctx.translate(canvasT.width, 0);
-                ctx.scale(-1, 1);
-            }
+            if (currentFacingMode === 'user') { ctx.translate(canvasT.width, 0); ctx.scale(-1, 1); }
             ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); 
-            // Reset transforms for next time
             ctx.setTransform(1, 0, 0, 1, 0, 0);
-
             const slotVacio = fotos[activeTarget].findIndex(f => f === null);
             if(slotVacio > -1) { fotos[activeTarget][slotVacio] = canvasT.toDataURL('image/jpeg', 0.8); renderSlots(activeTarget); }
             closeCamera(); 
@@ -677,9 +772,7 @@
             document.getElementById('imgFull').src = src;
             modal.classList.add('show');
         }
-        function closePhotoModal() {
-            document.getElementById('photoModal').classList.remove('show');
-        }
+        function closePhotoModal() { document.getElementById('photoModal').classList.remove('show'); }
 
         function renderSlots(target) {
             for (let i = 0; i < fotos[target].length; i++) {
@@ -714,16 +807,13 @@
         }
         function limpiarFirma(id) { ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
 
-        // Inicializar slots
         renderSlots('falla');
         renderSlots('solucion');
         renderSlots('soporte'); 
         renderSlots('selfie'); 
 
-        // ENVIAR ORDEN: Blindado con try-catch para no fallar
         document.getElementById('ordenMttoForm').addEventListener('submit', function(e) {
             e.preventDefault(); 
-            
             try {
                 const ordenData = {
                     sucursal: document.getElementById('sucursal-input').value || '',
@@ -755,7 +845,6 @@
                     foto_selfie: fotos.selfie[0], 
                     fecha_hora: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })
                 };
-
                 sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
                 window.location.href = 'index2.html';
             } catch(err) {
@@ -764,7 +853,6 @@
             }
         });
 
-        // MODALES DE CONFIRMACIÓN ELEGANTES
         let confirmCallback = null;
         function showConfirm(title, msg, callback) {
             document.getElementById('confirm-title').innerText = title;
@@ -773,15 +861,13 @@
             document.getElementById('custom-confirm').style.display = 'flex';
             lucide.createIcons();
         }
-        function closeConfirm() {
-            document.getElementById('custom-confirm').style.display = 'none';
-        }
+        function closeConfirm() { document.getElementById('custom-confirm').style.display = 'none'; }
+        
         document.getElementById('confirm-btn-action').addEventListener('click', function() {
             closeConfirm();
             if(confirmCallback) confirmCallback();
         });
 
-        // BOTÓN NUEVA ORDEN
         document.getElementById('btnNuevaOrden').addEventListener('click', function() {
             showConfirm("Nueva Orden", "¿Seguro que quieres borrar todo y generar una nueva orden? Se perderá la información actual.", function() {
                 document.getElementById('ordenMttoForm').reset();
@@ -791,16 +877,14 @@
                 limpiarFirma('firma_tecnico');
                 sessionStorage.removeItem('DatosOrdenPDF');
                 cambiarVista(null, 'vista-mantenimiento');
-                document.querySelector('.app-content').scrollTo({top: 0, behavior: 'smooth'}); // Scroll arriba
+                document.querySelector('.app-content').scrollTo({top: 0, behavior: 'smooth'}); 
             });
         });
 
-        // BOTÓN CERRAR SESIÓN
         document.getElementById('btnCerrarSesion').addEventListener('click', function() {
             showConfirm("Cerrar Sesión", "¿Seguro que quieres cerrar sesión? Se borrará la información actual.", function() {
-                sessionStorage.removeItem('DatosOrdenPDF');
-                window.scrollTo(0,0);
-                window.location.href = window.location.pathname; // Recarga limpia desde arriba
+                sessionStorage.clear(); // Borra login y form
+                window.location.href = window.location.pathname; // Recarga desde 0 sin scroll
             });
         });
 
