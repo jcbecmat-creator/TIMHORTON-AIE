@@ -40,9 +40,10 @@
         .logo-img { width: 140px; margin-bottom: 5px; margin-right: 15px; margin-top: -5px; }
         .store-img { width: 220px; }
 
-        .red-divider { height: 12px; background-color: var(--tm-red); width: 100%; margin: 4px 0; }
-        .red-divider-bottom { height: 12px; background-color: var(--tm-red); width: 100%; margin: 3px 0; }
-        .red-divider-bottom-sheet2 { height: 12px; background-color: var(--tm-red); width: 100%; margin: 2px 0 5px 0; }
+        /* FRANJAS ROJAS REDUCIDAS UN 40% (De 12px a 7px) */
+        .red-divider { height: 7px; background-color: var(--tm-red); width: 100%; margin: 4px 0; }
+        .red-divider-bottom { height: 7px; background-color: var(--tm-red); width: 100%; margin: 3px 0; }
+        .red-divider-bottom-sheet2 { height: 7px; background-color: var(--tm-red); width: 100%; margin: 2px 0 5px 0; }
 
         .main-titles-container { text-align: center; position: relative; margin-bottom: 0px; padding-bottom: 2px; }
         .title-red-centered { color: var(--tm-red); font-size: 16px; font-weight: normal; margin-bottom: 2px; }
@@ -60,32 +61,34 @@
         .bullet-white { display: inline-flex; justify-content: center; align-items: center; width: 8px; height: 8px; border-radius: 50%; border: 1px solid white; margin-right: 8px; flex-shrink: 0; }
         .bullet-white::after { content: ''; width: 3px; height: 3px; background-color: white; border-radius: 50%; }
 
-        /* FOTOS: Aumento del 15% en el alto (ahora miden 155px) */
         .photo-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 4px; margin-bottom: 4px; }
         .photo-box { border: 1px solid var(--tm-border); height: 155px; background-color: white; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .photo-box img { width: 100%; height: 100%; object-fit: contain; }
 
         .red-bar-third { background-color: var(--tm-red); color: white; display: flex; align-items: center; padding: 3px 10px; font-size: 11px; width: calc(33.33% - 10px); box-sizing: border-box; font-weight: normal; }
         
-        /* DESCRIPCIONES: Aumento del 25% en el alto (ahora min-height 45px) */
-        .text-input-box { border: 1px solid var(--tm-border); padding: 4px 8px; min-height: 45px; margin-top: 0; margin-bottom: 3px; background-color: white; font-weight: normal; } 
+        /* DESCRIPCIONES REDUCIDAS 10% Y CON ESPACIO EN BLANCO ARRIBA */
+        .text-input-box { border: 1px solid var(--tm-border); padding: 4px 8px; min-height: 40px; margin-top: 2px; margin-bottom: 4px; background-color: white; font-weight: normal; } 
 
-        /* TÉCNICO Y FIRMAS: Contenedor con altura fija exacta a las fotos (155px) para alinear la parte inferior */
+        /* TÉCNICO Y FIRMAS: Altura fija a 155px para alinear con la selfie */
         .eval-container { display: flex; gap: 8px; margin-top: 4px; margin-bottom: 4px; align-items: stretch; height: 155px; }
         
         .eval-left-box { width: 33%; border: 1px solid var(--tm-border); background-color: white; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #ccc; font-size: 10px; box-sizing: border-box; }
         .eval-left-box img { width: 100%; height: 100%; object-fit: contain; }
         
-        /* Grid de la derecha ocupa el 100% de esos 155px, auto ajustando firmas abajo */
+        /* Grid autoajustable para encajar todo sin desbordar */
         .eval-right-grid { width: 67%; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; gap: 6px; height: 100%; }
         .eval-card { border: 1px solid var(--tm-border); display: flex; flex-direction: column; overflow: hidden; }
         .empleado-card { grid-column: span 2; }
         
         .eval-card-header { background-color: var(--tm-red); color: white; padding: 3px 8px; font-size: 10px; display: flex; align-items: center; font-weight: normal; }
         
-        .eval-card-body { padding: 4px 8px; flex-grow: 1; background-color: white; font-weight: normal; display: flex; flex-direction: column; justify-content: center; } 
+        .eval-card-body { padding: 4px 8px; flex-grow: 1; background-color: white; font-weight: normal; display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; } 
         .eval-card-body .area-line { margin-bottom: 2px; font-size: 10px; font-weight: normal !important; } 
-        .eval-card-body img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        /* FIRMA AJUSTADA PARA VERSE COMPLETA */
+        #pdf-firma { padding: 2px; align-items: center; justify-content: center; width: 100%; height: 100%; box-sizing: border-box; }
+        #pdf-firma img { max-width: 100%; max-height: 100%; object-fit: contain; width: 100%; height: 100%; }
 
         .proveedor-grid { display: grid; grid-template-columns: 55% 45%; margin-top: 4px; margin-bottom: 4px; padding-left: 0px; }
         .proveedor-col { display: flex; flex-direction: column; gap: 0px; }
@@ -191,7 +194,7 @@
                     <div class="eval-right-grid">
                         <div class="eval-card empleado-card">
                             <div class="eval-card-header"><span class="bullet-white"></span> TECNICO DEL PROVEDOR</div>
-                            <div class="eval-card-body" style="padding: 4px 8px; justify-content: flex-start;">
+                            <div class="eval-card-body">
                                 <div class="area-line"><i class="custom-bullet"></i> NOMBRE: <span id="pdf-tec-nom" style="margin-left: 5px;"></span></div>
                                 <div class="area-line"><i class="custom-bullet"></i> CELULAR: <span id="pdf-tec-cel" style="margin-left: 5px;"></span></div>
                                 <div class="area-line"><i class="custom-bullet"></i> EMPRESA: <span id="pdf-tec-empresa" style="margin-left: 5px;"></span></div>
@@ -199,11 +202,11 @@
                         </div>
                         <div class="eval-card">
                             <div class="eval-card-header"><span class="bullet-white"></span> COMENTARIO DE SALIDA</div>
-                            <div class="eval-card-body" id="pdf-comentario" style="font-size: 10px; justify-content: flex-start; padding-top: 4px;"></div>
+                            <div class="eval-card-body" id="pdf-comentario" style="font-size: 10px;"></div>
                         </div>
                         <div class="eval-card">
                             <div class="eval-card-header"><span class="bullet-white"></span> FIRMA</div>
-                            <div class="eval-card-body" id="pdf-firma" style="padding: 2px;"></div>
+                            <div class="eval-card-body" id="pdf-firma"></div>
                         </div>
                     </div>
                 </div>
