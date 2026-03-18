@@ -254,7 +254,6 @@
                                     <div class="photo-slot" id="slot-falla-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
                                     <div class="photo-slot" id="slot-falla-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
                                     <div class="photo-slot" id="slot-falla-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
-                                }
                                 </div>
                             </div>
 
@@ -273,7 +272,6 @@
                                     <div class="photo-slot" id="slot-solucion-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
                                     <div class="photo-slot" id="slot-solucion-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
                                     <div class="photo-slot" id="slot-solucion-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
-                                }
                                 </div>
                             </div>
 
@@ -332,7 +330,7 @@
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="user-check"></i> Selfie del técnico en sitio</h3>
                                 
-                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Falla - Máx 3)</label>
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Selfie - Máx 1)</label>
                                 <div class="photo-controls">
                                     <button type="button" class="btn-photo" onclick="triggerCamera('selfie')"><i data-lucide="camera"></i> Toma Foto</button>
                                     <button type="button" class="btn-photo-secondary" onclick="triggerFile('selfie')"><i data-lucide="upload"></i> Subir Archivo</button>
@@ -357,7 +355,7 @@
                                 </button>
                                 
                                 <button type="button" id="btnCerrarSesion" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: #DC2626; color: white; border: none; width: 100%;">
-                                    <i data-lucide="log-out"></i> Cerrar Sección
+                                    <i data-lucide="log-out"></i> Cerrar Sesión
                                 </button>
                                 
                             </div>
@@ -439,7 +437,6 @@
         lucide.createIcons();
 
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
-
         window.appData = null;
 
         function togglePassword() {
@@ -468,7 +465,7 @@
                 body: JSON.stringify({ username: user, password: pass }),
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             })
-            .then(res => res.json();)
+            .then(res => res.json())
             .then(data => {
                 if (data.valido) {
                     window.appData = data;
@@ -569,11 +566,9 @@
             }
         });
 
-        // VALIDACIÓN SOLICITADA CELULAR DEL TÉCNICO (10 NÚMEROS LIMPIOS)
+        // VALIDACIÓN DE CELULAR (Solo 10 números limpios)
         document.getElementById('celular_tecnico').addEventListener('input', function(e) {
-            // Elimina cualquier carácter que no sea un número
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
-            // Limita la longitud a 10 dígitos
             if (e.target.value.length > 10) {
                 e.target.value = e.target.value.slice(0, 10);
             }
@@ -592,7 +587,6 @@
         toggles.forEach(t => { t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
         document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
-        // ACTUALIZADO: fotos tiene ahora soporte y selfie (arreglo de 1)
         let fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
         let activeTarget = 'falla';
         
@@ -682,21 +676,15 @@
         }
         function limpiarFirma(id) { ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
 
-        // Inicializar slots de todas las secciones
         renderSlots('falla');
         renderSlots('solucion');
         renderSlots('soporte'); 
         renderSlots('selfie'); 
 
-        // ==========================================
-        // ACTUALIZADO: ENVIAR ORDEN Y SALTAR A PDF
-        // ==========================================
         document.getElementById('ordenMttoForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evita que la página se recargue
+            e.preventDefault(); 
 
-            // Recolectamos TODA la información de la pantalla
             const ordenData = {
-                // Sucursal
                 sucursal: document.getElementById('sucursal-input').value,
                 suc_dir: document.getElementById('suc-dir').innerText,
                 suc_col: document.getElementById('suc-col').innerText,
@@ -705,21 +693,13 @@
                 suc_hor: document.getElementById('suc-hor').innerText,
                 suc_tel: document.getElementById('suc-tel').innerText,
                 suc_mail: document.getElementById('suc-mail').innerText,
-                
-                // Ticket y Área
                 ticket: document.getElementById('ticket_glpi').value || 'S/N',
                 area: document.getElementById('area-input').value,
                 subarea: document.getElementById('subarea-select').value,
-                
-                // Falla
                 desc_falla: document.getElementById('desc_falla').value,
                 fotos_falla: fotos.falla,
-                
-                // Solución
                 desc_solucion: document.getElementById('desc_solucion').value,
                 fotos_solucion: fotos.solucion,
-                
-                // Proveedor y Técnico
                 prov_nombre: document.getElementById('prov-info-nombre').innerText,
                 prov_rfc: document.getElementById('prov-info-rfc').innerText,
                 prov_dir: document.getElementById('prov-info-dir').innerText,
@@ -729,50 +709,35 @@
                 tec_nombre: document.getElementById('nombre_tecnico').value,
                 tec_celular: document.getElementById('celular_tecnico').value,
                 comentario: document.getElementById('comentario_salida').value,
-                
-                // Firma, Soporte y Selfie y Fecha
                 firma: document.getElementById('firma_tecnico_data').value,
                 foto_soporte: fotos.soporte[0], 
-                foto_selfie: fotos.selfie[0], // AGREGADO: La selfie
+                foto_selfie: fotos.selfie[0], 
                 fecha_hora: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })
             };
 
-            // Guardamos en la Memoria del Navegador
             sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
-
-            // Saltamos a la página del PDF
             window.location.href = 'index2.html';
         });
 
-        // LÓGICA SOLICITADA BOTÓN "NUEVA ORDEN" (VERDE)
         document.getElementById('btnNuevaOrden').addEventListener('click', function() {
             if (window.confirm("¿Seguro que quieres borrar todo y generar una nueva orden? Se perderá la información actual.")) {
-                // Borrar respuestas del formulario
                 document.getElementById('ordenMttoForm').reset();
-                // Limpiar detalles de sucursal
                 document.getElementById('sucursal-details').style.display = 'none';
-                // Borrar fotos de todas las secciones
                 fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
                 renderSlots('falla');
                 renderSlots('solucion');
                 renderSlots('soporte');
                 renderSlots('selfie');
-                // Limpiar firma
                 limpiarFirma('firma_tecnico');
-                // Borrar datos guardados en sesión
                 sessionStorage.removeItem('DatosOrdenPDF');
                 alert("Formulario limpio. Ya puedes generar una nueva orden.");
-                // Regresa al menú Mantenimiento Correctivo (vista activa por defecto)
                 cambiarVista(null, 'vista-mantenimiento');
             }
         });
 
-        // LÓGICA SOLICITADA BOTÓN "CERRAR SESIÓN" (ROJO)
         document.getElementById('btnCerrarSesion').addEventListener('click', function() {
             if (window.confirm("¿Seguro que quieres cerrar sesión? Se borrará la información actual.")) {
-                // Borrar datos guardados en sesión
                 sessionStorage.removeItem('DatosOrdenPDF');
-                // Recargar la página para volver al inicio de sesión
                 window.location.reload(); 
             }
         });
