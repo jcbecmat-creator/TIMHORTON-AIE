@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprobación de Costos</title>
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/fonts.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/style.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/components.css">
+    
+<link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/design-system.css">
+<link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/app-shell.css">
+
+<style>
+    /* ========================================
+       APROBACIÓN DE COSTOS - Diseño Empresarial
+       ======================================== */
+
+    .aprobacion-wrap {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: var(--space-6) var(--space-6) var(--space-16);
+    }
+
+    /* Page Header - Estilo empresarial */
+    .page-header-section {
+        margin-bottom: var(--space-8);
+        padding-bottom: var(--space-6);
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .page-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: var(--space-6);
+    }
+
+    .page-header-content h1 {
+        font-size: var(--text-2xl);
+        font-weight: var(--weight-semibold);
+        color: var(--gray-900);
+        letter-spacing: var(--tracking-tight);
+        margin: 0 0 var(--space-2) 0;
+    }
+
+    .page-header-content p {
+        font-size: var(--text-sm);
+        color: var(--gray-500);
+        margin: 0;
+    }
+
+    /* Tabs - Estilo segmentado profesional */
+    .tabs-segmented {
+        display: inline-flex;
+        background: var(--gray-100);
+        border-radius: var(--radius-lg);
+        padding: var(--space-1);
+        gap: var(--space-1);
+    }
+
+    .tab-segment {
+        padding: var(--space-3) var(--space-5);
+        border-radius: var(--radius-md);
+        text-decoration: none;
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+        color: var(--gray-600);
+        background: transparent;
+        transition: all var(--duration-fast) var(--ease-default);
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        white-space: nowrap;
+    }
+
+    .tab-segment:hover:not(.active) {
+        color: var(--gray-900);
+        background: rgba(255, 255, 255, 0.5);
+    }
+
+    .tab-segment.active {
+        background: white;
+        color: var(--gray-900);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .tab-segment.approved.active {
+        background: var(--success);
+        color: white;
+    }
+
+    .tab-segment.rejected.active {
+        background: var(--error);
+        color: white;
+    }
+
+    .tab-segment-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: var(--radius-full);
+        font-size: 11px;
+        font-weight: var(--weight-bold);
+        background: var(--gray-200);
+        color: var(--gray-600);
+    }
+
+    .tab-segment.active .tab-segment-count {
+        background: var(--accent);
+        color: white;
+    }
+
+    .tab-segment.approved.active .tab-segment-count,
+    .tab-segment.rejected.active .tab-segment-count {
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
+
+    /* Filters - Barra compacta */
+    .filters-bar {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: var(--space-5) var(--space-6);
+        margin-bottom: var(--space-6);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--gray-200);
+    }
+
+    .filters-row {
+        display: flex;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+        min-width: 140px;
+    }
+
+    .filter-group.flex-grow {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-label {
+        font-size: 11px;
+        font-weight: var(--weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-500);
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: var(--space-2);
+        flex-shrink: 0;
+    }
+
+    /* Table enhancements */
+    .data-table-container {
+        background: white;
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--gray-200);
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .data-table thead {
+        background: var(--gray-50);
+    }
+
+    .data-table th {
+        font-size: 11px;
+        font-weight: var(--weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-500);
+        padding: var(--space-4) var(--space-5);
+        text-align: left;
+        border-bottom: 1px solid var(--gray-200);
+    }
+
+    .data-table td {
+        padding: var(--space-4) var(--space-5);
+        border-bottom: 1px solid var(--gray-100);
+        font-size: var(--text-sm);
+        color: var(--gray-700);
+        vertical-align: middle;
+    }
+
+    .data-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .data-table tbody tr {
+        transition: background var(--duration-fast);
+    }
+
+    .data-table tbody tr:hover {
+        background: var(--gray-50);
+    }
+
+    .data-table .folio-cell {
+        font-weight: var(--weight-semibold);
+        color: var(--gray-900);
+    }
+
+    .data-table .total-cell {
+        font-weight: var(--weight-semibold);
+        color: var(--gray-900);
+    }
+
+    /* Status badges */
+    .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        border-radius: var(--radius-full);
+        font-size: 11px;
+        font-weight: var(--weight-semibold);
+    }
+
+    .status-pill::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .status-pill.status-aprobado {
+        background: var(--success-soft);
+        color: var(--success);
+    }
+
+    .status-pill.status-rechazado {
+        background: var(--error-soft);
+        color: var(--error);
+    }
+
+    .status-pill.status-pendiente {
+        background: var(--warning-soft);
+        color: var(--warning);
+    }
+
+    /* Empty state */
+    .empty-state-container {
+        text-align: center;
+        padding: var(--space-16) var(--space-6);
+    }
+
+    .empty-state-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto var(--space-4);
+        color: var(--gray-300);
+    }
+
+    .empty-state-title {
+        font-size: var(--text-lg);
+        font-weight: var(--weight-semibold);
+        color: var(--gray-700);
+        margin: 0 0 var(--space-2) 0;
+    }
+
+    .empty-state-text {
+        font-size: var(--text-sm);
+        color: var(--gray-500);
+        margin: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+        .page-header-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .tabs-segmented {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .tab-segment {
+            flex: 1;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .aprobacion-wrap {
+            padding: var(--space-4) var(--space-4) var(--space-16);
+        }
+
+        .filters-row {
+            flex-direction: column;
+        }
+
+        .filter-group,
+        .filter-group.flex-grow {
+            width: 100%;
+            min-width: 100%;
+        }
+
+        .filter-actions {
+            width: 100%;
+        }
+
+        .filter-actions .btn {
+            flex: 1;
+        }
+
+        .data-table-container {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            min-width: 700px;
+        }
+    }
+
+    /* ========================================
+       MODAL STYLES
+       ======================================== */
+    .aprobacion-wrap .empty-state-icon {
+        animation: none !important;
+    }
+
+    /* Orden info en modal */
+    .orden-info {
+        background: linear-gradient(135deg, var(--gray-50), white);
+        border-radius: var(--radius-lg);
+        padding: var(--space-5) var(--space-6);
+        margin-bottom: var(--space-6);
+        border: 1px solid var(--gray-200);
+    }
+
+    .orden-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--space-5);
+    }
+
+    .orden-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2);
+    }
+
+    .orden-info-label {
+        font-size: 11px;
+        font-weight: var(--weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--gray-500);
+    }
+
+    .orden-info-value {
+        font-size: var(--text-base);
+        font-weight: var(--weight-semibold);
+        color: var(--gray-900);
+    }
+
+    /* Conceptos section */
+    .conceptos-section-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-5);
+    }
+
+    .conceptos-section-title {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--gray-900);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+
+    .conceptos-section-title i {
+        width: 18px;
+        height: 18px;
+        color: var(--accent);
+    }
+
+    /* Concepto row */
+    .concepto-row {
+        background: white;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-lg);
+        padding: var(--space-5);
+        margin-bottom: var(--space-4);
+        box-shadow: var(--shadow-xs);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .concepto-row:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .concepto-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .concepto-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        margin-bottom: var(--space-3);
+    }
+
+    .concepto-nombre {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--gray-900);
+    }
+
+    .concepto-total {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-bold);
+        color: var(--accent);
+    }
+
+    .concepto-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: var(--space-4);
+        font-size: var(--text-sm);
+        color: var(--gray-600);
+    }
+
+    .concepto-detail {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .concepto-detail-label {
+        font-size: 10px;
+        font-weight: var(--weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--gray-400);
+    }
+
+    /* Total section */
+    .total-section {
+        background: linear-gradient(135deg, var(--gray-900), var(--gray-800));
+        border-radius: var(--radius-lg);
+        padding: var(--space-6);
+        margin-top: var(--space-6);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .total-label {
+        font-size: 12px;
+        font-weight: var(--weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .total-value {
+        font-size: var(--text-3xl);
+        font-weight: var(--weight-bold);
+        color: white;
+        letter-spacing: var(--tracking-tight);
+    }
+
+    /* Approval section */
+    .approval-section {
+        margin-top: var(--space-6);
+        padding-top: var(--space-6);
+        border-top: 1px solid var(--gray-100);
+    }
+
+    .approval-title {
+        font-size: var(--text-sm);
+        font-weight: var(--weight-semibold);
+        color: var(--gray-900);
+        margin: 0 0 var(--space-4) 0;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+
+    .approval-title i {
+        width: 18px;
+        height: 18px;
+        color: var(--success);
+    }
+
+    /* Rejection alert */
+    .rejection-alert {
+        background: linear-gradient(135deg, var(--error-soft), rgba(255, 59, 48, 0.05));
+        border: 1px solid rgba(255, 59, 48, 0.25);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        margin-top: var(--space-4);
+    }
+
+    .rejection-alert-title {
+        font-size: var(--text-xs);
+        font-weight: var(--weight-semibold);
+        color: var(--error);
+        margin: 0 0 var(--space-2) 0;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+
+    .rejection-alert-title i {
+        width: 16px;
+        height: 16px;
+    }
+
+    .rejection-alert-text {
+        font-size: var(--text-sm);
+        color: var(--gray-700);
+        margin: 0;
+    }
+
+    /* Decision inputs */
+    .decision-group {
+        margin-top: var(--space-4);
+        padding-top: var(--space-4);
+        border-top: 1px dashed var(--gray-200);
+    }
+
+    .decision-options {
+        display: flex;
+        gap: var(--space-4);
+        flex-wrap: wrap;
+        margin-top: var(--space-2);
+    }
+
+    .decision-option {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        font-size: var(--text-sm);
+        color: var(--gray-700);
+        cursor: pointer;
+    }
+
+    .decision-option input[type="radio"] {
+        accent-color: var(--accent);
+    }
+
+    /* Modal detalle */
+    .modal-detalle .orden-info {
+        background: white;
+        border: 1px solid var(--gray-200);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .modal-detalle .orden-info-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .modal-detalle .concepto-row {
+        border: 1.5px solid var(--gray-200);
+        box-shadow: var(--shadow-xs);
+    }
+
+    .modal-detalle .concepto-row:hover {
+        transform: none;
+        box-shadow: var(--shadow-xs);
+    }
+
+    .modal-detalle .concepto-header {
+        padding-bottom: var(--space-3);
+        margin-bottom: var(--space-4);
+        border-bottom: 1px dashed var(--gray-200);
+    }
+
+    .modal-detalle .concepto-total {
+        background: var(--accent-soft);
+        color: var(--accent);
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-full);
+        font-weight: var(--weight-bold);
+    }
+
+    .modal-detalle .concepto-details {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 900px) {
+        .modal-detalle .orden-info-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .modal-detalle .concepto-details {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 500px) {
+        .modal-detalle .orden-info-grid {
+            grid-template-columns: 1fr;
+        }
+        .modal-detalle .concepto-details {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="has-sidebar">
+    <header class="main-header">
+        <div class="header-left">
+            <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
+                <span class="hamburger"></span>
+            </button>
+            <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
+            <h1 class="system-title">Ordenes de Servicio</h1>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <button class="user-circle-btn"><span class="user-circle-initial" id="user-initial-header">U</span></button>
+            </div>
+        </div>
+    </header>
+
+<div class="main-layout">
+    <aside class="sidebar app-sidebar" data-app-sidebar>
+        <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
+            <span class="close-icon">X</span>
+        </button>
+        <button class="sidebar-toggle" type="button" aria-label="Mostrar navegación" data-sidebar-toggle>
+            <span class="hamburger"></span>
+        </button>
+        <div class="sidebar-content">
+            
+            <nav class="sidebar-nav">
+                <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Formas</div>
+                    <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                    <a href="index.html" class="sidebar-link" id="nav-preventivo"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                </div>
+                <div class="sidebar-section" id="nav-seccion-admin">
+                    <div class="sidebar-section-title">Administración</div>
+                    <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                    <a href="costos.html" class="sidebar-link"><i data-lucide="calculator"></i> Costos de reparación</a>
+                    <a href="aprobacion.html" class="sidebar-link activa"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                    <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
+                </div>
+                <div class="sidebar-section" id="nav-seccion-reportes">
+                    <div class="sidebar-section-title">Reportes</div>
+                    <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                </div>
+            </nav>
+
+        </div>
+    </aside>
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <main class="main-content app-content">
+        
+        <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px;">
+            <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
+            <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
+        </div>
+
+<div class="aprobacion-wrap">
+    <header class="page-header-section">
+        <div class="page-header-row">
+            <div class="page-header-content">
+                <h1>Aprobación de Costos</h1>
+                <p>Revisa y aprueba los costos de reparación enviados por proveedores</p>
+            </div>
+            <div class="tabs-segmented">
+                <a href="#" class="tab-segment active">
+                    Pendientes
+                    <span class="tab-segment-count">0</span>
+                </a>
+                <a href="#" class="tab-segment approved ">
+                    Aprobados
+                    <span class="tab-segment-count">0</span>
+                </a>
+                <a href="#" class="tab-segment rejected ">
+                    Rechazados
+                    <span class="tab-segment-count">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <form method="GET" class="filters-bar">
+        <input type="hidden" name="tab" value="pendientes">
+        <div class="filters-row">
+            <div class="filter-group">
+                <label class="filter-label">Fecha inicio</label>
+                <input type="date" class="input" name="fecha_inicio" value="" style="border: 1px solid #d1d5db; padding: 8px; border-radius: 6px;">
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Fecha fin</label>
+                <input type="date" class="input" name="fecha_fin" value="" style="border: 1px solid #d1d5db; padding: 8px; border-radius: 6px;">
+            </div>
+            <div class="filter-group flex-grow">
+                <label class="filter-label">Buscar</label>
+                <input type="text" class="input" name="buscar" value="" placeholder="Folio o sucursal..." style="border: 1px solid #d1d5db; padding: 8px; border-radius: 6px; width: 100%;">
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-secondary" type="submit" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="search" style="width: 16px;"></i>
+                    Buscar
+                </button>
+                <a href="#" class="btn btn-success" style="background: #15803d; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <i data-lucide="download" style="width: 16px;"></i>
+                    Exportar
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <div class="data-table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Sucursal</th>
+                    <th>Enviado por</th>
+                    <th>Fecha envío</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th style="text-align: right;">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-aprobacion-body">
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state-container">
+                            <i data-lucide="inbox" class="empty-state-icon"></i>
+                            <h3 class="empty-state-title">No hay costos pendientes de aprobación</h3>
+                            <p class="empty-state-text">Ajusta los filtros de búsqueda o intenta más tarde</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalRevision">
+    <div class="modal modal-xl">
+        <div class="modal-header">
+            <h2 class="modal-title">Revisión de Costos</h2>
+            <button type="button" class="modal-close" onclick="cerrarModal()">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <form id="formAprobacion" method="POST">
+            <input type="hidden" name="orden_id" id="modalOrdenId">
+            <input type="hidden" name="action" id="modalAction" value="procesar">
+            <div class="modal-body">
+                <div class="orden-info">
+                    <div class="orden-info-grid">
+                        <div class="orden-info-item">
+                            <span class="orden-info-label">Folio</span>
+                            <span class="orden-info-value" id="modalFolio">—</span>
+                        </div>
+                        <div class="orden-info-item">
+                            <span class="orden-info-label">Sucursal</span>
+                            <span class="orden-info-value" id="modalSucursal">—</span>
+                        </div>
+                        <div class="orden-info-item">
+                            <span class="orden-info-label">Enviado por</span>
+                            <span class="orden-info-value" id="modalEnviadoPor">—</span>
+                        </div>
+                        <div class="orden-info-item">
+                            <span class="orden-info-label">Fecha envío</span>
+                            <span class="orden-info-value" id="modalFechaEnvio">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="conceptos-section-header">
+                    <h3 class="conceptos-section-title">
+                        <i data-lucide="list"></i>
+                        Detalle de costos
+                    </h3>
+                </div>
+
+                <div id="conceptosContainer">
+                    </div>
+
+                <div class="total-section">
+                    <span class="total-label">TOTAL GENERAL</span>
+                    <span class="total-value" id="totalGeneral">$0.00</span>
+                </div>
+
+                <div class="approval-section">
+                    <h3 class="approval-title">
+                        <i data-lucide="check-circle"></i>
+                        Notas del aprobador
+                    </h3>
+                    <div class="form-group">
+                        <label class="label">Notas (opcional)</label>
+                        <textarea class="input" name="notas" id="modalNotas" rows="3" placeholder="Comentarios sobre la aprobación..." style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModal()" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
+                    <i data-lucide="x"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-success" onclick="setAction('procesar')" style="background: #15803d; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
+                    <i data-lucide="check-circle"></i>
+                    Enviar decisión
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalDetalle">
+    <div class="modal modal-xl modal-detalle">
+        <div class="modal-header">
+            <h2 class="modal-title">Detalle de Costos</h2>
+            <button type="button" class="modal-close" onclick="cerrarModalDetalle()">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="orden-info">
+                <div class="orden-info-grid">
+                    <div class="orden-info-item">
+                        <span class="orden-info-label">Folio</span>
+                        <span class="orden-info-value" id="modalDetalleFolio">—</span>
+                    </div>
+                    <div class="orden-info-item">
+                        <span class="orden-info-label">Sucursal</span>
+                        <span class="orden-info-value" id="modalDetalleSucursal">—</span>
+                    </div>
+                    <div class="orden-info-item">
+                        <span class="orden-info-label">Estado</span>
+                        <span class="orden-info-value" id="modalDetalleEstado">—</span>
+                    </div>
+                    <div class="orden-info-item" id="detalleAprobadoPorContainer">
+                        <span class="orden-info-label" id="detalleAccionLabel">Aprobado por</span>
+                        <span class="orden-info-value" id="modalDetalleAprobadoPor">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rechazoInfoContainer" class="hidden">
+                <div class="rejection-alert">
+                    <h4 class="rejection-alert-title">
+                        <i data-lucide="alert-circle"></i>
+                        Motivo del rechazo
+                    </h4>
+                    <p class="rejection-alert-text" id="modalDetalleRechazoMotivo">—</p>
+                </div>
+            </div>
+
+            <div class="conceptos-section-header mt-6">
+                <h3 class="conceptos-section-title">
+                    <i data-lucide="list"></i>
+                    Detalle de costos
+                </h3>
+            </div>
+
+            <div id="conceptosDetalleContainer">
+                </div>
+
+            <div class="total-section">
+                <span class="total-label">TOTAL GENERAL</span>
+                <span class="total-value" id="totalGeneralDetalle">$0.00</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="cerrarModalDetalle()" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 10px 15px; border-radius: 8px; cursor: pointer;">
+                <i data-lucide="x"></i>
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+
+    </main>
+</div>
+
+    <script src="https://tims-orden-de-servicio.onrender.com/static/js/components.js"></script>
+    
+<script>
+    // Variable limpia, lista para usar con tu base de datos después
+    const costosData = {};
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.lucide) { lucide.createIcons(); }
+
+        // Lógica para el menú lateral
+        const sidebar = document.querySelector('[data-app-sidebar]');
+        const toggles = document.querySelectorAll('[data-sidebar-toggle]');
+        const closeButton = document.querySelector('[data-sidebar-close]');
+        const backdrop = document.querySelector('[data-sidebar-backdrop]');
+        if (sidebar && toggles.length) {
+            const openSidebar = () => { sidebar.classList.add('open'); if (backdrop) backdrop.classList.add('visible'); };
+            const closeSidebar = () => { sidebar.classList.remove('open'); if (backdrop) backdrop.classList.remove('visible'); };
+            toggles.forEach(t => { t.addEventListener('click', () => { if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar(); }); });
+            if (closeButton) closeButton.addEventListener('click', closeSidebar);
+            if (backdrop) backdrop.addEventListener('click', closeSidebar);
+        }
+
+        // RECUPERAR USUARIO PARA EL MENSAJE DE BIENVENIDA
+        const savedSession = sessionStorage.getItem('loginSession');
+        const savedUser = sessionStorage.getItem('loginUser');
+        
+        if (savedSession && savedUser) {
+            const appData = JSON.parse(savedSession);
+            
+            const inicial = savedUser.charAt(0).toUpperCase();
+            const userInitialHeader = document.getElementById('user-initial-header');
+            if(userInitialHeader) userInitialHeader.innerText = inicial;
+
+            const welcomeTitle = document.getElementById('welcome-username-display');
+            if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
+
+            if(appData.privilegio == 2 || appData.privilegio == "2") {
+                window.location.href = 'index.html';
+            }
+
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    // Funciones de modales (Intactas para uso futuro)
+    function setAction(action) { document.getElementById('modalAction').value = action; }
+    function toggleMotivo(index, value) {
+        const motivoEl = document.getElementById(`detalleMotivo_${index}`);
+        if (motivoEl) { motivoEl.style.display = value === 'rechazar' ? 'block' : 'none'; }
+    }
+    function abrirModalRevision(ordenId) { /* Lógica futura */ }
+    function cerrarModal() { document.getElementById('modalRevision').classList.remove('active'); }
+    function verDetalle(ordenId) { /* Lógica futura */ }
+    function cerrarModalDetalle() { document.getElementById('modalDetalle').classList.remove('active'); }
+
+    // Cerrar modales
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { cerrarModal(); cerrarModalDetalle(); }
+    });
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) { cerrarModal(); cerrarModalDetalle(); }
+        });
+    });
+</script>
+
+</body>
+</html>
