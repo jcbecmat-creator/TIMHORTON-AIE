@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facturación</title>
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/fonts.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/style.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/components.css">
+    
+<link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/design-system.css">
+<link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/app-shell.css">
+<link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/data-table-enhanced.css">
+
+<style>
+/* ========================================
+   FACTURACIÓN - Diseño Empresarial
+   ======================================== */
+
+.facturacion-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-6) var(--space-16);
+}
+
+/* Page Header - Estilo empresarial */
+.page-header-section {
+    margin-bottom: var(--space-8);
+    padding-bottom: var(--space-6);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.page-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-6);
+}
+
+.page-header-content h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--space-2) 0;
+}
+
+.page-header-content p {
+    font-size: var(--text-sm);
+    color: var(--gray-500);
+    margin: 0;
+}
+
+/* === Stats Cards === */
+.fc-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+}
+
+.fc-stat-card {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.fc-stat-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--gray-500);
+    margin-bottom: var(--space-2);
+}
+
+.fc-stat-value {
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+}
+
+.fc-stat-value.success { color: var(--success); }
+.fc-stat-value.warning { color: var(--warning); }
+.fc-stat-value.accent { color: #DC2626; }
+
+/* === Filters Card === */
+.fc-filters {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: var(--space-6);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.fc-filters .btn {
+    border-radius: var(--radius-sm);
+}
+
+.fc-filters .btn-success {
+    background: #DC2626;
+    border-color: #DC2626;
+}
+
+.fc-filters .btn-success:hover {
+    background: #B91C1C;
+    border-color: #B91C1C;
+}
+
+.fc-filters-grid {
+    display: flex;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.fc-filter-group {
+    flex: 1;
+    min-width: 140px;
+}
+
+.fc-filter-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--gray-500);
+    margin-bottom: var(--space-2);
+    display: block;
+}
+
+.fc-filter-input {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    background: var(--gray-50);
+    font-size: var(--text-sm);
+    color: var(--gray-900);
+    transition: all var(--duration-fast);
+}
+
+.fc-filter-input:hover { background: var(--gray-100); }
+
+.fc-filter-input:focus {
+    outline: none;
+    background: white;
+    border-color: #DC2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+/* === Selection Bar === */
+.fc-selection-bar {
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: var(--space-5) var(--space-6);
+    margin-bottom: var(--space-6);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+}
+
+.fc-selection-bar .btn {
+    border-radius: var(--radius-sm);
+}
+
+.fc-selection-bar .btn-primary {
+    background: #DC2626;
+    border-color: #DC2626;
+}
+
+.fc-selection-bar .btn-primary:hover {
+    background: #B91C1C;
+    border-color: #B91C1C;
+}
+
+.fc-selection-info {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.fc-selection-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--gray-500);
+}
+
+.fc-selection-count {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+}
+
+.fc-selection-total {
+    font-size: var(--text-sm);
+    color: var(--gray-600);
+}
+
+.fc-selection-actions {
+    display: flex;
+    gap: var(--space-3);
+}
+
+.fc-select-cell {
+    width: 48px;
+    text-align: center;
+}
+
+.fc-select-order {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #DC2626;
+}
+
+.fc-select-order:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* === Data Table === */
+.fc-table-container {
+    background: white;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.fc-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.fc-table thead {
+    background: var(--gray-50);
+}
+
+.fc-table th {
+    padding: var(--space-4);
+    text-align: left;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--gray-500);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.fc-table td {
+    padding: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--gray-900);
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: middle;
+}
+
+.fc-table tbody tr { transition: background var(--duration-fast); }
+.fc-table tbody tr:hover { background: var(--gray-50); }
+.fc-table tbody tr:last-child td { border-bottom: none; }
+
+/* === Badges === */
+.fc-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+}
+
+.fc-badge-pending {
+    background: var(--warning-soft);
+    color: #92400E;
+}
+
+.fc-badge-partial {
+    background: var(--info-soft);
+    color: #1e40af;
+}
+
+.fc-badge-paid {
+    background: var(--success-soft);
+    color: #065F46;
+}
+
+.fc-badge-count {
+    background: var(--accent-soft);
+    color: var(--accent);
+    min-width: 24px;
+    text-align: center;
+}
+
+/* === Action Buttons === */
+.fc-actions {
+    display: flex;
+    gap: var(--space-2);
+    justify-content: flex-end;
+}
+
+.fc-actions .btn {
+    border-radius: var(--radius-sm);
+    font-weight: var(--weight-semibold);
+}
+
+.fc-actions .btn-secondary {
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.fc-actions .btn-secondary:hover {
+    background: #FEE2E2;
+    border-color: #F87171;
+}
+
+.fc-actions .btn-secondary:disabled {
+    background: var(--gray-100);
+    color: var(--gray-400);
+    border-color: var(--gray-200);
+}
+
+/* === Empty State === */
+.fc-empty {
+    text-align: center;
+    padding: var(--space-16) var(--space-6);
+}
+
+.fc-empty-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-5);
+    color: var(--gray-300);
+}
+
+.fc-empty-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+    margin: 0 0 var(--space-2);
+}
+
+.fc-empty-text {
+    font-size: var(--text-sm);
+    color: var(--gray-500);
+    margin: 0;
+}
+
+/* === XML Interpreter === */
+.fc-xml-upload {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: center;
+}
+
+.fc-xml-upload .btn {
+    border-radius: var(--radius-sm);
+}
+
+.fc-xml-upload input[type="file"] {
+    flex: 1;
+    min-width: 220px;
+    padding: var(--space-2);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    background: var(--gray-50);
+    font-size: var(--text-sm);
+    color: var(--gray-700);
+}
+
+.fc-xml-upload input[type="file"]::file-selector-button {
+    margin-right: var(--space-3);
+    border: none;
+    background: #DC2626;
+    color: white;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-default);
+}
+
+.fc-xml-upload input[type="file"]::file-selector-button:hover {
+    background: #B91C1C;
+}
+
+.fc-xml-upload input[type="file"]::-webkit-file-upload-button {
+    margin-right: var(--space-3);
+    border: none;
+    background: #DC2626;
+    color: white;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-default);
+}
+
+.fc-xml-upload input[type="file"]::-webkit-file-upload-button:hover {
+    background: #B91C1C;
+}
+
+.fc-xml-result {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+}
+
+.fc-xml-card {
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    border: 1px solid var(--gray-200);
+}
+
+.fc-xml-card-title {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-800);
+    margin: 0 0 var(--space-3) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.fc-xml-kv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+}
+
+.fc-xml-kv {
+    display: grid;
+    gap: var(--space-1);
+}
+
+.fc-xml-kv-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+}
+
+.fc-xml-kv-value {
+    font-size: var(--text-sm);
+    color: var(--gray-900);
+    font-weight: var(--weight-medium);
+    word-break: break-word;
+}
+
+.fc-xml-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+}
+
+.fc-xml-validation {
+    background: #ecfdf3;
+    border: 1px solid #86efac;
+    color: #166534;
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+}
+
+.fc-xml-validation.error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.fc-xml-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+}
+
+.fc-xml-table th,
+.fc-xml-table td {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--gray-100);
+    text-align: left;
+}
+
+.fc-xml-table th {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: white;
+    font-weight: var(--weight-semibold);
+    background: #DC2626;
+}
+
+.fc-xml-table thead {
+    border-radius: var(--radius-sm);
+}
+
+.fc-xml-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.fc-xml-cuenta-select {
+    min-width: 200px;
+}
+
+.fc-xml-cuenta-select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* === Orden Info === */
+.fc-orden-info {
+    background: var(--gray-50);
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+    border: 1px solid var(--gray-200);
+}
+
+.fc-orden-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-4);
+}
+
+.fc-orden-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.fc-orden-info-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--gray-500);
+}
+
+.fc-orden-info-value {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+}
+
+/* === Form Fields === */
+.fc-form-section {
+    margin-bottom: var(--space-6);
+}
+
+.fc-form-section-title {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+    margin: 0 0 var(--space-4) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.fc-form-section-title i {
+    width: 18px;
+    height: 18px;
+    color: #DC2626;
+}
+
+.fc-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-4);
+}
+
+.fc-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.fc-field.full-width {
+    grid-column: 1 / -1;
+}
+
+.fc-field-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--gray-500);
+}
+
+.fc-field-input {
+    padding: var(--space-3) var(--space-4);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--gray-900);
+    background: white;
+    transition: all var(--duration-fast);
+}
+
+.fc-field-input:focus {
+    outline: none;
+    border-color: #DC2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.fc-field-hint {
+    font-size: var(--text-xs);
+    color: var(--gray-500);
+}
+
+/* === Existing Facturas List === */
+.fc-existing-facturas {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--gray-200);
+}
+
+.fc-factura-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+}
+
+.fc-factura-card.selected {
+    border-color: #DC2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.fc-factura-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+}
+
+.fc-factura-card-uuid {
+    font-family: monospace;
+    font-size: var(--text-xs);
+    color: var(--gray-600);
+    background: var(--gray-100);
+    padding: var(--space-1) var(--space-2);
+    border-radius: 2px;
+    border: 1px solid var(--gray-200);
+}
+
+.fc-factura-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: var(--space-3);
+}
+
+.fc-factura-card-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.fc-factura-card-item-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--gray-500);
+}
+
+.fc-factura-card-item-value {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+}
+
+.fc-factura-card-actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--gray-100);
+}
+
+/* Alertas de vencimiento */
+.fc-factura-card.vencida {
+    border-color: #DC2626;
+    background: linear-gradient(135deg, #FEF2F2 0%, white 100%);
+}
+
+.fc-alerta-vencida {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-3);
+    background: #FEF2F2;
+    color: #DC2626;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    border: 1px solid #FECACA;
+}
+
+.fc-alerta-vencida svg { width: 14px; height: 14px; }
+
+.fc-alerta-por-vencer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-3);
+    background: var(--warning-soft);
+    color: #b45309;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    border: 1px solid #FDE68A;
+}
+
+.fc-alerta-por-vencer svg { width: 14px; height: 14px; }
+
+.fc-btn-sm {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: var(--weight-semibold);
+    transition: all var(--duration-fast);
+}
+
+.fc-btn-sm i { width: 14px; height: 14px; }
+
+.fc-btn-sm-secondary {
+    background: var(--gray-100);
+    color: var(--gray-900);
+}
+
+.fc-btn-sm-secondary:hover {
+    background: var(--gray-200);
+}
+
+.fc-btn-sm-danger {
+    background: var(--error-soft);
+    color: var(--error);
+}
+
+.fc-btn-sm-danger:hover {
+    background: rgba(255, 59, 48, 0.2);
+}
+
+/* === Modal overrides for this page === */
+#modalFactura .modal,
+#modalXml .modal {
+    border-radius: var(--radius-sm);
+}
+
+#modalFactura .modal-header,
+#modalXml .modal-header {
+    background: #DC2626;
+    color: white;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+#modalFactura .modal-title,
+#modalXml .modal-title {
+    color: white;
+}
+
+#modalFactura .modal-close,
+#modalXml .modal-close {
+    color: white;
+    opacity: 0.8;
+}
+
+#modalFactura .modal-close:hover,
+#modalXml .modal-close:hover {
+    opacity: 1;
+    background: rgba(255,255,255,0.15);
+}
+
+#modalFactura .modal-footer .btn,
+#modalXml .modal-footer .btn {
+    border-radius: var(--radius-sm);
+}
+
+#modalFactura .modal-footer .btn-success,
+#modalXml .modal-footer .btn-success {
+    background: #DC2626;
+    border-color: #DC2626;
+}
+
+#modalFactura .modal-footer .btn-success:hover,
+#modalXml .modal-footer .btn-success:hover {
+    background: #B91C1C;
+    border-color: #B91C1C;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .facturacion-wrap { padding: var(--space-4) var(--space-4) var(--space-16); }
+    .page-header-row { flex-direction: column; }
+    .fc-filters-grid { flex-direction: column; }
+    .fc-filter-group { width: 100%; }
+    .fc-table-container { overflow-x: auto; }
+    .fc-table { min-width: 900px; }
+    .fc-form-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="has-sidebar">
+    <header class="main-header">
+        <div class="header-left">
+            <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
+                <span class="hamburger"></span>
+            </button>
+            <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
+            <h1 class="system-title">Ordenes de Servicio</h1>
+        </div>
+        <div class="header-right">
+            <div class="user-menu">
+                <button class="user-circle-btn"><span class="user-circle-initial" id="user-initial-header">U</span></button>
+            </div>
+        </div>
+    </header>
+
+<div class="main-layout">
+    <aside class="sidebar app-sidebar" data-app-sidebar>
+        <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
+            <span class="close-icon">X</span>
+        </button>
+        <button class="sidebar-toggle" type="button" aria-label="Mostrar navegación" data-sidebar-toggle>
+            <span class="hamburger"></span>
+        </button>
+        <div class="sidebar-content">
+            
+            <nav class="sidebar-nav">
+                <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
+                <div class="sidebar-section">
+                    <div class="sidebar-section-title">Formas</div>
+                    <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                    <a href="index.html" class="sidebar-link" id="nav-preventivo"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                </div>
+                <div class="sidebar-section" id="nav-seccion-admin">
+                    <div class="sidebar-section-title">Administración</div>
+                    <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                    <a href="costos.html" class="sidebar-link"><i data-lucide="calculator"></i> Costos de reparación</a>
+                    <a href="aprobacion.html" class="sidebar-link"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                    <a href="facturacion.html" class="sidebar-link activa"><i data-lucide="file-text"></i> Facturación</a>
+                </div>
+                <div class="sidebar-section" id="nav-seccion-reportes">
+                    <div class="sidebar-section-title">Reportes</div>
+                    <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                </div>
+            </nav>
+
+        </div>
+    </aside>
+    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+    <main class="main-content app-content">
+        
+        <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px;">
+            <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
+            <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
+        </div>
+
+<div class="facturacion-wrap">
+    <header class="page-header-section">
+        <div class="page-header-row">
+            <div class="page-header-content">
+                <h1>Facturación</h1>
+                <p>Vincula facturas fiscales (CFDI) a órdenes con costos aprobados</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="fc-stats">
+        <div class="fc-stat-card">
+            <div class="fc-stat-label">Órdenes pendientes</div>
+            <div class="fc-stat-value accent">0</div>
+        </div>
+        <div class="fc-stat-card">
+            <div class="fc-stat-label">Facturas pendientes</div>
+            <div class="fc-stat-value warning">0</div>
+        </div>
+        <div class="fc-stat-card">
+            <div class="fc-stat-label">Facturas pagadas</div>
+            <div class="fc-stat-value success">0</div>
+        </div>
+        <div class="fc-stat-card">
+            <div class="fc-stat-label">Total facturado</div>
+            <div class="fc-stat-value">$0.00</div>
+        </div>
+    </div>
+
+    <form method="GET" class="fc-filters">
+        <div class="fc-filters-grid">
+            <div class="fc-filter-group">
+                <label class="fc-filter-label">Fecha inicio</label>
+                <input type="date" class="fc-filter-input" name="fecha_inicio" value="">
+            </div>
+            <div class="fc-filter-group">
+                <label class="fc-filter-label">Fecha fin</label>
+                <input type="date" class="fc-filter-input" name="fecha_fin" value="">
+            </div>
+            <div class="fc-filter-group">
+                <label class="fc-filter-label">Estado</label>
+                <select class="fc-filter-input" name="estado">
+                    <option value="">Todos</option>
+                    <option value="sin_factura">Sin factura</option>
+                    <option value="pendiente">Pago pendiente</option>
+                    <option value="pagado_parcial">Pago parcial</option>
+                    <option value="pagado">Pagado</option>
+                </select>
+            </div>
+            <div class="fc-filter-group">
+                <label class="fc-filter-label">Buscar</label>
+                <input type="text" class="fc-filter-input" name="buscar" value="" placeholder="Folio, UUID o sucursal...">
+            </div>
+            <div class="flex gap-2 flex-shrink-0">
+                <button class="btn btn-secondary" type="submit" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="filter" style="width: 16px;"></i>
+                    Filtrar
+                </button>
+                <a href="#" class="btn btn-success" style="background: #15803d; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
+                    <i data-lucide="download" style="width: 16px;"></i>
+                    Exportar Excel
+                </a>
+            </div>
+        </div>
+    </form>
+
+    <div class="fc-selection-bar">
+        <div class="fc-selection-info">
+            <span class="fc-selection-label">Selección actual</span>
+            <span class="fc-selection-count" id="selectedCount">0 folios</span>
+            <span class="fc-selection-total" id="selectedTotal">$0.00 aprobados</span>
+        </div>
+        <div class="fc-selection-actions">
+            <button type="button" class="btn btn-secondary" id="btnLimpiarSeleccion" disabled style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="x-circle" style="width: 16px;"></i>
+                Limpiar
+            </button>
+            <button type="button" class="btn btn-primary" id="btnAdjuntarXml" disabled style="background: #DC2626; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="file-plus" style="width: 16px;"></i>
+                Adjuntar XML
+            </button>
+        </div>
+    </div>
+
+    <div class="fc-table-container">
+        <table class="fc-table">
+            <thead>
+                <tr>
+                    <th style="width: 48px;">Sel.</th>
+                    <th>Folio</th>
+                    <th>Sucursal</th>
+                    <th>Centro de costos</th>
+                    <th>Costo Aprobado</th>
+                    <th>Facturas</th>
+                    <th>Total XML</th>
+                    <th>% Pagado</th>
+                    <th style="text-align: right;">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-facturacion-body">
+                <tr>
+                    <td colspan="9" class="fc-empty" style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                        <i data-lucide="inbox" style="width: 48px; height: 48px; margin: 0 auto 10px; opacity: 0.5;"></i>
+                        <p>No hay facturas pendientes en este momento.</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalFactura">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title">Facturas vinculadas</h2>
+            <button type="button" class="modal-close" onclick="cerrarModal('modalFactura')">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <form id="formFactura" method="POST">
+            <input type="hidden" name="factura_id" id="modalFacturaId" value="">
+            <input type="hidden" name="action" id="modalAction" value="editar">
+            <div class="modal-body">
+                <div class="fc-orden-info">
+                    <div class="fc-orden-info-grid">
+                        <div class="fc-orden-info-item">
+                            <span class="fc-orden-info-label">Folio</span>
+                            <span class="fc-orden-info-value" id="modalFolio">—</span>
+                        </div>
+                        <div class="fc-orden-info-item">
+                            <span class="fc-orden-info-label">Sucursal</span>
+                            <span class="fc-orden-info-value" id="modalSucursal">—</span>
+                        </div>
+                        <div class="fc-orden-info-item">
+                            <span class="fc-orden-info-label">Costo Aprobado</span>
+                            <span class="fc-orden-info-value" id="modalCostoAprobado">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="facturasExistentes" class="fc-existing-facturas" style="display: none;">
+                    <h3 class="fc-form-section-title">
+                        <i data-lucide="files"></i>
+                        Facturas vinculadas
+                    </h3>
+                    <div id="facturasListContainer"></div>
+                </div>
+
+                <div class="fc-form-section">
+                    <h3 class="fc-form-section-title">
+                        <i data-lucide="wallet"></i>
+                        Actualizar pago
+                    </h3>
+                    <p class="fc-field-hint" id="facturaSeleccionHint">Selecciona una factura para editar su pago.</p>
+                    <div class="fc-form-grid">
+                        <div class="fc-field">
+                            <label class="fc-field-label">% Pagado</label>
+                            <input type="number" step="0.01" min="0" max="100" class="fc-field-input" name="porcentaje_pagado" id="inputPorcentaje">
+                        </div>
+                        <div class="fc-field">
+                            <label class="fc-field-label">Fecha de pago</label>
+                            <input type="date" class="fc-field-input" name="fecha_pago" id="inputFechaPago">
+                        </div>
+                        <div class="fc-field">
+                            <label class="fc-field-label">Fecha de vencimiento</label>
+                            <input type="date" class="fc-field-input" name="fecha_vencimiento" id="inputFechaVencimiento">
+                        </div>
+                        <div class="fc-field full-width">
+                            <label class="fc-field-label">Notas</label>
+                            <input type="text" class="fc-field-input" name="notas" id="inputNotas" placeholder="Comentarios adicionales...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalFactura')">
+                    <i data-lucide="x"></i>
+                    Cerrar
+                </button>
+                <button type="submit" class="btn btn-success" id="btnGuardarPago" disabled>
+                    <i data-lucide="save"></i>
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalXml">
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <h2 class="modal-title">Adjuntar XML (CFDI)</h2>
+            <button type="button" class="modal-close" onclick="cerrarModal('modalXml')">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <form id="formXml" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="action" value="adjuntar_xml">
+            <input type="hidden" name="orden_ids" id="xmlOrdenIds">
+            <div class="modal-body">
+                <div class="fc-orden-info">
+                    <div class="fc-orden-info-grid">
+                        <div class="fc-orden-info-item">
+                            <span class="fc-orden-info-label">Folios seleccionados</span>
+                            <span class="fc-orden-info-value" id="xmlModalFolios">—</span>
+                        </div>
+                        <div class="fc-orden-info-item">
+                            <span class="fc-orden-info-label">Total aprobado</span>
+                            <span class="fc-orden-info-value" id="xmlModalTotalAprobado">—</span>
+                        </div>
+                        <div class="fc-orden-info-item">
+                            <span class="fc-orden-info-label">Total XML</span>
+                            <span class="fc-orden-info-value" id="xmlModalTotalXml">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fc-form-section">
+                    <h3 class="fc-form-section-title">
+                        <i data-lucide="layers"></i>
+                        Formulario contable
+                    </h3>
+                    <div class="fc-field">
+                        <label class="fc-field-label" for="xmlFormularioContable">Formulario</label>
+                        <select class="fc-field-input" id="xmlFormularioContable" name="formulario_contable_id">
+                            <option value="">Selecciona un formulario</option>
+                                <option value="7">Mantenimiento</option>
+                                <option value="6">Supply chain</option>
+                        </select>
+                        <span class="fc-field-hint" id="xmlFormularioContableHint">
+                            Selecciona el formulario contable para asignar cuentas a los conceptos.
+                        </span>
+                    </div>
+                    <div class="fc-field">
+                        <label class="fc-field-label" for="xmlCuentaContableGlobal">Cuenta contable (todos)</label>
+                        <div class="fc-xml-upload">
+                            <select class="fc-field-input" id="xmlCuentaContableGlobal">
+                                <option value="">Selecciona cuenta</option>
+                            </select>
+                            <button type="button" class="btn btn-secondary" id="btnAplicarCuentaGlobal">
+                                <i data-lucide="check"></i>
+                                Aplicar a todos
+                            </button>
+                        </div>
+                        <span class="fc-field-hint">
+                            Asigna la misma cuenta contable a todos los conceptos.
+                        </span>
+                    </div>
+                </div>
+
+                <div class="fc-form-section">
+                    <h3 class="fc-form-section-title">
+                        <i data-lucide="file-search"></i>
+                        Cargar XML CFDI
+                    </h3>
+                    <div class="fc-xml-upload">
+                        <input type="file" class="fc-field-input" id="xmlFileInput" name="xml_file" accept=".xml">
+                        <button type="button" class="btn btn-secondary" onclick="limpiarXml()">
+                            <i data-lucide="rotate-ccw"></i>
+                            Limpiar
+                        </button>
+                    </div>
+                    <span class="fc-field-hint">Se valida contra los folios seleccionados (±$1).</span>
+                </div>
+
+                <div id="xmlValidation" class="fc-xml-validation" style="display: none;"></div>
+                <div id="xmlError" class="fc-xml-error" style="display: none;"></div>
+
+                <div id="xmlResult" class="fc-xml-result" style="display: none;">
+                    <div class="fc-xml-card">
+                        <h4 class="fc-xml-card-title"><i data-lucide="file-text"></i>Comprobante</h4>
+                        <div class="fc-xml-kv-grid" id="xmlComprobanteGrid"></div>
+                    </div>
+                    <div class="fc-xml-card">
+                        <h4 class="fc-xml-card-title"><i data-lucide="user"></i>Emisor</h4>
+                        <div class="fc-xml-kv-grid" id="xmlEmisorGrid"></div>
+                    </div>
+                    <div class="fc-xml-card">
+                        <h4 class="fc-xml-card-title"><i data-lucide="users"></i>Receptor</h4>
+                        <div class="fc-xml-kv-grid" id="xmlReceptorGrid"></div>
+                    </div>
+                    <div class="fc-xml-card">
+                        <h4 class="fc-xml-card-title"><i data-lucide="badge-check"></i>Timbre</h4>
+                        <div class="fc-xml-kv-grid" id="xmlTimbreGrid"></div>
+                    </div>
+                    <div class="fc-xml-card">
+                        <h4 class="fc-xml-card-title"><i data-lucide="list"></i>Conceptos</h4>
+                        <div id="xmlConceptosContainer"></div>
+                    </div>
+                    <div class="fc-xml-card">
+                        <h4 class="fc-xml-card-title"><i data-lucide="calculator"></i>Totales</h4>
+                        <div class="fc-xml-kv-grid" id="xmlTotalesGrid"></div>
+                        <div id="xmlImpuestosBreakdown" style="margin-top: var(--space-4);"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalXml')">
+                    <i data-lucide="x"></i>
+                    Cerrar
+                </button>
+                <button type="submit" class="btn btn-success" id="btnGuardarXml" disabled>
+                    <i data-lucide="save"></i>
+                    Guardar factura
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+    </main>
+</div>
+
+    <script src="https://tims-orden-de-servicio.onrender.com/static/js/components.js"></script>
+
+<script>
+    // Variable limpia para recibir datos reales después
+    const ordenesData = {};
+    const formulariosContables = [{"id": 7, "nombre": "Mantenimiento", "slug": "mantenimiento"}, {"id": 6, "nombre": "Supply chain", "slug": "supply-chain"}];
+    const cuentasContables = [{"codigo": "602-56-019", "formulario_id": 6, "id": 6, "nombre": "Mtto correctivo maquinaria causa operativa"}, {"codigo": "602-56-020", "formulario_id": 6, "id": 5, "nombre": "Mtto correctivo maquinaria naturaleza del activo"}, {"codigo": "602-56-021", "formulario_id": 6, "id": 7, "nombre": "Mtto correctivo maquinaria causa instalaci\u00f3n"}, {"codigo": "602-56-035", "formulario_id": 6, "id": 4, "nombre": "Mtto Correctivo Repcops Espresso"}, {"codigo": "602-56-026", "formulario_id": 7, "id": 3, "nombre": "Mtto de Inmuebles correctivo causa operativa"}, {"codigo": "602-56-027", "formulario_id": 7, "id": 2, "nombre": "Mtto de Inmuebles correctivo deterioro del restaurante"}, {"codigo": "602-56-028", "formulario_id": 7, "id": 1, "nombre": "Mtto de Inmuebles correctivo naturaleza del equipo"}];
+    
+    const seleccionOrdenes = new Map();
+    let ultimoXmlParseado = null;
+    const cuentasContablesByFormulario = new Map();
+
+    cuentasContables.forEach((cuenta) => {
+        const key = Number(cuenta.formulario_id || 0);
+        if (!key) return;
+        if (!cuentasContablesByFormulario.has(key)) {
+            cuentasContablesByFormulario.set(key, []);
+        }
+        cuentasContablesByFormulario.get(key).push(cuenta);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.lucide) { lucide.createIcons(); }
+
+        // Lógica del menú lateral
+        const sidebar = document.querySelector('[data-app-sidebar]');
+        const toggles = document.querySelectorAll('[data-sidebar-toggle]');
+        const closeButton = document.querySelector('[data-sidebar-close]');
+        const backdrop = document.querySelector('[data-sidebar-backdrop]');
+        if (sidebar && toggles.length) {
+            const openSidebar = () => { sidebar.classList.add('open'); if (backdrop) backdrop.classList.add('visible'); };
+            const closeSidebar = () => { sidebar.classList.remove('open'); if (backdrop) backdrop.classList.remove('visible'); };
+            toggles.forEach(t => { t.addEventListener('click', () => { if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar(); }); });
+            if (closeButton) closeButton.addEventListener('click', closeSidebar);
+            if (backdrop) backdrop.addEventListener('click', closeSidebar);
+        }
+
+        // RECUPERAR USUARIO PARA EL MENSAJE DE BIENVENIDA
+        const savedSession = sessionStorage.getItem('loginSession');
+        const savedUser = sessionStorage.getItem('loginUser');
+        
+        if (savedSession && savedUser) {
+            const appData = JSON.parse(savedSession);
+            
+            const inicial = savedUser.charAt(0).toUpperCase();
+            const userInitialHeader = document.getElementById('user-initial-header');
+            if(userInitialHeader) userInitialHeader.innerText = inicial;
+
+            const welcomeTitle = document.getElementById('welcome-username-display');
+            if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
+
+            if(appData.privilegio == 2 || appData.privilegio == "2") {
+                window.location.href = 'index.html';
+            }
+        } else {
+            window.location.href = 'index.html';
+        }
+
+        // Listeners de la tabla (aunque ahora está vacía)
+        document.querySelectorAll('.fc-select-order').forEach((checkbox) => {
+            checkbox.addEventListener('change', onSeleccionChange);
+        });
+
+        const xmlInput = document.getElementById('xmlFileInput');
+        if (xmlInput) xmlInput.addEventListener('change', handleXmlFile);
+
+        const btnAdjuntarXml = document.getElementById('btnAdjuntarXml');
+        if (btnAdjuntarXml) btnAdjuntarXml.addEventListener('click', abrirModalXml);
+
+        const btnLimpiarSeleccion = document.getElementById('btnLimpiarSeleccion');
+        if (btnLimpiarSeleccion) btnLimpiarSeleccion.addEventListener('click', limpiarSeleccion);
+
+        const formularioSelect = document.getElementById('xmlFormularioContable');
+        if (formularioSelect) formularioSelect.addEventListener('change', () => actualizarFormularioContable(false));
+
+        const btnAplicarCuentaGlobal = document.getElementById('btnAplicarCuentaGlobal');
+        if (btnAplicarCuentaGlobal) btnAplicarCuentaGlobal.addEventListener('click', aplicarCuentaGlobal);
+
+        const formXml = document.getElementById('formXml');
+        if (formXml) {
+            formXml.addEventListener('submit', (event) => {
+                if (!validarCuentasConceptos()) {
+                    event.preventDefault();
+                    alert('Selecciona una cuenta contable para todos los conceptos.');
+                }
+            });
+        }
+    });
+
+    function formatMoney(value) {
+        const num = Number(value) || 0;
+        return num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function getTotalSeleccionado() {
+        let total = 0;
+        seleccionOrdenes.forEach((item) => { total += Number(item.costo || 0); });
+        return total;
+    }
+
+    function actualizarBarraSeleccion() {
+        const count = seleccionOrdenes.size;
+        const total = getTotalSeleccionado();
+        const countEl = document.getElementById('selectedCount');
+        const totalEl = document.getElementById('selectedTotal');
+        if (countEl) countEl.textContent = `${count} folio${count === 1 ? '' : 's'}`;
+        if (totalEl) totalEl.textContent = `$${formatMoney(total)} aprobados`;
+
+        const btnAdjuntar = document.getElementById('btnAdjuntarXml');
+        const btnLimpiar = document.getElementById('btnLimpiarSeleccion');
+        if (btnAdjuntar) btnAdjuntar.disabled = count === 0;
+        if (btnLimpiar) btnLimpiar.disabled = count === 0;
+    }
+
+    function getFormularioContableIdSeleccionado() {
+        const select = document.getElementById('xmlFormularioContable');
+        if (!select || !select.value) return null;
+        const value = String(select.value).trim();
+        return value ? Number(value) : null;
+    }
+
+    function getFormulariosContablesSeleccionados() {
+        const ids = new Set();
+        let hasMissing = false;
+        seleccionOrdenes.forEach((_, ordenId) => {
+            const data = ordenesData[ordenId];
+            if (!data) return;
+            const id = Number(data.formulario_contable_id || 0);
+            if (id) ids.add(id);
+            else hasMissing = true;
+        });
+        return { ids, hasMissing };
+    }
+
+    function buildCuentaOptions(formularioId, selectedValue) {
+        const cuentas = formularioId ? (cuentasContablesByFormulario.get(formularioId) || []) : [];
+        let options = '<option value="">Selecciona cuenta</option>';
+        cuentas.forEach((cuenta) => {
+            const label = `${cuenta.codigo} - ${cuenta.nombre}`;
+            const selected = String(cuenta.id) === String(selectedValue) ? ' selected' : '';
+            options += `<option value="${cuenta.id}"${selected}>${label}</option>`;
+        });
+        return { options, hasCuentas: cuentas.length > 0 };
+    }
+
+    function actualizarOpcionesCuentas() {
+        const formularioId = getFormularioContableIdSeleccionado();
+        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
+        if (globalSelect) {
+            const selected = globalSelect.value;
+            const { options, hasCuentas } = buildCuentaOptions(formularioId, selected);
+            globalSelect.innerHTML = options;
+            globalSelect.disabled = !formularioId || !hasCuentas;
+        }
+        document.querySelectorAll('.fc-xml-cuenta-select').forEach((select) => {
+            const selected = select.value;
+            const { options, hasCuentas } = buildCuentaOptions(formularioId, selected);
+            select.innerHTML = options;
+            select.required = hasCuentas;
+            select.disabled = !formularioId || !hasCuentas;
+        });
+    }
+
+    function aplicarCuentaGlobal() {
+        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
+        if (!globalSelect || !globalSelect.value) return;
+        document.querySelectorAll('.fc-xml-cuenta-select').forEach((select) => {
+            select.value = globalSelect.value;
+        });
+    }
+
+    function actualizarFormularioContable(force) {
+        const select = document.getElementById('xmlFormularioContable');
+        const hint = document.getElementById('xmlFormularioContableHint');
+        if (!select) return;
+        const { ids, hasMissing } = getFormulariosContablesSeleccionados();
+
+        if (force || !select.value) {
+            if (ids.size === 1) { select.value = String(Array.from(ids)[0]); } 
+            else { select.value = ''; }
+        }
+
+        let mensaje = 'Selecciona el formulario contable para asignar cuentas a los conceptos.';
+        if (ids.size > 1) { mensaje = 'Los folios seleccionados tienen formularios distintos; selecciona uno.'; } 
+        else if (ids.size === 0 && hasMissing) { mensaje = 'Los folios seleccionados no tienen formulario contable asociado; selecciona uno.'; }
+        
+        if (hint) hint.textContent = mensaje;
+        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
+        if (globalSelect) globalSelect.value = '';
+        actualizarOpcionesCuentas();
+    }
+
+    function validarCuentasConceptos() {
+        const formularioId = getFormularioContableIdSeleccionado();
+        if (!formularioId) return true;
+        const cuentas = cuentasContablesByFormulario.get(formularioId) || [];
+        if (!cuentas.length) return true;
+        const selects = document.querySelectorAll('.fc-xml-cuenta-select');
+        for (const select of selects) { if (!select.value) return false; }
+        return true;
+    }
+
+    function onSeleccionChange(event) {
+        const checkbox = event.target;
+        const ordenId = Number(checkbox.dataset.ordenId || 0);
+        const folio = checkbox.dataset.folio || '';
+        const costo = Number(checkbox.dataset.costo || 0);
+
+        if (checkbox.checked) { seleccionOrdenes.set(ordenId, { folio, costo }); } 
+        else { seleccionOrdenes.delete(ordenId); }
+
+        actualizarBarraSeleccion();
+        if (document.getElementById('modalXml')?.classList.contains('active')) {
+            actualizarResumenXml();
+            actualizarFormularioContable(false);
+            if (ultimoXmlParseado) { validarXmlContraSeleccion(ultimoXmlParseado); }
+        }
+    }
+
+    function limpiarSeleccion() {
+        seleccionOrdenes.clear();
+        document.querySelectorAll('.fc-select-order').forEach((checkbox) => {
+            if (!checkbox.disabled) checkbox.checked = false;
+        });
+        actualizarBarraSeleccion();
+        actualizarResumenXml();
+        const formularioSelect = document.getElementById('xmlFormularioContable');
+        if (formularioSelect) formularioSelect.value = '';
+        actualizarFormularioContable(true);
+        limpiarXml();
+    }
+
+    function abrirModalXml() {
+        if (seleccionOrdenes.size === 0) {
+            alert('Selecciona al menos un folio para adjuntar el XML.');
+            return;
+        }
+        actualizarResumenXml();
+        limpiarXml();
+        actualizarFormularioContable(true);
+        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
+        if (globalSelect) globalSelect.value = '';
+        document.getElementById('modalXml').classList.add('active');
+        if (window.lucide) { lucide.createIcons(); }
+    }
+
+    function actualizarResumenXml() {
+        const folios = Array.from(seleccionOrdenes.values()).map(item => item.folio).filter(Boolean);
+        const total = getTotalSeleccionado();
+        const ordenIds = Array.from(seleccionOrdenes.keys());
+
+        const foliosEl = document.getElementById('xmlModalFolios');
+        const totalAprobadoEl = document.getElementById('xmlModalTotalAprobado');
+        const totalXmlEl = document.getElementById('xmlModalTotalXml');
+        const ordenIdsInput = document.getElementById('xmlOrdenIds');
+
+        if (foliosEl) foliosEl.textContent = folios.length ? folios.join(', ') : '—';
+        if (totalAprobadoEl) totalAprobadoEl.textContent = `$${formatMoney(total)}`;
+        if (totalXmlEl) totalXmlEl.textContent = '—';
+        if (ordenIdsInput) ordenIdsInput.value = ordenIds.join(',');
+    }
+
+    function abrirModalFactura(ordenId) {
+        // Logica para abrir detalle de la factura. Como está vacía, no hace nada ahora.
+    }
+
+    function editarFactura(ordenId, facturaId) { }
+    function resetPagoForm() { }
+
+    function limpiarXml() {
+        const input = document.getElementById('xmlFileInput');
+        if (input) input.value = '';
+        ultimoXmlParseado = null;
+
+        const validationEl = document.getElementById('xmlValidation');
+        if (validationEl) {
+            validationEl.textContent = '';
+            validationEl.style.display = 'none';
+            validationEl.classList.remove('error');
+        }
+
+        const errorEl = document.getElementById('xmlError');
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.style.display = 'none';
+        }
+
+        const resultEl = document.getElementById('xmlResult');
+        if (resultEl) resultEl.style.display = 'none';
+
+        ['xmlComprobanteGrid', 'xmlEmisorGrid', 'xmlReceptorGrid', 'xmlTimbreGrid', 'xmlConceptosContainer', 'xmlTotalesGrid', 'xmlImpuestosBreakdown']
+            .forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = '';
+            });
+
+        const totalXmlEl = document.getElementById('xmlModalTotalXml');
+        if (totalXmlEl) totalXmlEl.textContent = '—';
+
+        const btnGuardar = document.getElementById('btnGuardarXml');
+        if (btnGuardar) btnGuardar.disabled = true;
+    }
+
+    function mostrarXmlError(mensaje) {
+        ultimoXmlParseado = null;
+        const errorEl = document.getElementById('xmlError');
+        const resultEl = document.getElementById('xmlResult');
+        if (resultEl) resultEl.style.display = 'none';
+        if (errorEl) {
+            errorEl.textContent = mensaje;
+            errorEl.style.display = 'block';
+        }
+        const validationEl = document.getElementById('xmlValidation');
+        if (validationEl) {
+            validationEl.textContent = '';
+            validationEl.style.display = 'none';
+        }
+        const btnGuardar = document.getElementById('btnGuardarXml');
+        if (btnGuardar) btnGuardar.disabled = true;
+    }
+
+    async function handleXmlFile(event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+
+        limpiarXml();
+        try {
+            const xmlText = await file.text();
+            const parsed = parseCfdiXml(xmlText);
+            if (parsed.error) {
+                mostrarXmlError(parsed.error);
+                return;
+            }
+            renderXmlData(parsed);
+            ultimoXmlParseado = parsed;
+            validarXmlContraSeleccion(parsed);
+        } catch (error) {
+            mostrarXmlError('No se pudo leer el archivo XML.');
+        }
+    }
+
+    function validarXmlContraSeleccion(data) {
+        const totalXmlRaw = data?.totales?.total || data?.comprobante?.total || '';
+        const totalXml = parseFloat(totalXmlRaw);
+        const totalAprobado = getTotalSeleccionado();
+
+        if (seleccionOrdenes.size === 0) {
+            setXmlValidation('error', 'Selecciona al menos un folio para validar el XML.');
+            return;
+        }
+
+        const totalXmlEl = document.getElementById('xmlModalTotalXml');
+        if (totalXmlEl && Number.isFinite(totalXml)) {
+            totalXmlEl.textContent = `$${formatMoney(totalXml)}`;
+        }
+
+        if (!Number.isFinite(totalXml)) {
+            setXmlValidation('error', 'No se pudo leer el total del XML.');
+            return;
+        }
+
+        const diff = Math.abs(totalXml - totalAprobado);
+        if (diff <= 1) {
+            setXmlValidation('ok', `Validación OK. Diferencia: $${formatMoney(diff)}.`);
+        } else {
+            setXmlValidation('error', `El total del XML difiere $${formatMoney(diff)} del total aprobado.`);
+        }
+    }
+
+    function setXmlValidation(type, mensaje) {
+        const validationEl = document.getElementById('xmlValidation');
+        const btnGuardar = document.getElementById('btnGuardarXml');
+        if (!validationEl) return;
+        validationEl.textContent = mensaje;
+        validationEl.style.display = 'block';
+        validationEl.classList.toggle('error', type === 'error');
+        if (btnGuardar) btnGuardar.disabled = type === 'error';
+    }
+
+    function parseCfdiXml(xmlText) {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
+        const parserError = xmlDoc.getElementsByTagName('parsererror')[0];
+        if (parserError) return { error: 'XML inválido o mal formado.' };
+
+        const getNodeByTag = (names) => {
+            for (const name of names) {
+                const node = xmlDoc.getElementsByTagName(name)[0];
+                if (node) return node;
+            }
+            return null;
+        };
+
+        const findFirstChildByLocalName = (parent, localName) => {
+            if (!parent || !parent.children) return null;
+            for (const child of Array.from(parent.children)) {
+                if ((child.localName || '').toLowerCase() === localName.toLowerCase()) return child;
+            }
+            return null;
+        };
+
+        const findChildrenByLocalName = (parent, localName) => {
+            if (!parent || !parent.children) return [];
+            return Array.from(parent.children).filter(
+                (child) => ((child.localName || '').toLowerCase() === localName.toLowerCase())
+            );
+        };
+
+        const getAttr = (node, names) => {
+            if (!node) return '';
+            for (const name of names) {
+                const value = node.getAttribute(name);
+                if (value !== null && value !== '') return value;
+            }
+            return '';
+        };
+
+        const toNumber = (value) => {
+            const num = parseFloat(value);
+            return Number.isFinite(num) ? num : null;
+        };
+
+        const formatMoneyInner = (value) => {
+            if (value === null || value === undefined) return '';
+            return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        };
+
+        const comprobante = getNodeByTag(['cfdi:Comprobante', 'Comprobante']);
+        const emisor = getNodeByTag(['cfdi:Emisor', 'Emisor']);
+        const receptor = getNodeByTag(['cfdi:Receptor', 'Receptor']);
+        const timbre = getNodeByTag(['tfd:TimbreFiscalDigital', 'TimbreFiscalDigital']);
+        const conceptosNode = comprobante ? findFirstChildByLocalName(comprobante, 'Conceptos') : null;
+        const conceptosNodes = conceptosNode ? findChildrenByLocalName(conceptosNode, 'Concepto') : [];
+
+        const impuestosGlobal = comprobante ? findFirstChildByLocalName(comprobante, 'Impuestos') : null;
+
+        const parseImpuestoLinea = (node, tipo) => {
+            if (!node) return null;
+            return {
+                tipo,
+                impuesto: getAttr(node, ['Impuesto', 'impuesto']),
+                tipoFactor: getAttr(node, ['TipoFactor', 'tipoFactor']),
+                tasaOCuota: getAttr(node, ['TasaOCuota', 'tasaOCuota']),
+                importe: getAttr(node, ['Importe', 'importe'])
+            };
+        };
+
+        const dedupeAndSum = (items) => {
+            const map = new Map();
+            items.forEach((it) => {
+                const key = [it.tipo, it.impuesto, it.tipoFactor, it.tasaOCuota].join('|');
+                const prev = map.get(key);
+                if (!prev) {
+                    map.set(key, { ...it });
+                    return;
+                }
+                const a = toNumber(prev.importe);
+                const b = toNumber(it.importe);
+                if (a !== null && b !== null) {
+                    prev.importe = formatMoneyInner(a + b);
+                }
+            });
+            return Array.from(map.values());
+        };
+
+        const extractImpuestos = () => {
+            let trasladados = [];
+            let retenidos = [];
+
+            if (impuestosGlobal) {
+                const traslados = findFirstChildByLocalName(impuestosGlobal, 'Traslados');
+                const retenciones = findFirstChildByLocalName(impuestosGlobal, 'Retenciones');
+                trasladados = findChildrenByLocalName(traslados, 'Traslado')
+                    .map((n) => parseImpuestoLinea(n, 'Traslado')).filter(Boolean);
+                retenidos = findChildrenByLocalName(retenciones, 'Retencion')
+                    .map((n) => parseImpuestoLinea(n, 'Retención')).filter(Boolean);
+                return { trasladados, retenidos };
+            }
+
+            conceptosNodes.forEach((concepto) => {
+                const imp = findFirstChildByLocalName(concepto, 'Impuestos');
+                const tras = imp ? findFirstChildByLocalName(imp, 'Traslados') : null;
+                const ret = imp ? findFirstChildByLocalName(imp, 'Retenciones') : null;
+                const t = findChildrenByLocalName(tras, 'Traslado').map((n) => parseImpuestoLinea(n, 'Traslado')).filter(Boolean);
+                const r = findChildrenByLocalName(ret, 'Retencion').map((n) => parseImpuestoLinea(n, 'Retención')).filter(Boolean);
+                trasladados.push(...t);
+                retenidos.push(...r);
+            });
+
+            return {
+                trasladados: dedupeAndSum(trasladados),
+                retenidos: dedupeAndSum(retenidos)
+            };
+        };
+
+        const subtotal = getAttr(comprobante, ['SubTotal', 'subTotal', 'subtotal']);
+        const total = getAttr(comprobante, ['Total', 'total']);
+        const impuestosDetalle = extractImpuestos();
+
+        const conceptos = Array.from(conceptosNodes || []).map((concepto) => ({
+            clave: getAttr(concepto, ['ClaveProdServ', 'claveprodserv', 'claveProdServ']),
+            descripcion: getAttr(concepto, ['Descripcion', 'descripcion']),
+            cantidad: getAttr(concepto, ['Cantidad', 'cantidad']),
+            unidad: getAttr(concepto, ['Unidad', 'unidad']),
+            valorUnitario: getAttr(concepto, ['ValorUnitario', 'valorUnitario']),
+            importe: getAttr(concepto, ['Importe', 'importe'])
+        }));
+
+        return {
+            comprobante: {
+                version: getAttr(comprobante, ['Version', 'version']),
+                serie: getAttr(comprobante, ['Serie', 'serie']),
+                folio: getAttr(comprobante, ['Folio', 'folio']),
+                fecha: getAttr(comprobante, ['Fecha', 'fecha']),
+                subtotal,
+                total,
+                moneda: getAttr(comprobante, ['Moneda', 'moneda']),
+                tipo: getAttr(comprobante, ['TipoDeComprobante', 'tipoDeComprobante']),
+                metodoPago: getAttr(comprobante, ['MetodoPago', 'metodoPago']),
+                formaPago: getAttr(comprobante, ['FormaPago', 'formaPago']),
+                lugarExpedicion: getAttr(comprobante, ['LugarExpedicion', 'lugarExpedicion'])
+            },
+            emisor: {
+                rfc: getAttr(emisor, ['Rfc', 'rfc']),
+                nombre: getAttr(emisor, ['Nombre', 'nombre']),
+                regimen: getAttr(emisor, ['RegimenFiscal', 'regimenFiscal'])
+            },
+            receptor: {
+                rfc: getAttr(receptor, ['Rfc', 'rfc']),
+                nombre: getAttr(receptor, ['Nombre', 'nombre']),
+                usoCfdi: getAttr(receptor, ['UsoCFDI', 'UsoCfdi', 'usoCFDI', 'usoCfdi']),
+                domicilioFiscal: getAttr(receptor, ['DomicilioFiscalReceptor', 'domicilioFiscalReceptor']),
+                regimen: getAttr(receptor, ['RegimenFiscalReceptor', 'regimenFiscalReceptor'])
+            },
+            timbre: {
+                uuid: getAttr(timbre, ['UUID', 'Uuid', 'uuid']),
+                fechaTimbrado: getAttr(timbre, ['FechaTimbrado', 'fechaTimbrado']),
+                rfcProvCertif: getAttr(timbre, ['RfcProvCertif', 'rfcProvCertif'])
+            },
+            totales: { subtotal, total },
+            impuestos: impuestosDetalle,
+            conceptos
+        };
+    }
+
+    function renderXmlData(data) {
+        const errorEl = document.getElementById('xmlError');
+        if (errorEl) { errorEl.textContent = ''; errorEl.style.display = 'none'; }
+
+        renderKvGrid('xmlComprobanteGrid', [
+            ['Versión', data.comprobante.version],
+            ['Serie', data.comprobante.serie],
+            ['Folio', data.comprobante.folio],
+            ['Fecha', data.comprobante.fecha],
+            ['Subtotal', data.comprobante.subtotal],
+            ['Total', data.comprobante.total],
+            ['Moneda', data.comprobante.moneda],
+            ['Tipo', data.comprobante.tipo],
+            ['Método de Pago', data.comprobante.metodoPago],
+            ['Forma de Pago', data.comprobante.formaPago],
+            ['Lugar Expedición', data.comprobante.lugarExpedicion]
+        ]);
+
+        renderKvGrid('xmlEmisorGrid', [
+            ['RFC', data.emisor.rfc],
+            ['Nombre', data.emisor.nombre],
+            ['Régimen', data.emisor.regimen]
+        ]);
+
+        renderKvGrid('xmlReceptorGrid', [
+            ['RFC', data.receptor.rfc],
+            ['Nombre', data.receptor.nombre],
+            ['Uso CFDI', data.receptor.usoCfdi],
+            ['Domicilio Fiscal', data.receptor.domicilioFiscal],
+            ['Régimen', data.receptor.regimen]
+        ]);
+
+        renderKvGrid('xmlTimbreGrid', [
+            ['UUID', data.timbre.uuid],
+            ['Fecha Timbrado', data.timbre.fechaTimbrado],
+            ['RFC Prov. Certif.', data.timbre.rfcProvCertif]
+        ]);
+
+        renderConceptos(data.conceptos || []);
+
+        renderKvGrid('xmlTotalesGrid', [
+            ['Subtotal', data.totales?.subtotal],
+            ['Total', data.totales?.total]
+        ]);
+
+        renderImpuestosBreakdown(data.impuestos || { trasladados: [], retenidos: [] });
+
+        const resultEl = document.getElementById('xmlResult');
+        if (resultEl) resultEl.style.display = 'grid';
+        if (window.lucide) { lucide.createIcons(); }
+    }
+
+    function renderKvGrid(containerId, pairs) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        pairs.forEach(([label, value]) => {
+            const item = document.createElement('div');
+            item.className = 'fc-xml-kv';
+            const labelEl = document.createElement('span');
+            labelEl.className = 'fc-xml-kv-label';
+            labelEl.textContent = label;
+            const valueEl = document.createElement('span');
+            valueEl.className = 'fc-xml-kv-value';
+            valueEl.textContent = value || '—';
+            item.appendChild(labelEl);
+            item.appendChild(valueEl);
+            container.appendChild(item);
+        });
+    }
+
+    function renderConceptos(conceptos) {
+        const container = document.getElementById('xmlConceptosContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        const formularioId = getFormularioContableIdSeleccionado();
+
+        if (!conceptos.length) {
+            const empty = document.createElement('div');
+            empty.className = 'fc-xml-kv-value';
+            empty.textContent = 'Sin conceptos detectados.';
+            container.appendChild(empty);
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.className = 'fc-xml-table';
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Clave</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Unidad</th>
+                    <th>V. Unitario</th>
+                    <th>Importe</th>
+                    <th>Cuenta contable</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+
+        const tbody = table.querySelector('tbody');
+        conceptos.forEach((concepto, idx) => {
+            const row = document.createElement('tr');
+            const cells = [
+                concepto.clave || '—',
+                concepto.descripcion || '—',
+                concepto.cantidad || '—',
+                concepto.unidad || '—',
+                concepto.valorUnitario || '—',
+                concepto.importe || '—'
+            ];
+
+            cells.forEach((text) => {
+                const td = document.createElement('td');
+                td.textContent = text;
+                row.appendChild(td);
+            });
+
+            const cuentaTd = document.createElement('td');
+            const select = document.createElement('select');
+            select.className = 'fc-field-input fc-xml-cuenta-select';
+            select.name = `concepto_cuenta_${idx}`;
+            const { options, hasCuentas } = buildCuentaOptions(formularioId, '');
+            select.innerHTML = options;
+            select.required = hasCuentas;
+            select.disabled = !formularioId || !hasCuentas;
+            cuentaTd.appendChild(select);
+            row.appendChild(cuentaTd);
+            tbody.appendChild(row);
+        });
+
+        container.appendChild(table);
+
+        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
+        if (globalSelect && globalSelect.value) { aplicarCuentaGlobal(); }
+    }
+
+    function renderImpuestosBreakdown(impuestos) {
+        const container = document.getElementById('xmlImpuestosBreakdown');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const trasladados = (impuestos.trasladados || []);
+        const retenidos = (impuestos.retenidos || []);
+        const rows = [...trasladados, ...retenidos];
+
+        if (!rows.length) {
+            const empty = document.createElement('div');
+            empty.className = 'fc-xml-kv-value';
+            empty.textContent = 'Sin impuestos detectados.';
+            container.appendChild(empty);
+            return;
+        }
+
+        const table = document.createElement('table');
+        table.className = 'fc-xml-table';
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Impuesto</th>
+                    <th>Tipo factor</th>
+                    <th>Tasa/Cuota</th>
+                    <th class="num">Importe</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        `;
+
+        const tbody = table.querySelector('tbody');
+        rows.forEach((it) => {
+            const tr = document.createElement('tr');
+            const cells = [
+                { text: it.tipo || '—' },
+                { text: it.impuesto || '—' },
+                { text: it.tipoFactor || '—' },
+                { text: it.tasaOCuota || '—' },
+                { text: it.importe || '—', cls: 'num' }
+            ];
+
+            cells.forEach(({ text, cls }) => {
+                const td = document.createElement('td');
+                if (cls) td.className = cls;
+                td.textContent = text;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        container.appendChild(table);
+    }
+
+    function eliminarFactura(facturaId) {
+        if (!confirm('¿Estás seguro de eliminar esta factura?')) return;
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.innerHTML = `
+            <input type="hidden" name="factura_id" value="${facturaId}">
+            <input type="hidden" name="action" value="eliminar">
+        `;
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function cerrarModal(id = '') {
+        if (id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.remove('active');
+            return;
+        }
+        document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+            modal.classList.remove('active');
+        });
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { cerrarModal(); }
+    });
+
+    document.querySelectorAll('.modal-overlay').forEach((overlay) => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) { this.classList.remove('active'); }
+        });
+    });
+</script>
+
+</body>
+</html>
