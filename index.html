@@ -147,6 +147,7 @@
             <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
+                    
                     <nav class="sidebar-nav">
                         <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
@@ -156,17 +157,17 @@
                         </div>
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-confirmacion')"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-costos')"><i data-lucide="calculator"></i> Costos de reparación</a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-aprobacion')"><i data-lucide="badge-check"></i> Aprobación de costos</a>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-facturacion')"><i data-lucide="file-text"></i> Facturación</a>
+                            <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a href="costos.html" class="sidebar-link"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a href="aprobacion.html" class="sidebar-link"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-reportes">
                             <div class="sidebar-section-title">Reportes</div>
                             <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')"><i data-lucide="bar-chart-3"></i> Reportes</a>
                         </div>
                     </nav>
-                </div>
+                    </div>
             </aside>
             <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
 
