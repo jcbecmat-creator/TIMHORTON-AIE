@@ -2,460 +2,211 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Costos de Reparación</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Costos de Reparación | Tim Hortons</title>
+    
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/fonts.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/style.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/components.css">
-    
-<link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/design-system.css">
-<link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/app-shell.css">
-
-<style>
-    /* ========================================
-       COSTOS DE REPARACIÓN - Diseño Empresarial
-       ======================================== */
-
-    .costos-wrap {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: var(--space-6) var(--space-6) var(--space-16);
-    }
-
-    /* Page Header - Estilo empresarial */
-    .page-header-section {
-        margin-bottom: var(--space-8);
-        padding-bottom: var(--space-6);
-        border-bottom: 1px solid var(--gray-200);
-    }
-
-    .page-header-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: var(--space-6);
-    }
-
-    .page-header-content h1 {
-        font-size: var(--text-2xl);
-        font-weight: var(--weight-semibold);
-        color: var(--gray-900);
-        letter-spacing: var(--tracking-tight);
-        margin: 0 0 var(--space-2) 0;
-    }
-
-    .page-header-content p {
-        font-size: var(--text-sm);
-        color: var(--gray-500);
-        margin: 0;
-    }
-
-    /* Tabs - Estilo segmentado profesional */
-    .tabs-segmented {
-        display: inline-flex;
-        background: var(--gray-100);
-        border-radius: var(--radius-lg);
-        padding: var(--space-1);
-        gap: var(--space-1);
-    }
-
-    .tab-segment {
-        padding: var(--space-3) var(--space-5);
-        border-radius: var(--radius-md);
-        text-decoration: none;
-        font-size: var(--text-sm);
-        font-weight: var(--weight-medium);
-        color: var(--gray-600);
-        background: transparent;
-        transition: all var(--duration-fast) var(--ease-default);
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        white-space: nowrap;
-    }
-
-    .tab-segment:hover:not(.active) {
-        color: var(--gray-900);
-        background: rgba(255, 255, 255, 0.5);
-    }
-
-    .tab-segment.active {
-        background: white;
-        color: var(--gray-900);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .tab-segment.rejected.active {
-        background: var(--error);
-        color: white;
-    }
-
-    .tab-segment-count {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 20px;
-        height: 20px;
-        padding: 0 6px;
-        border-radius: var(--radius-full);
-        font-size: 11px;
-        font-weight: var(--weight-bold);
-        background: var(--gray-200);
-        color: var(--gray-600);
-    }
-
-    .tab-segment.active .tab-segment-count {
-        background: var(--accent);
-        color: white;
-    }
-
-    .tab-segment.rejected.active .tab-segment-count {
-        background: rgba(255, 255, 255, 0.25);
-        color: white;
-    }
-
-    /* Filters - Barra compacta */
-    .filters-bar {
-        background: white;
-        border-radius: var(--radius-xl);
-        padding: var(--space-5) var(--space-6);
-        margin-bottom: var(--space-6);
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--gray-200);
-    }
-
-    .filters-row {
-        display: flex;
-        gap: var(--space-4);
-        flex-wrap: wrap;
-        align-items: flex-end;
-    }
-
-    .filter-group {
-        display: flex;
-        flex-direction: column;
-        gap: var(--space-2);
-        min-width: 140px;
-    }
-
-    .filter-group.flex-grow {
-        flex: 1;
-        min-width: 200px;
-    }
-
-    .filter-label {
-        font-size: 11px;
-        font-weight: var(--weight-semibold);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--gray-500);
-    }
-
-    .filter-actions {
-        display: flex;
-        gap: var(--space-2);
-        flex-shrink: 0;
-    }
-
-    /* Table enhancements */
-    .data-table-container {
-        background: white;
-        border-radius: var(--radius-sm);
-        overflow: hidden;
-        box-shadow: var(--shadow-sm);
-        border: 1px solid var(--gray-200);
-    }
-
-    .data-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .data-table thead {
-        background: var(--gray-50);
-    }
-
-    .data-table th {
-        font-size: 11px;
-        font-weight: var(--weight-semibold);
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--gray-500);
-        padding: var(--space-4) var(--space-5);
-        text-align: left;
-        border-bottom: 1px solid var(--gray-200);
-    }
-
-    .data-table td {
-        padding: var(--space-4) var(--space-5);
-        border-bottom: 1px solid var(--gray-100);
-        font-size: var(--text-sm);
-        color: var(--gray-700);
-        vertical-align: middle;
-    }
-
-    .data-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    .data-table tbody tr {
-        transition: background var(--duration-fast);
-    }
-
-    .data-table tbody tr:hover {
-        background: var(--gray-50);
-    }
-
-    .data-table .folio-cell {
-        font-weight: var(--weight-semibold);
-        color: var(--gray-900);
-    }
-
-    .data-table .total-cell {
-        font-weight: var(--weight-semibold);
-        color: var(--gray-900);
-    }
-
-    /* Empty State Table */
-    .co-table-empty {
-        text-align: center;
-        padding: var(--space-8);
-        color: var(--gray-500);
-        font-size: var(--text-sm);
-    }
-
-    /* Status badges */
-    .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 12px;
-        border-radius: var(--radius-full);
-        font-size: 11px;
-        font-weight: var(--weight-semibold);
-    }
-
-    .status-pill::before {
-        content: '';
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: currentColor;
-    }
-
-    .status-pill.status-enviado {
-        background: var(--info-soft);
-        color: var(--info);
-    }
-
-    .status-pill.status-rechazado {
-        background: var(--error-soft);
-        color: var(--error);
-    }
-
-    .status-pill.status-borrador {
-        background: var(--gray-100);
-        color: var(--gray-600);
-    }
-
-    .status-pill.status-pendiente {
-        background: var(--warning-soft);
-        color: var(--warning);
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-        .page-header-row {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .tabs-segmented {
-            width: 100%;
-            flex-wrap: wrap;
-        }
-
-        .tab-segment {
-            flex: 1;
-            justify-content: center;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .costos-wrap {
-            padding: var(--space-4) var(--space-4) var(--space-16);
-        }
-
-        .filters-row {
-            flex-direction: column;
-        }
-
-        .filter-group,
-        .filter-group.flex-grow {
-            width: 100%;
-            min-width: 100%;
-        }
-
-        .filter-actions {
-            width: 100%;
-        }
-
-        .filter-actions .btn {
-            flex: 1;
-        }
-
-        .data-table-container {
-            overflow-x: auto;
-        }
-
-        .data-table {
-            min-width: 700px;
-        }
-    }
-</style>
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/design-system.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/app-shell.css">
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
+    </script>
+
+    <script>
+        if (!sessionStorage.getItem('loginSession')) {
+            window.location.replace('index.html');
+        }
+    </script>
+
+    <style>
+        body { margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
+        
+        /* === ESTILOS DEL MENÚ EXACTOS A INDEX.HTML === */
+        .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
+        .sidebar-link.activa i { color: #DC2626 !important; }
+        .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
+        .sidebar-section:last-child { border-bottom: none; }
+        .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
+
+        /* === COSTOS DE REPARACIÓN STYLES === */
+        .costos-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-16); }
+        .page-header-section { margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--gray-200); }
+        .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-6); }
+        .page-header-content h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-2) 0; }
+        .page-header-content p { font-size: var(--text-sm); color: var(--gray-500); margin: 0; }
+        
+        .co-filters { background: white; border-radius: var(--radius-xl); padding: var(--space-6); margin-bottom: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100); }
+        .co-filters-grid { display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-end; }
+        .co-filter-group { flex: 1; min-width: 160px; }
+        .co-filter-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); margin-bottom: var(--space-2); display: block; }
+        .co-filter-input { width: 100%; padding: var(--space-3) var(--space-4); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); background: var(--gray-50); font-size: var(--text-sm); color: var(--gray-900); transition: all var(--duration-fast); box-sizing: border-box; }
+        .co-filter-input:focus { outline: none; background: white; border-color: #DC2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15); }
+        
+        .co-table-container { background: white; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100); }
+        .co-table { width: 100%; border-collapse: collapse; }
+        .co-table thead { background: var(--gray-50); }
+        .co-table th { padding: var(--space-4) var(--space-5); text-align: left; font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); border-bottom: 1px solid var(--gray-200); }
+        .co-table td { padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--gray-900); border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+        .co-table tbody tr { transition: background var(--duration-fast); }
+        .co-table tbody tr:hover { background: var(--gray-50); }
+        .co-table tbody tr:last-child td { border-bottom: none; }
+        
+        .co-table-empty { text-align: center; padding: 40px 20px !important; color: #6b7280; font-size: 14px; }
+        
+        .btn-secondary { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-secondary:hover { background: #e5e7eb; }
+
+        @media (max-width: 768px) {
+            .costos-wrap { padding: var(--space-4) var(--space-4) var(--space-16); }
+            .page-header-row { flex-direction: column; }
+            .co-filters-grid { flex-direction: column; }
+            .co-filter-group { width: 100%; }
+            .co-table-container { overflow-x: auto; }
+            .co-table { min-width: 600px; }
+        }
+    </style>
 </head>
 <body class="has-sidebar">
-    <header class="main-header">
-        <div class="header-left">
-            <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
-                <span class="hamburger"></span>
-            </button>
-            <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
-            <h1 class="system-title">Ordenes de Servicio</h1>
-        </div>
-        <div class="header-right">
-            <div class="user-menu">
-                <button class="user-circle-btn"><span class="user-circle-initial" id="user-initial-header">U</span></button>
-            </div>
-        </div>
-    </header>
 
-<div class="main-layout">
-    <aside class="sidebar app-sidebar" data-app-sidebar>
-        <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
-            <span class="close-icon">X</span>
-        </button>
-        <button class="sidebar-toggle" type="button" aria-label="Mostrar navegación" data-sidebar-toggle>
-            <span class="hamburger"></span>
-        </button>
-        <div class="sidebar-content">
-            
-            <nav class="sidebar-nav">
-                <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
-                <div class="sidebar-section">
-                    <div class="sidebar-section-title">Formas</div>
-                    <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
-                    <a href="index.html" class="sidebar-link" id="nav-preventivo"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+    <div id="app-screen" style="display: none;">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button>
+                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo"></a>
+                <h1 class="system-title">Ordenes de Servicio</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-menu" data-user-menu>
+                    <button class="user-circle-btn" type="button" data-user-trigger>
+                        <span class="user-circle-initial" id="user-initial-header">U</span>
+                    </button>
+                    <div class="user-dropdown" data-user-dropdown>
+                        <div class="user-card">
+                            <div class="user-circle-avatar user-circle-initial">U</div>
+                            <div class="user-meta">
+                                <div class="user-name" id="dropdown-username">Cargando...</div>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <a href="index.html" class="dropdown-link destructive" onclick="sessionStorage.clear();">
+                                <i data-lucide="log-out"></i> Cerrar sesión
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="sidebar-section" id="nav-seccion-admin">
-                    <div class="sidebar-section-title">Administración</div>
-                    <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
-                    <a href="costos.html" class="sidebar-link activa"><i data-lucide="calculator"></i> Costos de reparación</a>
-                    <a href="aprobacion.html" class="sidebar-link"><i data-lucide="badge-check"></i> Aprobación de costos</a>
-                    <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
+                <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
+                <div class="sidebar-content">
+                    <nav class="sidebar-nav">
+                        <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Formas</div>
+                            <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a href="index.html" class="sidebar-link" id="nav-preventivo"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                        </div>
+                        <div class="sidebar-section" id="nav-seccion-admin">
+                            <div class="sidebar-section-title">Administración</div>
+                            <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a href="costos.html" class="sidebar-link activa"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a href="aprobacion.html" class="sidebar-link"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
+                        </div>
+                        <div class="sidebar-section" id="nav-seccion-reportes">
+                            <div class="sidebar-section-title">Reportes</div>
+                            <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                        </div>
+                    </nav>
                 </div>
-                <div class="sidebar-section" id="nav-seccion-reportes">
-                    <div class="sidebar-section-title">Reportes</div>
-                    <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
+            </aside>
+            <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
+
+            <main class="main-content app-content" id="main-scroll-area">
+                
+                <div id="global-welcome-section" style="text-align: center; padding-top: 25px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
+                    <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
+                    <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
                 </div>
-            </nav>
 
-        </div>
-    </aside>
-    <div class="sidebar-backdrop" data-sidebar-backdrop></div>
-    <main class="main-content app-content">
-        
-        <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px;">
-            <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
-            <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
-        </div>
+                <div class="costos-wrap">
+                    <header class="page-header-section">
+                        <div class="page-header-row">
+                            <div class="page-header-content">
+                                <h1>Costos de Reparación</h1>
+                                <p>Gestiona los costos de conceptos empleados en órdenes aprobadas</p>
+                            </div>
+                        </div>
+                    </header>
 
-<div class="costos-wrap">
-    <header class="page-header-section">
-        <div class="page-header-row">
-            <div class="page-header-content">
-                <h1>Costos de Reparación</h1>
-                <p>Gestiona los costos de conceptos empleados en órdenes de construcción aprobadas</p>
-            </div>
-            <div class="tabs-segmented">
-                <a href="#" class="tab-segment active">
-                    Pendientes
-                    <span class="tab-segment-count">0</span>
-                </a>
-                <a href="#" class="tab-segment ">
-                    Enviados
-                    <span class="tab-segment-count">0</span>
-                </a>
-                <a href="#" class="tab-segment rejected ">
-                    Rechazados
-                    <span class="tab-segment-count">0</span>
-                </a>
-            </div>
-        </div>
-    </header>
+                    <form method="GET" class="co-filters">
+                        <div class="co-filters-grid">
+                            <div class="co-filter-group">
+                                <label class="co-filter-label">Fecha inicio</label>
+                                <input type="date" class="co-filter-input" name="fecha_inicio" value="">
+                            </div>
+                            <div class="co-filter-group">
+                                <label class="co-filter-label">Fecha fin</label>
+                                <input type="date" class="co-filter-input" name="fecha_fin" value="">
+                            </div>
+                            <div class="co-filter-group" style="flex: 2;">
+                                <label class="co-filter-label">Buscar</label>
+                                <input type="text" class="co-filter-input" name="buscar" value="" placeholder="Folio o sucursal...">
+                            </div>
+                            
+                            <div class="flex gap-2 flex-shrink-0">
+                                <button class="btn-secondary" type="button">
+                                    <i data-lucide="search" style="width: 18px; height: 18px;"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
 
-    <form method="GET" class="filters-bar">
-        <input type="hidden" name="tab" value="pendientes">
-        <div class="filters-row">
-            <div class="filter-group">
-                <label class="filter-label">Fecha inicio</label>
-                <input type="date" class="input" name="fecha_inicio" value="" style="border: 1px solid #d1d5db; padding: 8px; border-radius: 6px;">
-            </div>
-            <div class="filter-group">
-                <label class="filter-label">Fecha fin</label>
-                <input type="date" class="input" name="fecha_fin" value="" style="border: 1px solid #d1d5db; padding: 8px; border-radius: 6px;">
-            </div>
-            <div class="filter-group flex-grow">
-                <label class="filter-label">Buscar</label>
-                <input type="text" class="input" name="buscar" value="" placeholder="Folio o sucursal..." style="border: 1px solid #d1d5db; padding: 8px; border-radius: 6px; width: 100%;">
-            </div>
-            <div class="filter-actions">
-                <button class="btn btn-secondary" type="submit" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="search" style="width: 16px;"></i>
-                    Buscar
-                </button>
-                <a href="#" class="btn btn-success" style="background: #15803d; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none;">
-                    <i data-lucide="download" style="width: 16px;"></i>
-                    Exportar
-                </a>
-            </div>
-        </div>
-    </form>
+                    <div class="co-table-container">
+                        <table class="co-table">
+                            <thead>
+                                <tr>
+                                    <th>Folio</th>
+                                    <th>Sucursal</th>
+                                    <th>Estado</th>
+                                    <th style="text-align: right;">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-costos-body">
+                                <tr>
+                                    <td colspan="4" class="co-table-empty">
+                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                            <i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i>
+                                            <span>No hay costos pendientes de revisión en este momento.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-    <div class="data-table-container">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Folio</th>
-                    <th>Sucursal</th>
-                    <th>Fecha Aprobación</th>
-                    <th>Conceptos</th>
-                    <th>Estado</th>
-                    <th>Total</th>
-                    <th style="text-align: right;">Acción</th>
-                </tr>
-            </thead>
-            <tbody id="tabla-costos-body">
-                <tr>
-                    <td colspan="7" class="co-table-empty">No hay costos pendientes en este momento.</td>
-                </tr>
-            </tbody>
-        </table>
+            </main>
+        </div>
     </div>
-</div>
 
-    </main>
-</div>
-
-    <script src="https://tims-orden-de-servicio.onrender.com/static/js/components.js"></script>
     <script>
-        // Cargar íconos
+        // Cargar Íconos Lucide
         document.addEventListener('DOMContentLoaded', function () {
             if (window.lucide) { lucide.createIcons(); }
 
-            // Lógica para el menú lateral
+            // Lógica para el menú lateral en móviles
             const sidebar = document.querySelector('[data-app-sidebar]');
             const toggles = document.querySelectorAll('[data-sidebar-toggle]');
             const closeButton = document.querySelector('[data-sidebar-close]');
@@ -468,29 +219,46 @@
                 if (backdrop) backdrop.addEventListener('click', closeSidebar);
             }
 
-            // RECUPERAR USUARIO PARA EL MENSAJE DE BIENVENIDA
+            // RECUPERAR SESIÓN Y MOSTRAR PANTALLA
             const savedSession = sessionStorage.getItem('loginSession');
             const savedUser = sessionStorage.getItem('loginUser');
             
             if (savedSession && savedUser) {
+                // Mostrar la app (estaba oculta para evitar parpadeo del login)
+                document.getElementById('app-screen').style.display = 'block';
+                
                 const appData = JSON.parse(savedSession);
                 
+                // Setear Inicial
                 const inicial = savedUser.charAt(0).toUpperCase();
-                const userInitialHeader = document.getElementById('user-initial-header');
-                if(userInitialHeader) userInitialHeader.innerText = inicial;
+                document.querySelectorAll('.user-circle-initial').forEach(el => el.innerText = inicial);
 
+                // Setear Nombre de Bienvenida
                 const welcomeTitle = document.getElementById('welcome-username-display');
                 if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
 
+                const dropdownName = document.getElementById('dropdown-username');
+                if(dropdownName) dropdownName.innerText = appData.nombreProveedor || savedUser;
+
+                // Si no tiene permisos de administrador, regresarlo a index.html
                 if(appData.privilegio == 2 || appData.privilegio == "2") {
-                    window.location.href = 'index.html';
+                    window.location.replace('index.html');
                 }
 
             } else {
-                window.location.href = 'index.html';
+                window.location.replace('index.html');
+            }
+
+            // Lógica Menú de Usuario (Dropdown superior derecho)
+            const userMenu = document.querySelector('[data-user-menu]');
+            if (userMenu) {
+                const trigger = userMenu.querySelector('[data-user-trigger]');
+                const dropdown = userMenu.querySelector('[data-user-dropdown]');
+                const closeMenus = (event) => { if (!userMenu.contains(event.target)) dropdown.classList.remove('show'); };
+                trigger.addEventListener('click', (event) => { event.stopPropagation(); dropdown.classList.toggle('show'); });
+                document.addEventListener('click', closeMenus);
             }
         });
     </script>
-
 </body>
 </html>
