@@ -26,6 +26,12 @@
         tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
     </script>
 
+    <script>
+        if (sessionStorage.getItem('loginSession')) { 
+            document.documentElement.classList.add('is-logged-in'); 
+        }
+    </script>
+
     <style>
         body { margin: 0; padding: 0; background-color: #f8fafc; }
         
@@ -37,7 +43,8 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         
-        .sidebar-link.activa { background-color: #FFF1F1 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626; }
+        /* ESTILO DEL MENÚ ACTIVO TIPO PASTILLA CON CURVA */
+        .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 8px !important; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section:last-child { border-bottom: none; }
@@ -84,17 +91,12 @@
         .info-item label { display: block; font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 2px; }
         .info-item span { display: block; font-size: 13px; color: #111827; font-weight: 500; }
 
-        /* REGLA ANTI-PARPADEO Y BORDE REDONDEADO MENU */
-        .sidebar-link.activa { background-color: #FFF1F1 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
+        /* REGLA CSS ANTI-PARPADEO ABSOLUTA */
         html.is-logged-in #login-screen { display: none !important; }
         html.is-logged-in #app-screen { display: block !important; }
     </style>
 </head>
 <body class="has-sidebar">
-
-    <script>
-        if (sessionStorage.getItem('loginSession')) { document.documentElement.classList.add('is-logged-in'); }
-    </script>
 
     <div id="login-screen">
         <div id="login-card">
