@@ -153,14 +153,6 @@
     border-bottom: none;
 }
 
-/* Empty State Table */
-.co-table-empty {
-    text-align: center;
-    padding: var(--space-8);
-    color: var(--gray-500);
-    font-size: var(--text-sm);
-}
-
 /* === Badges === */
 .co-badge {
     display: inline-flex;
@@ -171,45 +163,82 @@
     font-weight: var(--weight-semibold);
 }
 
+.co-badge-pending {
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+    color: #92400E;
+}
+
+.co-badge-approved {
+    background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+    color: #065F46;
+}
+
+.co-badge-rejected {
+    background: linear-gradient(135deg, #FEE2E2, #FECACA);
+    color: #991B1B;
+}
+
+.co-badge-default {
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+
+/* === Empty State === */
+.co-empty {
+    text-align: center;
+    padding: var(--space-16) var(--space-6);
+}
+
+.co-empty-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-5);
+    color: var(--gray-300);
+}
+
+.co-empty-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-900);
+    margin: 0 0 var(--space-2);
+}
+
+.co-empty-text {
+    font-size: var(--text-sm);
+    color: var(--gray-500);
+    margin: 0;
+}
+
 /* === Responsive === */
 @media (max-width: 768px) {
     .confirmacion-wrap {
         padding: var(--space-4) var(--space-4) var(--space-16);
     }
+
     .page-header-row {
         flex-direction: column;
     }
+
     .co-filters-grid {
         flex-direction: column;
     }
+
     .co-filter-group {
         width: 100%;
     }
+
     .co-table-container {
         overflow-x: auto;
     }
+
     .co-table {
         min-width: 600px;
     }
 }
 
-/* Botón estilo Tim Hortons rojo */
-.btn-revisar {
-    background: #DC2626;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-weight: 600;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
-}
-.btn-revisar:hover {
-    background: #B91C1C;
-}
+/* ESTILO DEL MENÚ ACTIVO TIPO PASTILLA CON CURVA */
+.sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 8px !important; }
+.sidebar-link.activa i { color: #DC2626 !important; }
 </style>
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -224,12 +253,37 @@
             <h1 class="system-title">Ordenes de Servicio</h1>
         </div>
         <div class="header-right">
-            <div class="user-menu">
-                <button class="user-circle-btn"><span class="user-circle-initial" id="user-initial-header">U</span></button>
+            <div class="auth-section">
+                
+                    <div class="user-menu" data-user-menu>
+                        <button class="user-circle-btn" type="button" aria-label="Abrir menú de usuario" data-user-trigger>
+                            <span class="user-circle-initial">
+                                U
+                            </span>
+                        </button>
+                        <div class="user-dropdown" data-user-dropdown>
+                            <div class="user-card">
+                                <div class="user-circle-avatar user-circle-initial">
+                                    U
+                                </div>
+                                <div class="user-meta">
+                                    <div class="user-name">Cargando...</div>
+                                </div>
+                            </div>
+                            <div class="user-actions">
+                                <a href="index.html" class="dropdown-link destructive" onclick="sessionStorage.clear();">
+                                    <i data-lucide="log-out"></i>
+                                    Cerrar sesión
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                
             </div>
         </div>
     </header>
 
+    
 <div class="main-layout">
     <aside class="sidebar app-sidebar" data-app-sidebar>
         <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
@@ -239,143 +293,232 @@
             <span class="hamburger"></span>
         </button>
         <div class="sidebar-content">
-            
             <nav class="sidebar-nav">
-                <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
+                
+                <a class="sidebar-link" href="index.html">
+                    <i data-lucide="home"></i>
+                    Inicio
+                </a>
+                
                 <div class="sidebar-section">
                     <div class="sidebar-section-title">Formas</div>
-                    <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
-                    <a href="index.html" class="sidebar-link" id="nav-preventivo"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                    
+                    <a class="sidebar-link" href="index.html">
+                        <i data-lucide="wrench"></i>
+                        Mantenimiento correctivo
+                    </a>
+                    
+                    <a class="sidebar-link" href="index.html">
+                        <i data-lucide="calendar-check"></i>
+                        Mantenimientos Preventivos
+                    </a>
                 </div>
-                <div class="sidebar-section" id="nav-seccion-admin">
+                
+                <div class="sidebar-section">
                     <div class="sidebar-section-title">Administración</div>
-                    <a href="confirmacion.html" class="sidebar-link activa"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
-                    <a href="costos.html" class="sidebar-link"><i data-lucide="calculator"></i> Costos de reparación</a>
-                    <a href="aprobacion.html" class="sidebar-link"><i data-lucide="badge-check"></i> Aprobación de costos</a>
-                    <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
+                    
+                    <a class="sidebar-link activa" href="confirmacion.html">
+                        <i data-lucide="check-circle-2"></i>
+                        Confirmación operativa
+                    </a>
+                    
+                    <a class="sidebar-link " href="costos.html">
+                        <i data-lucide="calculator"></i>
+                        Costos de reparación
+                    </a>
+                    
+                    <a class="sidebar-link " href="aprobacion.html">
+                        <i data-lucide="badge-check"></i>
+                        Aprobación de costos
+                    </a>
+                    
+                    <a class="sidebar-link " href="facturacion.html">
+                        <i data-lucide="file-text"></i>
+                        Facturación
+                    </a>
                 </div>
-                <div class="sidebar-section" id="nav-seccion-reportes">
+                
+                <div class="sidebar-section">
                     <div class="sidebar-section-title">Reportes</div>
-                    <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                    
+                    <a class="sidebar-link " href="index.html">
+                        <i data-lucide="bar-chart-3"></i>
+                        Reportes
+                    </a>
+                    
                 </div>
+                
             </nav>
-
         </div>
     </aside>
     <div class="sidebar-backdrop" data-sidebar-backdrop></div>
     <main class="main-content app-content">
         
-        <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px;">
+        <div id="global-welcome-section" style="text-align: center; padding-top: 25px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
             <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
             <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
         </div>
 
-        <div class="confirmacion-wrap">
-            <header class="page-header-section">
-                <div class="page-header-row">
-                    <div class="page-header-content">
-                        <h1>Confirmación Operativa</h1>
-                        <p>Revisa y aprueba las órdenes de servicio pendientes</p>
-                    </div>
-                </div>
-            </header>
-
-            <form method="GET" class="co-filters">
-                <input type="hidden" name="tab" value="pendientes">
-                <div class="co-filters-grid">
-                    <div class="co-filter-group">
-                        <label class="co-filter-label">Fecha inicio</label>
-                        <input type="date" class="co-filter-input" name="fecha_inicio" value="">
-                    </div>
-                    <div class="co-filter-group">
-                        <label class="co-filter-label">Fecha fin</label>
-                        <input type="date" class="co-filter-input" name="fecha_fin" value="">
-                    </div>
-                    <div class="co-filter-group">
-                        <label class="co-filter-label">Tipo de orden</label>
-                        <select class="co-filter-input" name="tipo">
-                            <option value="" selected>Todos los tipos</option>
-                            <option value="mantenimiento">Mantenimiento</option>
-                            <option value="capex">Capex Supply</option>
-                        </select>
-                    </div>
-                    
-                    <div class="flex gap-2 flex-shrink-0">
-                        <button class="btn btn-secondary" type="submit" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="filter" style="width: 16px;"></i>
-                            Filtrar
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <div class="co-table-container">
-                <table class="co-table">
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Sucursal</th>
-                            <th>Tipo</th>
-                            <th>Fecha</th>
-                            <th style="text-align: right;">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-confirmacion-body">
-                        <tr>
-                            <td colspan="5" class="co-table-empty">No hay registros pendientes por confirmar en este momento.</td>
-                        </tr>
-                    </tbody>
-                </table>
+<div class="confirmacion-wrap">
+    
+    <header class="page-header-section">
+        <div class="page-header-row">
+            <div class="page-header-content">
+                <h1>Confirmación Operativa</h1>
+                <p>Revisa y aprueba las órdenes de servicio pendientes</p>
             </div>
         </div>
+    </header>
+
+    <form method="GET" class="co-filters">
+        <input type="hidden" name="tab" value="pendientes">
+        <div class="co-filters-grid">
+            <div class="co-filter-group">
+                <label class="co-filter-label">Fecha inicio</label>
+                <input type="date" class="co-filter-input" name="fecha_inicio" value="">
+            </div>
+            <div class="co-filter-group">
+                <label class="co-filter-label">Fecha fin</label>
+                <input type="date" class="co-filter-input" name="fecha_fin" value="">
+            </div>
+            <div class="co-filter-group">
+                <label class="co-filter-label">Tipo de orden</label>
+                <select class="co-filter-input" name="tipo">
+                    <option value="" selected>Todos los tipos</option>
+                    <option value="mantenimiento" >Mantenimiento</option>
+                    <option value="capex" >Capex Supply</option>
+                </select>
+            </div>
+            
+            <div class="flex gap-2 flex-shrink-0">
+                <button class="btn btn-secondary" type="submit" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+                    <i data-lucide="filter" style="width: 18px; height: 18px;"></i>
+                    Filtrar
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="co-table-container">
+        <table class="co-table">
+            <thead>
+                <tr>
+                    <th>Folio</th>
+                    <th>Sucursal</th>
+                    <th>Tipo</th>
+                    <th>Fecha</th>
+                    <th style="text-align: right;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td colspan="5" class="co-table-empty" style="text-align: center; padding: 40px 20px; color: #6b7280;">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                            <i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i>
+                            <span>No hay registros pendientes por confirmar en este momento.</span>
+                        </div>
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
 
     </main>
 </div>
 
+    <script src="https://tims-orden-de-servicio.onrender.com/static/js/components.js"></script>
     <script>
-        // Cargar íconos
-        document.addEventListener('DOMContentLoaded', function () {
-            if (window.lucide) { lucide.createIcons(); }
-
-            // Lógica para el menú lateral (App Shell)
-            const sidebar = document.querySelector('[data-app-sidebar]');
-            const toggles = document.querySelectorAll('[data-sidebar-toggle]');
-            const closeButton = document.querySelector('[data-sidebar-close]');
-            const backdrop = document.querySelector('[data-sidebar-backdrop]');
-            if (sidebar && toggles.length) {
-                const openSidebar = () => { sidebar.classList.add('open'); if (backdrop) backdrop.classList.add('visible'); };
-                const closeSidebar = () => { sidebar.classList.remove('open'); if (backdrop) backdrop.classList.remove('visible'); };
-                toggles.forEach(t => { t.addEventListener('click', () => { if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar(); }); });
-                if (closeButton) closeButton.addEventListener('click', closeSidebar);
-                if (backdrop) backdrop.addEventListener('click', closeSidebar);
-            }
-
-            // RECUPERAR USUARIO PARA EL MENSAJE DE BIENVENIDA
-            const savedSession = sessionStorage.getItem('loginSession');
-            const savedUser = sessionStorage.getItem('loginUser');
-            
-            if (savedSession && savedUser) {
-                const appData = JSON.parse(savedSession);
-                
-                // Inicial de arriba a la derecha
-                const inicial = savedUser.charAt(0).toUpperCase();
-                const userInitialHeader = document.getElementById('user-initial-header');
-                if(userInitialHeader) userInitialHeader.innerText = inicial;
-
-                // Nombre en grande al centro
-                const welcomeTitle = document.getElementById('welcome-username-display');
-                if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
-
-                // Ocultar menús si es proveedor normal (privilegio 2)
-                if(appData.privilegio == 2 || appData.privilegio == "2") {
-                    window.location.href = 'index.html'; // Si un técnico intenta entrar por URL directa a esta pantalla admin, lo regresa al inicio.
+        lucide.createIcons();
+        const userMenu = document.querySelector('[data-user-menu]');
+        if (userMenu) {
+            const trigger = userMenu.querySelector('[data-user-trigger]');
+            const dropdown = userMenu.querySelector('[data-user-dropdown]');
+            const closeMenus = (event) => {
+                if (!userMenu.contains(event.target)) {
+                    dropdown.classList.remove('show');
                 }
+            };
+            trigger.addEventListener('click', (event) => {
+                event.stopPropagation();
+                dropdown.classList.toggle('show');
+            });
+            document.addEventListener('click', closeMenus);
+        }
+    </script>
+    
+<script>
+    const sidebar = document.querySelector('[data-app-sidebar]');
+    const toggles = document.querySelectorAll('[data-sidebar-toggle]');
+    const closeButton = document.querySelector('[data-sidebar-close]');
+    const backdrop = document.querySelector('[data-sidebar-backdrop]');
+    if (sidebar && toggles.length) {
+        const openSidebar = () => {
+            sidebar.classList.add('open');
+            if (backdrop) {
+                backdrop.classList.add('visible');
+            }
+        };
+        const closeSidebar = () => {
+            sidebar.classList.remove('open');
+            if (backdrop) {
+                backdrop.classList.remove('visible');
+            }
+        };
+        toggles.forEach((toggle) => {
+            toggle.addEventListener('click', () => {
+                if (sidebar.classList.contains('open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+        });
+        if (closeButton) {
+            closeButton.addEventListener('click', closeSidebar);
+        }
+        if (backdrop) {
+            backdrop.addEventListener('click', closeSidebar);
+        }
+    }
+</script>
 
-            } else {
-                // Si no hay sesión, regresarlo al index para que haga Login
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.lucide) { lucide.createIcons(); }
+
+        // RECUPERAR SESIÓN
+        const savedSession = sessionStorage.getItem('loginSession');
+        const savedUser = sessionStorage.getItem('loginUser');
+        
+        if (savedSession && savedUser) {
+            const appData = JSON.parse(savedSession);
+            
+            // Setear Iniciales en el Header
+            const inicial = savedUser.charAt(0).toUpperCase();
+            document.querySelectorAll('.user-circle-initial').forEach(el => el.innerText = inicial);
+
+            // Setear Nombre de Bienvenida
+            const welcomeTitle = document.getElementById('welcome-username-display');
+            if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
+
+            // Setear Nombre en el menú de usuario
+            const userNameEl = document.querySelector('.user-name');
+            if(userNameEl) userNameEl.innerText = appData.nombreProveedor || savedUser;
+
+            // Si no tiene permisos de administrador, regresarlo a index.html
+            if(appData.privilegio == 2 || appData.privilegio == "2") {
                 window.location.href = 'index.html';
             }
-        });
-    </script>
+
+        } else {
+            // Si entra sin sesión, lo rebotamos al index para que haga Login
+            window.location.href = 'index.html';
+        }
+    });
+</script>
+
 </body>
 </html>
