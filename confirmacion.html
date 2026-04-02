@@ -90,27 +90,30 @@
         .eval-label { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; }
         .eval-label i { color: #374151; width: 16px; height: 16px; flex-shrink: 0; }
         
-        /* === RESPUESTAS: SOLICITUD DE FONDO GRIS, BORDES REDONDEADOS Y ALTURA EMPAREJADA === */
+        /* === RESPUESTAS: SOLICITUD DE FONDO GRIS, BORDES REDONDEADOS Y CENTRADO DE TEXTO === */
         .eval-input-wrapper { display: flex; flex-direction: column; width: 100%; }
         .eval-input-control { 
             width: 100% !important; 
-            padding: 0.75rem 1rem !important; 
+            padding: 0 1rem !important; /* Ajuste: Quitamos el padding vertical para centrar el texto con line-height */
+            line-height: 40px !important; /* Ajuste: Centra el texto perfectamente dentro de los 42px de alto (42 - 2 de borde) */
             font-size: 14px !important; 
             color: #111827 !important; 
-            background-color: #f3f4f6 !important; /* Fondo gris claro */
-            border-radius: 0.5rem !important; /* Borde redondeado */
-            border: 1px solid #d1d5db !important; /* Borde gris sutil */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important; /* Sombra de tarjeta */
+            background-color: #f3f4f6 !important; 
+            border-radius: 0.5rem !important; 
+            border: 1px solid #d1d5db !important; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important; 
             box-sizing: border-box !important; 
             font-family: inherit !important; 
-            height: 42px !important; /* Altura emparejada específica para todos los inputs y selects */
+            height: 42px !important; 
             display: block !important;
             transition: all 0.2s ease !important; 
         }
         
         textarea.eval-input-control {
             height: auto !important; 
-            min-height: 100px !important; /* El textarea necesita crecer, así que no se fija a 42px */
+            min-height: 100px !important; 
+            padding: 0.75rem 1rem !important; /* El textarea sí mantiene su padding normal */
+            line-height: 1.5 !important; /* El textarea mantiene su interlineado normal */
         }
 
         .eval-input-control:focus { outline: none; background-color: #ffffff !important; border-color: #d1d5db !important; box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.5) !important; }
@@ -324,7 +327,7 @@
                         </div>
                     </div>
                     <div class="eval-field-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
-                        <button type="button" style="height: 42px !important; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: background 0.2s;">
+                        <button type="button" style="height: 42px; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: background 0.2s;">
                             <i data-lucide="file-text" style="width: 18px; height: 18px; color: white;"></i> Ver PDF
                         </button>
                     </div>
