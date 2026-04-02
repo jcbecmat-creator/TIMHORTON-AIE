@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+        
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Confirmación Operativa | Tim Hortons</title>
@@ -669,5 +673,40 @@
         }
     }
 </script>
+
+<script>
+        // Inicializar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
+            authDomain: "timhortons-mantenimiento.firebaseapp.com",
+            projectId: "timhortons-mantenimiento",
+            storageBucket: "timhortons-mantenimiento.firebasestorage.app",
+            messagingSenderId: "892024009722",
+            appId: "1:892024009722:web:fd43a68570f78cedcaea43"
+        };
+        
+        // Evitar que se inicialice dos veces
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Función de prueba para inyectar un ticket
+        function crearTicketDePrueba() {
+            db.collection("tickets_mantenimiento").doc("OS-2026-00012").set({
+                id_ticket: "OS-2026-00012",
+                sucursal: "Acoxpa",
+                tipo: "Correctivo",
+                fecha_creacion: "2026-02-10",
+                estado_confirmacion: "En proceso"
+            }).then(() => {
+                alert("¡Éxito! Se creó un ticket de prueba en tu base de datos de Firebase.");
+            }).catch((error) => {
+                alert("Error al conectar con Firebase: " + error);
+            });
+        }
+    </script>
+    
 </body>
 </html>
