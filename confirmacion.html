@@ -50,28 +50,34 @@
         .co-filters-grid { display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-end; }
         .co-filter-group { flex: 1; min-width: 160px; }
         .co-filter-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); margin-bottom: var(--space-2); display: block; }
-        .co-filter-input { width: 100%; padding: var(--space-3) var(--space-4); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); background: var(--gray-50); font-size: var(--text-sm); color: var(--gray-900); transition: all var(--duration-fast); box-sizing: border-box; }
+        
+        /* ALINEACIÓN DE ALTURA DE FILTROS */
+        .co-filter-input { height: 42px; width: 100%; padding: var(--space-3) var(--space-4); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); background: var(--gray-50); font-size: var(--text-sm); color: var(--gray-900); transition: all var(--duration-fast); box-sizing: border-box; }
         .co-filter-input:focus { outline: none; background: white; border-color: #DC2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15); }
         
         .co-table-container { background: white; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100); }
         .co-table { width: 100%; border-collapse: collapse; }
         .co-table thead { background: var(--gray-50); }
-        .co-table th { padding: var(--space-4) var(--space-5); text-align: left; font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); border-bottom: 1px solid var(--gray-200); }
-        .co-table td { padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--gray-900); border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+        
+        /* TÍTULOS CENTRADOS */
+        .co-table th { padding: var(--space-4) var(--space-5); text-align: center; font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); border-bottom: 1px solid var(--gray-200); }
+        .co-table td { padding: var(--space-4) var(--space-5); text-align: center; font-size: var(--text-sm); color: var(--gray-900); border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
         .co-table tbody tr { transition: background var(--duration-fast); }
         .co-table tbody tr:hover { background: var(--gray-50); }
         .co-table tbody tr:last-child td { border-bottom: none; }
         
         .co-table-empty { text-align: center; padding: 40px 20px !important; color: #6b7280; font-size: 14px; }
         
-        .btn-secondary { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        /* ALINEACIÓN ALTURA BOTÓN FILTRAR */
+        .btn-secondary { height: 42px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-sizing: border-box;}
         .btn-secondary:hover { background: #e5e7eb; }
         
-        .btn-action-red { background: #DC2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s; }
+        /* ALINEACIÓN ALTURA BOTÓN ACCIÓN */
+        .btn-action-red { height: 28px; background: #DC2626; color: white; border: none; padding: 0px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s; box-sizing: border-box;}
         .btn-action-red:hover { background: #B91C1C; }
 
-        /* STATUS BADGE */
-        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        /* STATUS BADGE AJUSTADO (Mismo alto que botón) */
+        .status-badge { height: 28px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: none; box-sizing: border-box; }
         .status-en-proceso { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
         .status-aceptado { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
         .status-no-aceptado { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
@@ -80,22 +86,41 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-overlay.active { display: flex; }
         .modal-card { background: white; width: 100%; max-width: 600px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        .modal-header { padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h2 { margin: 0; font-size: 18px; color: #111827; }
-        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; }
+        .modal-header { padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: flex-start; }
+        .modal-header h2 { margin: 0; font-size: 20px; color: #111827; font-weight: 800; }
+        .modal-header p { margin: 2px 0 0 0; font-size: 13px; color: #6b7280; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; padding: 0; margin-top: -5px; }
         .modal-body { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .modal-footer { padding: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 10px; background: #f9fafb; border-radius: 0 0 16px 16px; }
+        .modal-footer button { height: 42px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; }
 
-        .form-label { font-size: 12px; font-weight: bold; color: #4b5563; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .form-input-modal { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f9fafb; }
-        .form-input-modal:focus { background: white; border-color: #DC2626; outline: none; }
+        /* REPLICANDO ESTILOS DE MANTENIMIENTO CORRECTIVO (RESPUESTAS) */
+        .form-label { font-size: 13px; font-weight: bold; color: #374151; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; text-transform: none; }
+        .form-label i { color: #DC2626; width: 16px; height: 16px; }
+        .form-input-modal { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f3f4f6; color: #111827; }
+        .form-input-modal:focus { background: #e5e7eb; outline: none; }
+        .form-input-modal::placeholder { color: #9ca3af; }
         
-        .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #f9fafb; position: relative; width: 100%; overflow: hidden; height: 150px; }
+        .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #f3f4f6; position: relative; width: 100%; overflow: hidden; height: 150px; }
         .signature-pad { width: 100%; height: 100%; cursor: crosshair; touch-action: none; } 
 
-        .photo-slot { aspect-ratio: 1; border: 2px dashed #d1d5db; border-radius: 12px; background: #f9fafb; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; width: 120px; height: 120px; margin-top: 10px; }
+        /* FOTO CENTRADA Y FUNCIONALIDAD */
+        .photo-container-centered { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
+        .photo-slot { aspect-ratio: 1; border: 2px dashed #d1d5db; border-radius: 12px; background: #f3f4f6; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; width: 150px; height: 150px; cursor: zoom-in; transition: transform 0.3s ease-in-out; z-index: 1; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
-        .btn-photo { background: #DC2626; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+        
+        /* Foto en Zoom (Pantalla Completa) */
+        .photo-slot.zoomed { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; aspect-ratio: auto; z-index: 99999; cursor: zoom-out; border: none; border-radius: 0; background: rgba(0,0,0,0.9); transform: none; }
+        .photo-slot.zoomed img { width: auto; height: 100%; max-width: 100%; margin: 0 auto; object-fit: contain; }
+
+        .btn-photo-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-photo { background: #DC2626; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-photo:hover { background: #B91C1C; }
+
+        /* Botón Tache para quitar foto */
+        .btn-remove-photo { display: none; position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; background: rgba(220, 38, 38, 0.8); color: white; border: none; cursor: pointer; align-items: center; justify-content: center; padding: 0; z-index: 10; }
+        .btn-remove-photo i { width: 14px; height: 14px; }
+        .photo-slot:hover .btn-remove-photo, .photo-slot.zoomed .btn-remove-photo { display: flex; }
 
         /* Camera Overlay */
         #camera-overlay { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
@@ -111,6 +136,7 @@
             .co-filter-group { width: 100%; }
             .co-table-container { overflow-x: auto; }
             .co-table { min-width: 750px; }
+            .co-table th, .co-table td { text-align: left; } /* En móvil se ve mejor a la izquierda */
         }
     </style>
 </head>
@@ -233,7 +259,7 @@
                                     <td>Acoxpa</td>
                                     <td>Correctivo</td>
                                     <td>10/02/2026</td>
-                                    <td><span class="status-badge status-en-proceso">En Proceso</span></td>
+                                    <td><span class="status-badge status-en-proceso">En proceso</span></td>
                                     <td style="text-align: right;">
                                         <button class="btn-action-red" onclick="abrirModalEvaluacion('OS-2026-00012')">
                                             <i data-lucide="search" style="width:14px;"></i> Revisar
@@ -252,35 +278,45 @@
     <div id="modalEvaluacion" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <h2>Cuestionario de Evaluación</h2>
+                <div>
+                    <h2>Confirmación Operativa</h2>
+                    <p>Aprueba las órdenes de servicio</p>
+                </div>
                 <button class="modal-close" onclick="cerrarModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="eval-id-ticket">
 
+                <div style="margin-bottom: 5px;">
+                    <a href="#" id="eval-pdf-link" target="_blank" style="display: flex; align-items: center; gap: 8px; color: #1d4ed8; font-weight: 600; font-size: 14px; text-decoration: none;">
+                        <i data-lucide="file-text" style="width: 18px; height: 18px; color: #DC2626;"></i>
+                        Ver PDF del Mantenimiento Correctivo
+                    </a>
+                </div>
+
                 <div>
-                    <label class="form-label">Folio</label>
-                    <input type="text" id="eval-folio" class="form-input-modal" readonly style="background:#e5e7eb; font-weight:bold;">
+                    <label class="form-label"><i data-lucide="hash"></i>Folio</label>
+                    <input type="text" id="eval-folio" class="form-input-modal" readonly style="font-weight:bold;">
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div>
-                        <label class="form-label">Nombre del Empleado</label>
+                        <label class="form-label"><i data-lucide="user"></i>Nombre del Empleado</label>
                         <input type="text" id="eval-nombre" class="form-input-modal" placeholder="Ej. Juan Pérez">
                     </div>
                     <div>
-                        <label class="form-label">Número de Empleado</label>
+                        <label class="form-label"><i data-lucide="id-card"></i>Número de Empleado</label>
                         <input type="text" id="eval-numero" class="form-input-modal" placeholder="Ej. 10452">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div>
-                        <label class="form-label">Cargo de Empleado</label>
+                        <label class="form-label"><i data-lucide="briefcase"></i>Cargo de Empleado</label>
                         <input type="text" id="eval-cargo" class="form-input-modal" placeholder="Ej. Gerente en turno">
                     </div>
                     <div>
-                        <label class="form-label">Nivel de Servicio</label>
+                        <label class="form-label"><i data-lucide="star"></i>Nivel de Servicio</label>
                         <select id="eval-nivel" class="form-input-modal">
                             <option value="">Selecciona...</option>
                             <option value="Aceptado">Aceptado</option>
@@ -290,21 +326,29 @@
                 </div>
 
                 <div>
-                    <label class="form-label">Comentario de Salida</label>
+                    <label class="form-label"><i data-lucide="message-square"></i>Comentario de Salida</label>
                     <textarea id="eval-comentario" class="form-input-modal" rows="2" placeholder="Observaciones sobre el trabajo realizado..."></textarea>
                 </div>
 
-                <div>
-                    <label class="form-label">Selfie del Empleado</label>
-                    <button type="button" class="btn-photo" onclick="abrirCamaraEvaluacion()"><i data-lucide="camera"></i> Tomar Selfie</button>
-                    <div class="photo-slot" id="eval-selfie-slot" style="display: none;">
+                <div class="photo-container-centered">
+                    <label class="form-label"><i data-lucide="camera"></i>Selfie del Empleado</label>
+                    
+                    <input type="file" id="eval-photo-input" accept="image/*" style="display: none;" onchange="handleFileUpload(this)">
+
+                    <div class="btn-photo-group">
+                        <button type="button" class="btn-photo" onclick="abrirCamaraEvaluacion()"><i data-lucide="aperture"></i> Tomar Selfie</button>
+                        <button type="button" class="btn-photo" style="background: #f3f4f6; color: #374151; border: 1px solid #d1d5db;" onclick="document.getElementById('eval-photo-input').click()"><i data-lucide="upload-cloud"></i> Subir archivos</button>
+                    </div>
+
+                    <div class="photo-slot" id="eval-selfie-slot" style="display: none;" onclick="toggleZoom(this)">
+                        <button class="btn-remove-photo" onclick="quitarFoto(event)"><i data-lucide="x"></i></button>
                         <img id="eval-selfie-img" src="">
                     </div>
                     <input type="hidden" id="eval-selfie-data">
                 </div>
 
                 <div>
-                    <label class="form-label">Firma de Autorización</label>
+                    <label class="form-label"><i data-lucide="pen-tool"></i>Firma Táctil</label>
                     <div class="signature-container">
                         <canvas id="eval-firma-canvas" class="signature-pad"></canvas>
                     </div>
@@ -396,10 +440,8 @@
             document.getElementById('eval-nivel').value = '';
             document.getElementById('eval-comentario').value = '';
             
-            document.getElementById('eval-selfie-data').value = '';
-            document.getElementById('eval-selfie-slot').style.display = 'none';
-            document.getElementById('eval-selfie-img').src = '';
-            
+            quitarFoto(); // Limpiar foto
+
             limpiarFirmaModal();
 
             document.getElementById('modalEvaluacion').classList.add('active');
@@ -411,17 +453,21 @@
         }
 
         function cerrarModal() {
+            // Asegurarnos de cerrar el zoom si está abierto al cerrar el modal
+            const slot = document.getElementById('eval-selfie-slot');
+            if(slot.classList.contains('zoomed')) { slot.classList.remove('zoomed'); }
+            
             document.getElementById('modalEvaluacion').classList.remove('active');
         }
 
         function enviarEvaluacion() {
-            // LÓGICA TEMPORAL VISUAL (En el siguiente paso conectamos Firebase aquí)
+            // LÓGICA TEMPORAL VISUAL
             alert("Evaluación simulada. En el siguiente paso la conectaremos a Firebase.");
             cerrarModal();
         }
 
         // ==========================================
-        // CÁMARA (SELFIE)
+        // CÁMARA (SELFIE) Y SUBIDA DE ARCHIVOS
         // ==========================================
         let currentStreamModal;
         let currentFacingModeModal = 'user'; // Selfie por defecto
@@ -455,11 +501,46 @@
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             
             const base64Img = canvasT.toDataURL('image/jpeg', 0.8);
-            document.getElementById('eval-selfie-data').value = base64Img;
-            document.getElementById('eval-selfie-img').src = base64Img;
-            document.getElementById('eval-selfie-slot').style.display = 'flex';
+            mostrarFotoPreview(base64Img);
 
             cerrarCamaraEvaluacion(); 
+        }
+
+        // Lógica para subir archivo desde dispositivo
+        function handleFileUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                mostrarFotoPreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+            input.value = ''; // Limpiar input para permitir subir la misma foto
+        }
+
+        // Mostrar la foto en el slot y guardar data
+        function mostrarFotoPreview(base64Data) {
+            document.getElementById('eval-selfie-data').value = base64Data;
+            document.getElementById('eval-selfie-img').src = base64Data;
+            document.getElementById('eval-selfie-slot').style.display = 'flex';
+        }
+
+        // Botón tache para quitar la foto
+        function quitarFoto(event) {
+            if(event) event.stopPropagation(); // Evitar que el clic en el tache active el zoom
+            
+            const slot = document.getElementById('eval-selfie-slot');
+            if(slot.classList.contains('zoomed')) { slot.classList.remove('zoomed'); }
+
+            document.getElementById('eval-selfie-data').value = '';
+            document.getElementById('eval-selfie-img').src = '';
+            slot.style.display = 'none';
+        }
+
+        // Funcionalidad de Zoom (Doble clic / Clic para grande/pequeño)
+        function toggleZoom(slot) {
+            slot.classList.toggle('zoomed');
         }
 
         // ==========================================
@@ -519,7 +600,6 @@
                 const container = canvasFirmaModal.parentElement;
                 canvasFirmaModal.width = container.offsetWidth;
                 canvasFirmaModal.height = container.offsetHeight;
-                // Si había firma, se pierde al redimensionar, pero como se hace al abrir el modal, está bien.
             }
         }
 
