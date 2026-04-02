@@ -744,7 +744,7 @@
             else window.alert("Límite de fotos alcanzado para esta sección."); 
         }
         
-function processFile(input) { 
+        function processFile(input) { 
             if (!input.files || input.files.length === 0) return; 
             const reader = new FileReader(); 
             reader.onload = function(e) { 
@@ -880,13 +880,12 @@ function processFile(input) {
             return new Blob([ab], {type: mimeString});
         }
 
-async function guardarEnFirebase(ordenData) {
-            // Generar un ID único si no escribieron Ticket GLPI
+        async function guardarEnFirebase(ordenData) {
             const folioTicket = (ordenData.ticket === 'S/N' || ordenData.ticket === '') ? 
                                 `OS-${new Date().getFullYear()}-${Math.floor(Math.random()*10000).toString().padStart(4, '0')}` : 
                                 ordenData.ticket;
             
-            ordenData.ticket = folioTicket; // Aseguramos que el objeto tenga el ID final
+            ordenData.ticket = folioTicket;
 
             try {
                 let urlsFalla = [];
@@ -934,7 +933,7 @@ async function guardarEnFirebase(ordenData) {
                     urlFirma = await ref.getDownloadURL();
                 }
 
-                // Guardar documento en Firestore CON TODOS LOS CAMPOS DE TEXTO
+                // === GUARDAR EN FIRESTORE (BLOQUE COMPLETO CORREGIDO) ===
                 await db.collection("tickets_mantenimiento").doc(folioTicket).set({
                     id_ticket: folioTicket,
                     sucursal: ordenData.sucursal || '',
@@ -976,8 +975,8 @@ async function guardarEnFirebase(ordenData) {
                 throw error;
             }
         }
-        
-// ==========================================
+
+        // ==========================================
         // EVENTO SUBMIT MODIFICADO (CON FIRMA INTELIGENTE)
         // ==========================================
         document.getElementById('ordenMttoForm').addEventListener('submit', async function(e) {
@@ -990,23 +989,18 @@ async function guardarEnFirebase(ordenData) {
                 // Validar firma 100% a prueba de fallos
                 const canvasFirmaReal = document.getElementById('firma_tecnico');
                 const firmaDataActual = canvasFirmaReal.toDataURL();
-                
-                // Creamos un canvas invisible en blanco para comparar
                 const canvasBlanco = document.createElement('canvas');
                 canvasBlanco.width = canvasFirmaReal.width;
                 canvasBlanco.height = canvasFirmaReal.height;
                 const firmaBlanca = canvasBlanco.toDataURL();
 
-                // Si la firma actual es idéntica a un lienzo en blanco, lo rebotamos
                 if(firmaDataActual === firmaBlanca) {
                     alert("La firma del técnico es obligatoria.");
                     return;
                 } else {
-                    // Si sí firmó, aseguramos que el input oculto tenga la imagen correcta
                     document.getElementById('firma_tecnico_data').value = firmaDataActual;
                 }
 
-                // Deshabilitar botón
                 btnEnviar.disabled = true;
                 btnEnviar.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando en servidor...';
                 lucide.createIcons();
@@ -1042,10 +1036,7 @@ async function guardarEnFirebase(ordenData) {
                     fecha_hora: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })
                 };
 
-                // 1. Guardamos en Firebase primero
                 await guardarEnFirebase(ordenData);
-
-                // 2. Si Firebase fue exitoso, guardamos en local para el PDF y redirigimos
                 sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
                 window.location.href = 'index2.html';
 
