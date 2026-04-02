@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-        
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Confirmación Operativa | Tim Hortons</title>
     
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/fonts.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/style.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/components.css">
@@ -65,6 +65,8 @@
         .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
         .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; box-sizing: border-box; }
         .status-en-proceso { background: #FEF3C7; color: #92400E; }
+        /* Nuevos estilos de badge por si acaso */
+        .status-confirmado { background: #D1FAE5; color: #065F46; } 
 
         /* === MODAL STYLES === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
@@ -87,6 +89,7 @@
         .modal-footer button { height: 44px; padding: 0 24px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; gap: 8px; }
         .btn-cancelar { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
         .btn-enviar { background: #DC2626; color: white; border: none; }
+        .btn-enviar:disabled { background: #fca5a5; cursor: not-allowed; } /* Estilo de botón deshabilitado */
 
         /* === PREGUNTAS Y RESPUESTAS === */
         .eval-field-group { width: 100%; display: flex; flex-direction: column; }
@@ -98,8 +101,8 @@
         .eval-input-wrapper { display: flex; flex-direction: column; width: 100%; }
         .eval-input-control { 
             width: 100% !important; 
-            padding: 0 1rem !important; /* Ajuste: Quitamos el padding vertical para centrar el texto con line-height */
-            line-height: 40px !important; /* Ajuste: Centra el texto perfectamente dentro de los 42px de alto (42 - 2 de borde) */
+            padding: 0 1rem !important; 
+            line-height: 40px !important; 
             font-size: 14px !important; 
             color: #111827 !important; 
             background-color: #f3f4f6 !important; 
@@ -116,8 +119,8 @@
         textarea.eval-input-control {
             height: auto !important; 
             min-height: 100px !important; 
-            padding: 0.75rem 1rem !important; /* El textarea sí mantiene su padding normal */
-            line-height: 1.5 !important; /* El textarea mantiene su interlineado normal */
+            padding: 0.75rem 1rem !important; 
+            line-height: 1.5 !important; 
         }
 
         .eval-input-control:focus { outline: none; background-color: #ffffff !important; border-color: #d1d5db !important; box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.5) !important; }
@@ -260,7 +263,7 @@
                                 </select>
                             </div>
                             <div class="flex gap-2 flex-shrink-0">
-                                <button class="btn-filtrar" type="button" onclick="aplicarFiltros()">
+                                <button class="btn-filtrar" type="button" onclick="cargarTablaConfirmacion()">
                                     <i data-lucide="filter" style="width: 18px; height: 18px;"></i> Filtrar
                                 </button>
                             </div>
@@ -281,16 +284,7 @@
                             </thead>
                             <tbody id="tabla-confirmacion-body">
                                 <tr>
-                                    <td><strong>OS-2026-00012</strong></td>
-                                    <td>Acoxpa</td>
-                                    <td>Correctivo</td>
-                                    <td>10/02/2026</td>
-                                    <td><span class="status-badge status-en-proceso">En proceso</span></td>
-                                    <td>
-                                        <button class="btn-action-red" onclick="abrirModalEvaluacion('OS-2026-00012')">
-                                            <i data-lucide="search" style="width: 14px; height: 14px;"></i> Revisar
-                                        </button>
-                                    </td>
+                                    <td colspan="6" style="padding: 20px; text-align: center; color: #6b7280;">Cargando órdenes de servicio...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -422,10 +416,10 @@
             </div>
             
             <div class="modal-footer">
-                <button class="btn-cancelar" onclick="cerrarModal()">
+                <button class="btn-cancelar" onclick="cerrarModal()" id="btn-cancelar-eval">
                     <i data-lucide="x-circle" style="color: currentColor; width: 18px; height: 18px;"></i> Cancelar Evaluación 
                 </button>
-                <button class="btn-enviar" onclick="enviarEvaluacion()">
+                <button class="btn-enviar" onclick="enviarEvaluacion()" id="btn-enviar-eval">
                     <i data-lucide="send" style="color: white; width: 18px; height: 18px;"></i> Enviar evaluación 
                 </button>
             </div>
@@ -443,6 +437,27 @@
     </div>
 
 <script>
+    // ==========================================
+    // 1. CONFIGURACIÓN DE FIREBASE
+    // ==========================================
+    const firebaseConfig = {
+        apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
+        authDomain: "timhortons-mantenimiento.firebaseapp.com",
+        projectId: "timhortons-mantenimiento",
+        storageBucket: "timhortons-mantenimiento.firebasestorage.app",
+        messagingSenderId: "892024009722",
+        appId: "1:892024009722:web:fd43a68570f78cedcaea43"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // ==========================================
+    // 2. INICIALIZACIÓN DE LA PÁGINA
+    // ==========================================
     document.addEventListener('DOMContentLoaded', function () {
         const savedSession = sessionStorage.getItem('loginSession');
         const savedUser = sessionStorage.getItem('loginUser');
@@ -468,6 +483,7 @@
 
         if (window.lucide) { lucide.createIcons(); }
 
+        // Inicializar menú lateral
         const userMenu = document.querySelector('[data-user-menu]');
         if (userMenu) {
             const trigger = userMenu.querySelector('[data-user-trigger]');
@@ -490,14 +506,65 @@
         }
 
         inicializarFirmaModal();
+        cargarTablaConfirmacion(); // Cargar la tabla al inicio
     });
 
     // ==========================================
-    // LÓGICA DEL MODAL DE EVALUACIÓN
+    // 3. CARGAR DATOS DESDE FIRESTORE
+    // ==========================================
+    function cargarTablaConfirmacion() {
+        const tbody = document.getElementById('tabla-confirmacion-body');
+        tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center;">Cargando...</td></tr>';
+
+        // Traemos los tickets que tengan estado "En proceso"
+        db.collection("tickets_mantenimiento")
+          .where("estado_confirmacion", "==", "En proceso")
+          .get()
+          .then((querySnapshot) => {
+              tbody.innerHTML = '';
+              if (querySnapshot.empty) {
+                  tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #6b7280;">No hay órdenes pendientes de evaluación.</td></tr>';
+                  return;
+              }
+
+              querySnapshot.forEach((doc) => {
+                  const data = doc.data();
+                  // Prevenir errores si faltan campos
+                  const folio = data.id_ticket || doc.id;
+                  const sucursal = data.sucursal || "No especificada";
+                  const tipo = data.tipo || "Correctivo";
+                  const fecha = data.fecha_creacion || "N/A";
+                  
+                  const tr = document.createElement('tr');
+                  tr.innerHTML = `
+                      <td><strong>${folio}</strong></td>
+                      <td>${sucursal}</td>
+                      <td>${tipo}</td>
+                      <td>${fecha}</td>
+                      <td><span class="status-badge status-en-proceso">En proceso</span></td>
+                      <td>
+                          <button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}')">
+                              <i data-lucide="search" style="width: 14px; height: 14px;"></i> Revisar
+                          </button>
+                      </td>
+                  `;
+                  tbody.appendChild(tr);
+              });
+              lucide.createIcons(); // Recargar iconos para las nuevas filas
+          })
+          .catch((error) => {
+              console.error("Error obteniendo documentos: ", error);
+              tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #DC2626;">Error al cargar los datos. Revisa la consola.</td></tr>';
+          });
+    }
+
+    // ==========================================
+    // 4. LÓGICA DEL MODAL DE EVALUACIÓN
     // ==========================================
     function abrirModalEvaluacion(folio) {
         document.getElementById('eval-folio').value = folio;
         
+        // Limpiar campos previos
         document.getElementById('eval-nombre').value = '';
         document.getElementById('eval-cargo').value = '';
         document.getElementById('eval-numero').value = '';
@@ -509,6 +576,7 @@
 
         document.getElementById('modalEvaluacion').classList.add('active');
         
+        // Timeout para que el canvas de la firma agarre bien su tamaño cuando se hace visible
         setTimeout(() => {
             redimensionarCanvasFirma();
         }, 100);
@@ -519,11 +587,6 @@
         if(slot.classList.contains('zoomed')) { slot.classList.remove('zoomed'); }
         if(document.getElementById('modal-card-eval').classList.contains('maximized')) { toggleMaximizarModal(); }
         document.getElementById('modalEvaluacion').classList.remove('active');
-    }
-
-    function enviarEvaluacion() {
-        alert("Evaluación simulada.");
-        cerrarModal();
     }
 
     function toggleMaximizarModal() {
@@ -537,7 +600,7 @@
     }
 
     // ==========================================
-    // CÁMARA Y ARCHIVOS (CUADRO DE FOTO)
+    // 5. CÁMARA Y ARCHIVOS (SELFIE)
     // ==========================================
     let currentStreamModal;
     let currentFacingModeModal = 'user'; 
@@ -616,7 +679,7 @@
     }
 
     // ==========================================
-    // FIRMA TÁCTIL MODAL
+    // 6. FIRMA TÁCTIL
     // ==========================================
     let canvasFirmaModal, ctxFirmaModal;
     function inicializarFirmaModal() {
@@ -663,6 +726,8 @@
             const container = canvasFirmaModal.parentElement;
             canvasFirmaModal.width = container.offsetWidth;
             canvasFirmaModal.height = container.offsetHeight;
+            // Para mantener la firma si se redimensiona la ventana, idealmente se debería re-dibujar la imagen guardada
+            // Por simplicidad en este prototipo, solo redimensionamos el lienzo.
         }
     }
 
@@ -672,41 +737,96 @@
             document.getElementById('eval-firma-data').value = ''; 
         }
     }
-</script>
 
-<script>
-        // Inicializar Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
-            authDomain: "timhortons-mantenimiento.firebaseapp.com",
-            projectId: "timhortons-mantenimiento",
-            storageBucket: "timhortons-mantenimiento.firebasestorage.app",
-            messagingSenderId: "892024009722",
-            appId: "1:892024009722:web:fd43a68570f78cedcaea43"
-        };
-        
-        // Evitar que se inicialice dos veces
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        // Función de prueba para inyectar un ticket
-        function crearTicketDePrueba() {
-            db.collection("tickets_mantenimiento").doc("OS-2026-00012").set({
-                id_ticket: "OS-2026-00012",
-                sucursal: "Acoxpa",
-                tipo: "Correctivo",
-                fecha_creacion: "2026-02-10",
-                estado_confirmacion: "En proceso"
-            }).then(() => {
-                alert("¡Éxito! Se creó un ticket de prueba en tu base de datos de Firebase.");
-            }).catch((error) => {
-                alert("Error al conectar con Firebase: " + error);
-            });
-        }
-    </script>
+    // ==========================================
+    // 7. ENVÍO DE DATOS A FIREBASE (STORAGE Y FIRESTORE)
+    // ==========================================
     
+    // Función auxiliar para convertir Base64 a Blob (para subir a Storage)
+    function dataURItoBlob(dataURI) {
+        const byteString = atob(dataURI.split(',')[1]);
+        const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], {type: mimeString});
+    }
+
+    async function enviarEvaluacion() {
+        const folio = document.getElementById('eval-folio').value;
+        const nombre = document.getElementById('eval-nombre').value.trim();
+        const numero = document.getElementById('eval-numero').value.trim();
+        const cargo = document.getElementById('eval-cargo').value.trim();
+        const nivel = document.getElementById('eval-nivel').value;
+        const comentario = document.getElementById('eval-comentario').value.trim();
+        const selfieBase64 = document.getElementById('eval-selfie-data').value;
+        const firmaBase64 = document.getElementById('eval-firma-data').value;
+
+        // Validaciones básicas
+        if (!nombre || !nivel) {
+            alert("Por favor, completa al menos el Nombre del Empleado y el Nivel de Servicio.");
+            return;
+        }
+        if (!firmaBase64) {
+            alert("La firma de autorización es obligatoria.");
+            return;
+        }
+
+        // Deshabilitar botón para evitar doble envío
+        const btnEnviar = document.getElementById('btn-enviar-eval');
+        const btnCancelar = document.getElementById('btn-cancelar-eval');
+        btnEnviar.disabled = true;
+        btnEnviar.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando...';
+        btnCancelar.disabled = true;
+
+        try {
+            let selfieUrl = null;
+            let firmaUrl = null;
+
+            // 1. Subir Selfie (si existe)
+            if (selfieBase64) {
+                const selfieBlob = dataURItoBlob(selfieBase64);
+                const selfieRef = storage.ref(`evaluaciones/${folio}/selfie_${Date.now()}.jpg`);
+                await selfieRef.put(selfieBlob);
+                selfieUrl = await selfieRef.getDownloadURL();
+            }
+
+            // 2. Subir Firma
+            const firmaBlob = dataURItoBlob(firmaBase64);
+            const firmaRef = storage.ref(`evaluaciones/${folio}/firma_${Date.now()}.png`);
+            await firmaRef.put(firmaBlob);
+            firmaUrl = await firmaRef.getDownloadURL();
+
+            // 3. Actualizar Firestore
+            await db.collection("tickets_mantenimiento").doc(folio).update({
+                evaluacion_nombre: nombre,
+                evaluacion_numero: numero,
+                evaluacion_cargo: cargo,
+                evaluacion_nivel: nivel,
+                evaluacion_comentario: comentario,
+                evaluacion_selfie_url: selfieUrl,
+                evaluacion_firma_url: firmaUrl,
+                estado_confirmacion: "Confirmado", // Cambiamos el estado para que salga de esta tabla
+                fecha_evaluacion: new Date().toISOString()
+            });
+
+            alert("¡Evaluación enviada y guardada correctamente!");
+            cerrarModal();
+            cargarTablaConfirmacion(); // Recargar la tabla para que desaparezca el ticket confirmado
+
+        } catch (error) {
+            console.error("Error guardando la evaluación:", error);
+            alert("Ocurrió un error al guardar la evaluación. Revisa la consola.");
+        } finally {
+            // Restaurar botones
+            btnEnviar.disabled = false;
+            btnEnviar.innerHTML = '<i data-lucide="send" style="color: white; width: 18px; height: 18px;"></i> Enviar evaluación';
+            btnCancelar.disabled = false;
+            lucide.createIcons(); // Re-renderizar iconos
+        }
+    }
+</script>
 </body>
 </html>
