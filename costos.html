@@ -35,7 +35,7 @@
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         html.is-logged-in #app-screen { display: block !important; }
 
-        /* === ESTILOS DEL MENÚ PRINCIPAL (INTACTOS DESDE TU CÓDIGO) === */
+        /* === ESTILOS DEL MENÚ PRINCIPAL (INTACTOS) === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
@@ -84,41 +84,43 @@
         /* ========================================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-overlay.active { display: flex; }
-        .modal-card { background: white; width: 100%; max-width: 1150px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; position: relative; }
+        .modal-card { background: white; width: 100%; max-width: 1200px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; position: relative; }
         
-        /* Encabezado del modal */
+        /* Encabezado del modal (Horizontal, Títulos y Totales) */
         .modal-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 10; }
         
-        .header-left { display: flex; flex-direction: column; gap: 4px; }
-        .header-left h2 { font-size: 24px; font-weight: 800; margin: 0; color: #111827; }
-        .header-left p { font-size: 14px; color: #6b7280; margin: 0 0 8px 0; }
-        .header-left-row { display: flex; align-items: center; gap: 15px; }
+        .header-left-group { display: flex; align-items: center; gap: 24px; }
+        .header-titles { display: flex; flex-direction: column; }
+        .header-titles h2 { font-size: 24px; font-weight: 800; margin: 0; color: #111827; }
+        .header-titles p { font-size: 14px; color: #6b7280; margin: 4px 0 0 0; }
         
-        .btn-ver-pdf { height: 34px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
+        .header-folio-group { display: flex; align-items: center; gap: 12px; border-left: 2px solid #e5e7eb; padding-left: 24px; }
+        
+        .btn-ver-pdf { height: 36px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
         .btn-ver-pdf:hover { background: #b91c1c; }
         
-        /* Totales Horizontales, Negros y en Negrita */
-        .header-right { display: flex; align-items: center; gap: 20px; font-size: 16px; font-weight: 700; color: #111827; padding-right: 40px; }
+        /* Totales Horizontales, Negros, Negritas y 35% más grandes (~22px) */
+        .header-totals-group { display: flex; align-items: center; gap: 24px; font-size: 22px; font-weight: 800; color: #111827; padding-right: 40px; }
         
         .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: #6b7280; position: absolute; top: 15px; right: 20px; }
         .modal-close:hover { color: #111827; }
         
-        .modal-body { padding: 20px 24px 0 24px; overflow-y: auto; background: #fff; }
+        .modal-body { padding: 24px; overflow-y: auto; background: #fff; }
         
         /* Tabla de captura */
         .captura-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
-        .captura-table th { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; padding-bottom: 8px; text-align: left; border-bottom: 2px solid #e5e7eb; }
-        .captura-table td { padding: 6px 4px; vertical-align: top; }
+        .captura-table th { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; padding-bottom: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; }
+        .captura-table td { padding: 8px 4px; vertical-align: top; }
         
-        /* === PRIORIDAD ALTA: CAJAS GRISES Y REDONDEADAS COMO CONFIRMACIÓN OPERATIVA === */
+        /* === CAJAS GRISES REDONDEADAS COMO CONFIRMACIÓN OPERATIVA === */
         .cap-input, .cap-select { 
             width: 100% !important; 
             padding: 0 1rem !important; 
-            line-height: 40px !important; 
+            line-height: 42px !important; 
             font-size: 14px !important; 
             color: #111827 !important; 
-            background-color: #f3f4f6 !important; /* Gris */
-            border-radius: 0.5rem !important; /* Redondeado 8px */
+            background-color: #f3f4f6 !important; 
+            border-radius: 0.5rem !important; 
             border: 1px solid #d1d5db !important; 
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important; 
             box-sizing: border-box !important; 
@@ -134,31 +136,33 @@
         select.cap-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; }
 
         /* === FOOTER DEL MODAL === */
-        .modal-footer { padding: 20px 24px; background: #fff; display: flex; flex-direction: column; align-items: flex-end; }
+        .modal-footer { padding: 20px 24px; background: #fff; }
         
-        .section-agregar { width: 100%; border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 15px; text-align: right; }
+        .section-agregar { width: 100%; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 20px; text-align: right; }
         .btn-add-concepto { background: #DC2626; color: white; border: none; height: 42px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
         .btn-add-concepto:hover { background: #b91c1c; }
 
-        .botones-accion-group { display: flex; gap: 12px; justify-content: flex-end; }
+        .botones-accion-group { display: flex; gap: 12px; justify-content: flex-end; width: 100%; }
         
-        .btn-cancelar { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
-        .btn-confirmar { background: #DC2626; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
+        .btn-cancelar { background: #ffffff; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+        .btn-confirmar { background: #DC2626; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
         
         .btn-confirmar:hover { background: #b91c1c; }
-        .btn-cancelar:hover { background: #e2e8f0; }
+        .btn-cancelar:hover { background: #f8fafc; }
         
         .btn-eliminar-fila { background: none; border: none; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; height: 42px; width: 100%; }
         .btn-eliminar-fila:hover { color: #b91c1c; }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .costos-wrap { padding: var(--space-4) var(--space-4) var(--space-16); }
             .co-filters-grid { flex-direction: column; }
             .co-filter-group { width: 100%; }
             .co-table-container { overflow-x: auto; }
             .modal-header-custom { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .header-right { align-self: flex-end; }
-            .botones-accion-group { flex-direction: column; width: 100%; }
+            .header-left-group { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .header-folio-group { border-left: none; padding-left: 0; }
+            .header-totals-group { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .botones-accion-group { flex-direction: column; }
             .btn-cancelar, .btn-confirmar, .btn-add-concepto { width: 100%; }
         }
     </style>
@@ -169,7 +173,7 @@
         <header class="main-header">
             <div class="header-left">
                 <button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button>
-                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo"></a>
+                <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo">
                 <h1 class="system-title">Ordenes de Servicio</h1>
             </div>
             <div class="header-right">
@@ -223,6 +227,11 @@
 
             <main class="main-content app-content" id="main-scroll-area">
                 
+                <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
+                    <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
+                    <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
+                </div>
+
                 <div class="costos-wrap">
                     <header class="page-header-row">
                         <div class="page-header-content">
@@ -296,15 +305,18 @@
             <button class="modal-close" onclick="cerrarModal()">&times;</button>
             
             <div class="modal-header-custom">
-                <div class="header-left">
-                    <h2>Costos de Reparación</h2>
-                    <p>Carga los conceptos empleados para esta orden</p>
-                    <div class="header-left-row">
-                        <span style="font-size: 15px; color: #111827; font-weight: 700;">Folio: <strong id="modal-folio-lbl" style="color: #DC2626;"></strong></span>
+                <div class="header-left-group">
+                    <div class="header-titles">
+                        <h2>Costos de Reparación</h2>
+                        <p>Carga los conceptos empleados para esta orden</p>
+                    </div>
+                    <div class="header-folio-group">
+                        <span style="font-size: 16px; color: #111827; font-weight: 700;">Folio: <strong id="modal-folio-lbl" style="color: #DC2626;"></strong></span>
                         <button type="button" class="btn-ver-pdf" onclick="verPDFDesdeModal()"><i data-lucide="file-text" style="width:16px;"></i> Ver PDF</button>
                     </div>
                 </div>
-                <div class="header-right">
+                
+                <div class="header-totals-group">
                     <div>Importe: <span id="modal-importe-top">$0.00</span></div>
                     <div>IVA: <span id="modal-iva-top">$0.00</span></div>
                     <div>Total: <span id="modal-suma-total">$0.00</span></div>
@@ -335,7 +347,7 @@
             <div class="modal-footer">
                 <div class="section-agregar">
                     <button type="button" class="btn-add-concepto" onclick="agregarFilaConcepto()">
-                        <i data-lucide="plus" style="width:18px;"></i> Agregar concepto
+                        <i data-lucide="plus-circle" style="width:18px;"></i> Agregar concepto
                     </button>
                 </div>
                 
@@ -371,6 +383,15 @@
         lucide.createIcons();
         const savedUser = sessionStorage.getItem('loginUser');
         if(savedUser) document.getElementById('user-initial-header').innerText = savedUser.charAt(0).toUpperCase();
+
+        const appDataStr = sessionStorage.getItem('loginSession');
+        if(appDataStr) {
+            const appData = JSON.parse(appDataStr);
+            const welcomeTitle = document.getElementById('welcome-username-display');
+            if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
+            const dropdownName = document.getElementById('dropdown-username');
+            if(dropdownName) dropdownName.innerText = appData.nombreProveedor || savedUser;
+        }
 
         const userMenu = document.querySelector('[data-user-menu]');
         if (userMenu) {
