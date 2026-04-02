@@ -510,7 +510,7 @@
     });
 
 // ==========================================
-    // 3. CARGAR DATOS DESDE FIRESTORE
+    // 3. CARGAR DATOS DESDE FIRESTORE (CON FILTROS)
     // ==========================================
     function cargarTablaConfirmacion() {
         const tbody = document.getElementById('tabla-confirmacion-body');
@@ -519,12 +519,19 @@
         // Objeto global para guardar la info de los tickets y usarla en el PDF
         window.ticketsPendientes = {};
 
+        // 1. LEER VALORES DE LOS FILTROS
+        const fechaInicio = document.getElementById('filtro-fecha-inicio').value;
+        const fechaFin = document.getElementById('filtro-fecha-fin').value;
+        const tipoFiltro = document.getElementById('filtro-tipo').value;
+
         // Traemos los tickets que tengan estado "En proceso"
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "==", "En proceso")
           .get()
           .then((querySnapshot) => {
               tbody.innerHTML = '';
+              let ticketsMostrados = 0;
+
               if (querySnapshot.empty) {
                   tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #6b7280;">No hay órdenes pendientes de evaluación.</td></tr>';
                   return;
@@ -532,21 +539,41 @@
 
               querySnapshot.forEach((doc) => {
                   const data = doc.data();
+                  
+                  // 2. LÓGICA DE FILTRADO
+                  let pasaFiltro = true;
+                  const fechaTicket = data.fecha_creacion || ""; // Formato YYYY-MM-DD
+                  const tipoTicket = data.tipo || "Correctivo";
+
+                  // Validar Fecha Inicio
+                  if (fechaInicio && fechaTicket < fechaInicio) pasaFiltro = false;
+                  
+                  // Validar Fecha Fin
+                  if (fechaFin && fechaTicket > fechaFin) pasaFiltro = false;
+                  
+                  // Validar Tipo de Orden
+                  if (tipoFiltro && tipoFiltro !== "Todos los tipos" && tipoFiltro !== "") {
+                      if (tipoTicket !== tipoFiltro) pasaFiltro = false;
+                  }
+
+                  // Si el ticket no cumple con los filtros, lo saltamos y no lo dibujamos
+                  if (!pasaFiltro) return; 
+
+                  // Si sí pasó los filtros, lo contamos y lo dibujamos
+                  ticketsMostrados++;
                   const folio = data.id_ticket || doc.id;
                   
-                  // Guardamos todos los datos del ticket en la memoria
+                  // Guardamos todos los datos del ticket en la memoria para el PDF
                   window.ticketsPendientes[folio] = data;
                   
                   const sucursal = data.sucursal || "No especificada";
-                  const tipo = data.tipo || "Correctivo";
-                  const fecha = data.fecha_creacion || "N/A";
                   
                   const tr = document.createElement('tr');
                   tr.innerHTML = `
                       <td><strong>${folio}</strong></td>
                       <td>${sucursal}</td>
-                      <td>${tipo}</td>
-                      <td>${fecha}</td>
+                      <td>${tipoTicket}</td>
+                      <td>${fechaTicket}</td>
                       <td><span class="status-badge status-en-proceso">En proceso</span></td>
                       <td>
                           <button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}')">
@@ -556,6 +583,12 @@
                   `;
                   tbody.appendChild(tr);
               });
+
+              // Si después de filtrar no quedó ninguno, mostramos un mensaje
+              if (ticketsMostrados === 0) {
+                  tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #6b7280;">No hay resultados que coincidan con estos filtros.</td></tr>';
+              }
+
               lucide.createIcons();
           })
           .catch((error) => {
@@ -563,7 +596,6 @@
               tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #DC2626;">Error al cargar los datos. Revisa la consola.</td></tr>';
           });
     }
-
 // ==========================================
     // 3.5. RECONSTRUIR Y VER PDF ORIGINAL
     // ==========================================
