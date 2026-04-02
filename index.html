@@ -18,9 +18,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <script>
         tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
@@ -232,7 +232,7 @@
                             <div class="form-card">
                                 <h3 class="section-title"><i data-lucide="ticket"></i> Tickets</h3>
                                 <div class="form-group">
-                                    <label class="form-label" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Número de Ticket GLPI / Interno</label>
+                                    <label class="form-label" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Número de Ticket GLPI / Interno (OPCIONAL)</label>
                                     <input type="text" class="form-input" id="ticket_glpi" placeholder="Ej. 10293">
                                 </div>
                             </div>
@@ -357,7 +357,7 @@
 
                             <div class="submit-section" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: stretch; max-width: 400px; margin-left: auto; margin-right: auto; padding-bottom: 40px;">
                                 
-                                <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); width: 100%;">
+                                <button type="submit" id="btn-enviar-orden" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); width: 100%; transition: background 0.3s;">
                                     <i data-lucide="send"></i> Enviar Orden
                                 </button>
                                 
@@ -458,6 +458,24 @@
     </div>
 
     <script>
+        // ==========================================
+        // 1. CONFIGURACIÓN E INICIALIZACIÓN DE FIREBASE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
+            authDomain: "timhortons-mantenimiento.firebaseapp.com",
+            projectId: "timhortons-mantenimiento",
+            storageBucket: "timhortons-mantenimiento.firebasestorage.app",
+            messagingSenderId: "892024009722",
+            appId: "1:892024009722:web:fd43a68570f78cedcaea43"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
         lucide.createIcons();
 
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
@@ -823,9 +841,126 @@
         renderSlots('soporte'); 
         renderSlots('selfie'); 
 
-        document.getElementById('ordenMttoForm').addEventListener('submit', function(e) {
-            e.preventDefault(); 
+        // ==========================================
+        // FUNCIONES DE APOYO PARA FIREBASE
+        // ==========================================
+        function dataURItoBlob(dataURI) {
+            if(!dataURI) return null;
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], {type: mimeString});
+        }
+
+        async function guardarEnFirebase(ordenData) {
+            // Generar un ID único si no escribieron Ticket GLPI
+            const folioTicket = (ordenData.ticket === 'S/N' || ordenData.ticket === '') ? 
+                                `OS-${new Date().getFullYear()}-${Math.floor(Math.random()*10000).toString().padStart(4, '0')}` : 
+                                ordenData.ticket;
+            
+            ordenData.ticket = folioTicket; // Aseguramos que el objeto tenga el ID final
+
             try {
+                let urlsFalla = [];
+                let urlsSolucion = [];
+                let urlSoporte = null;
+                let urlSelfie = null;
+                let urlFirma = null;
+
+                // Subir fotos de falla
+                for(let i=0; i<ordenData.fotos_falla.length; i++) {
+                    if(ordenData.fotos_falla[i]) {
+                        const ref = storage.ref(`ordenes/${folioTicket}/falla_${i}_${Date.now()}.jpg`);
+                        await ref.put(dataURItoBlob(ordenData.fotos_falla[i]));
+                        urlsFalla.push(await ref.getDownloadURL());
+                    }
+                }
+
+                // Subir fotos de solución
+                for(let i=0; i<ordenData.fotos_solucion.length; i++) {
+                    if(ordenData.fotos_solucion[i]) {
+                        const ref = storage.ref(`ordenes/${folioTicket}/solucion_${i}_${Date.now()}.jpg`);
+                        await ref.put(dataURItoBlob(ordenData.fotos_solucion[i]));
+                        urlsSolucion.push(await ref.getDownloadURL());
+                    }
+                }
+
+                // Subir soporte
+                if(ordenData.foto_soporte) {
+                    const ref = storage.ref(`ordenes/${folioTicket}/soporte_${Date.now()}.jpg`);
+                    await ref.put(dataURItoBlob(ordenData.foto_soporte));
+                    urlSoporte = await ref.getDownloadURL();
+                }
+
+                // Subir selfie
+                if(ordenData.foto_selfie) {
+                    const ref = storage.ref(`ordenes/${folioTicket}/selfie_${Date.now()}.jpg`);
+                    await ref.put(dataURItoBlob(ordenData.foto_selfie));
+                    urlSelfie = await ref.getDownloadURL();
+                }
+
+                // Subir firma
+                if(ordenData.firma) {
+                    const ref = storage.ref(`ordenes/${folioTicket}/firma_${Date.now()}.png`);
+                    await ref.put(dataURItoBlob(ordenData.firma));
+                    urlFirma = await ref.getDownloadURL();
+                }
+
+                // Guardar documento en Firestore
+                await db.collection("tickets_mantenimiento").doc(folioTicket).set({
+                    id_ticket: folioTicket,
+                    sucursal: ordenData.sucursal,
+                    tipo: "Correctivo",
+                    area: ordenData.area,
+                    subarea: ordenData.subarea,
+                    desc_falla: ordenData.desc_falla,
+                    desc_solucion: ordenData.desc_solucion,
+                    tec_nombre: ordenData.tec_nombre,
+                    tec_celular: ordenData.tec_celular,
+                    comentario: ordenData.comentario,
+                    proveedor: ordenData.prov_nombre,
+                    fecha_creacion: new Date().toISOString().split('T')[0], // Solo la fecha YYYY-MM-DD
+                    fecha_hora_completa: new Date().toISOString(),
+                    estado_confirmacion: "En proceso", // <--- EL DATO CLAVE
+                    urls_falla: urlsFalla,
+                    urls_solucion: urlsSolucion,
+                    url_soporte: urlSoporte,
+                    url_selfie: urlSelfie,
+                    url_firma: urlFirma
+                });
+
+                return true;
+            } catch (error) {
+                console.error("Error al guardar en Firebase:", error);
+                throw error;
+            }
+        }
+
+        // ==========================================
+        // EVENTO SUBMIT MODIFICADO
+        // ==========================================
+        document.getElementById('ordenMttoForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            const btnEnviar = document.getElementById('btn-enviar-orden');
+            const textoOriginal = btnEnviar.innerHTML;
+            
+            try {
+                // Validar firma (la única que no valida HTML5 por defecto)
+                if(!document.getElementById('firma_tecnico_data').value) {
+                    alert("La firma del técnico es obligatoria.");
+                    return;
+                }
+
+                // Deshabilitar botón
+                btnEnviar.disabled = true;
+                btnEnviar.innerHTML = '<i data-lucide="loader-2" class="animate-spin"></i> Guardando en servidor...';
+                lucide.createIcons();
+
                 const ordenData = {
                     sucursal: document.getElementById('sucursal-input').value || '',
                     suc_dir: document.getElementById('suc-dir').innerText || '',
@@ -856,11 +991,20 @@
                     foto_selfie: fotos.selfie[0], 
                     fecha_hora: new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' })
                 };
+
+                // 1. Guardamos en Firebase primero
+                await guardarEnFirebase(ordenData);
+
+                // 2. Si Firebase fue exitoso, guardamos en local para el PDF y redirigimos
                 sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
                 window.location.href = 'index2.html';
+
             } catch(err) {
                 console.error("Error recolectando datos:", err);
-                alert("Error al procesar la orden. Revisa que todos los campos requeridos estén llenos.");
+                alert("Error al procesar la orden o subir archivos. Revisa tu conexión a internet e intenta de nuevo.");
+                btnEnviar.disabled = false;
+                btnEnviar.innerHTML = textoOriginal;
+                lucide.createIcons();
             }
         });
 
