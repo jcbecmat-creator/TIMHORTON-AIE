@@ -325,9 +325,9 @@
                         </div>
                     </div>
                     <div class="eval-field-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
-                        <button type="button" style="height: 42px; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: background 0.2s;">
-                            <i data-lucide="file-text" style="width: 18px; height: 18px; color: white;"></i> Ver PDF
-                        </button>
+                        <button type="button" onclick="verPDF()" style="height: 42px; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: background 0.2s;">
+                        <i data-lucide="file-text" style="width: 18px; height: 18px; color: white;"></i> Ver PDF
+                    </button>
                     </div>
                 </div>
                 
@@ -509,12 +509,15 @@
         cargarTablaConfirmacion(); // Cargar la tabla al inicio
     });
 
-    // ==========================================
+// ==========================================
     // 3. CARGAR DATOS DESDE FIRESTORE
     // ==========================================
     function cargarTablaConfirmacion() {
         const tbody = document.getElementById('tabla-confirmacion-body');
         tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center;">Cargando...</td></tr>';
+
+        // Objeto global para guardar la info de los tickets y usarla en el PDF
+        window.ticketsPendientes = {};
 
         // Traemos los tickets que tengan estado "En proceso"
         db.collection("tickets_mantenimiento")
@@ -529,8 +532,11 @@
 
               querySnapshot.forEach((doc) => {
                   const data = doc.data();
-                  // Prevenir errores si faltan campos
                   const folio = data.id_ticket || doc.id;
+                  
+                  // Guardamos todos los datos del ticket en la memoria
+                  window.ticketsPendientes[folio] = data;
+                  
                   const sucursal = data.sucursal || "No especificada";
                   const tipo = data.tipo || "Correctivo";
                   const fecha = data.fecha_creacion || "N/A";
@@ -550,7 +556,7 @@
                   `;
                   tbody.appendChild(tr);
               });
-              lucide.createIcons(); // Recargar iconos para las nuevas filas
+              lucide.createIcons();
           })
           .catch((error) => {
               console.error("Error obteniendo documentos: ", error);
@@ -558,6 +564,83 @@
           });
     }
 
+// ==========================================
+    // 3.5. RECONSTRUIR Y VER PDF ORIGINAL
+    // ==========================================
+    function verPDF() {
+        const folio = document.getElementById('eval-folio').value;
+        const ticketData = window.ticketsPendientes[folio];
+        
+        if(!ticketData) {
+            alert("No se encontraron los datos del ticket para generar el PDF.");
+            return;
+        }
+
+        // 1. Extraer información del proveedor desde la sesión actual (del Gerente/Administrador)
+        let provRfc='', provDir='', provCont='', provTel='', provMail='';
+        if(window.appData && window.appData.proveedorInfo) {
+            provRfc = window.appData.proveedorInfo.rfc || '';
+            provDir = window.appData.proveedorInfo.direccion || '';
+            provCont = window.appData.proveedorInfo.contacto || '';
+            provTel = window.appData.proveedorInfo.telefono || '';
+            provMail = window.appData.proveedorInfo.correo || '';
+        }
+
+        // 2. Extraer información de la sucursal
+        let sucDir='', sucCol='', sucCity='', sucCp='', sucHor='', sucTel='', sucMail='';
+        if(window.appData && window.appData.sucursales) {
+            const sucInfo = window.appData.sucursales.find(s => s.nombre === ticketData.sucursal);
+            if(sucInfo) {
+                sucDir = sucInfo.direccion || '';
+                sucCol = sucInfo.colonia || '';
+                sucCity = sucInfo.ciudad || '';
+                sucCp = sucInfo.cp || '';
+                sucHor = sucInfo.horario || '';
+                sucTel = sucInfo.telefono || '';
+                sucMail = sucInfo.correo || '';
+            }
+        }
+
+        // 3. Reconstruir el objeto idéntico al que usa index.html para generar el PDF
+        const datosParaPDF = {
+            sucursal: ticketData.sucursal || '',
+            suc_dir: sucDir,
+            suc_col: sucCol,
+            suc_city: sucCity,
+            suc_cp: sucCp,
+            suc_hor: sucHor,
+            suc_tel: sucTel,
+            suc_mail: sucMail,
+            ticket: ticketData.id_ticket || 'S/N',
+            area: ticketData.area || '',
+            subarea: ticketData.subarea || '',
+            desc_falla: ticketData.desc_falla || '',
+            fotos_falla: ticketData.urls_falla || [null, null, null],
+            desc_solucion: ticketData.desc_solucion || '',
+            fotos_solucion: ticketData.urls_solucion || [null, null, null],
+            prov_nombre: ticketData.proveedor || '',
+            prov_rfc: provRfc,
+            prov_dir: provDir,
+            prov_cont: provCont,
+            prov_tel: provTel,
+            prov_mail: provMail,
+            tec_nombre: ticketData.tec_nombre || '',
+            tec_celular: ticketData.tec_celular || '',
+            comentario: ticketData.comentario || '',
+            firma: ticketData.url_firma || '',
+            foto_soporte: ticketData.url_soporte || null,
+            foto_selfie: ticketData.url_selfie || null,
+            fecha_hora: ticketData.fecha_hora_completa 
+                ? new Date(ticketData.fecha_hora_completa).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }) 
+                : (ticketData.fecha_creacion || '')
+        };
+
+        // 4. Guardar en memoria y abrir la página del PDF en otra pestaña
+        sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(datosParaPDF));
+        window.open('index2.html', '_blank');
+    }
+
+    
     // ==========================================
     // 4. LÓGICA DEL MODAL DE EVALUACIÓN
     // ==========================================
