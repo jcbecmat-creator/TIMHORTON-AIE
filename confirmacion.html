@@ -576,41 +576,17 @@
             return;
         }
 
-        // 1. Extraer información del proveedor desde la sesión actual (del Gerente/Administrador)
-        let provRfc='', provDir='', provCont='', provTel='', provMail='';
-        if(window.appData && window.appData.proveedorInfo) {
-            provRfc = window.appData.proveedorInfo.rfc || '';
-            provDir = window.appData.proveedorInfo.direccion || '';
-            provCont = window.appData.proveedorInfo.contacto || '';
-            provTel = window.appData.proveedorInfo.telefono || '';
-            provMail = window.appData.proveedorInfo.correo || '';
-        }
-
-        // 2. Extraer información de la sucursal
-        let sucDir='', sucCol='', sucCity='', sucCp='', sucHor='', sucTel='', sucMail='';
-        if(window.appData && window.appData.sucursales) {
-            const sucInfo = window.appData.sucursales.find(s => s.nombre === ticketData.sucursal);
-            if(sucInfo) {
-                sucDir = sucInfo.direccion || '';
-                sucCol = sucInfo.colonia || '';
-                sucCity = sucInfo.ciudad || '';
-                sucCp = sucInfo.cp || '';
-                sucHor = sucInfo.horario || '';
-                sucTel = sucInfo.telefono || '';
-                sucMail = sucInfo.correo || '';
-            }
-        }
-
-        // 3. Reconstruir el objeto idéntico al que usa index.html para generar el PDF
+        // Reconstruir el objeto idéntico al que usa index.html para generar el PDF
+        // PERO AHORA TOMANDO TODO DIRECTO DE FIREBASE
         const datosParaPDF = {
             sucursal: ticketData.sucursal || '',
-            suc_dir: sucDir,
-            suc_col: sucCol,
-            suc_city: sucCity,
-            suc_cp: sucCp,
-            suc_hor: sucHor,
-            suc_tel: sucTel,
-            suc_mail: sucMail,
+            suc_dir: ticketData.suc_dir || '',
+            suc_col: ticketData.suc_col || '',
+            suc_city: ticketData.suc_city || '',
+            suc_cp: ticketData.suc_cp || '',
+            suc_hor: ticketData.suc_hor || '',
+            suc_tel: ticketData.suc_tel || '',
+            suc_mail: ticketData.suc_mail || '',
             ticket: ticketData.id_ticket || 'S/N',
             area: ticketData.area || '',
             subarea: ticketData.subarea || '',
@@ -618,12 +594,12 @@
             fotos_falla: ticketData.urls_falla || [null, null, null],
             desc_solucion: ticketData.desc_solucion || '',
             fotos_solucion: ticketData.urls_solucion || [null, null, null],
-            prov_nombre: ticketData.proveedor || '',
-            prov_rfc: provRfc,
-            prov_dir: provDir,
-            prov_cont: provCont,
-            prov_tel: provTel,
-            prov_mail: provMail,
+            prov_nombre: ticketData.prov_nombre || ticketData.proveedor || '',
+            prov_rfc: ticketData.prov_rfc || '',
+            prov_dir: ticketData.prov_dir || '',
+            prov_cont: ticketData.prov_cont || '',
+            prov_tel: ticketData.prov_tel || '',
+            prov_mail: ticketData.prov_mail || '',
             tec_nombre: ticketData.tec_nombre || '',
             tec_celular: ticketData.tec_celular || '',
             comentario: ticketData.comentario || '',
@@ -635,11 +611,9 @@
                 : (ticketData.fecha_creacion || '')
         };
 
-        // 4. Guardar en memoria y abrir la página del PDF en otra pestaña
         sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(datosParaPDF));
         window.open('index2.html', '_blank');
     }
-
     
     // ==========================================
     // 4. LÓGICA DEL MODAL DE EVALUACIÓN
