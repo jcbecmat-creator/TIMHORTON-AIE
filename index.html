@@ -880,7 +880,7 @@ function processFile(input) {
             return new Blob([ab], {type: mimeString});
         }
 
-        async function guardarEnFirebase(ordenData) {
+async function guardarEnFirebase(ordenData) {
             // Generar un ID único si no escribieron Ticket GLPI
             const folioTicket = (ordenData.ticket === 'S/N' || ordenData.ticket === '') ? 
                                 `OS-${new Date().getFullYear()}-${Math.floor(Math.random()*10000).toString().padStart(4, '0')}` : 
@@ -934,22 +934,35 @@ function processFile(input) {
                     urlFirma = await ref.getDownloadURL();
                 }
 
-                // Guardar documento en Firestore
+                // Guardar documento en Firestore CON TODOS LOS CAMPOS DE TEXTO
                 await db.collection("tickets_mantenimiento").doc(folioTicket).set({
                     id_ticket: folioTicket,
-                    sucursal: ordenData.sucursal,
+                    sucursal: ordenData.sucursal || '',
+                    suc_dir: ordenData.suc_dir || '',
+                    suc_col: ordenData.suc_col || '',
+                    suc_city: ordenData.suc_city || '',
+                    suc_cp: ordenData.suc_cp || '',
+                    suc_hor: ordenData.suc_hor || '',
+                    suc_tel: ordenData.suc_tel || '',
+                    suc_mail: ordenData.suc_mail || '',
+                    prov_nombre: ordenData.prov_nombre || '',
+                    prov_rfc: ordenData.prov_rfc || '',
+                    prov_dir: ordenData.prov_dir || '',
+                    prov_cont: ordenData.prov_cont || '',
+                    prov_tel: ordenData.prov_tel || '',
+                    prov_mail: ordenData.prov_mail || '',
                     tipo: "Correctivo",
-                    area: ordenData.area,
-                    subarea: ordenData.subarea,
-                    desc_falla: ordenData.desc_falla,
-                    desc_solucion: ordenData.desc_solucion,
-                    tec_nombre: ordenData.tec_nombre,
-                    tec_celular: ordenData.tec_celular,
-                    comentario: ordenData.comentario,
-                    proveedor: ordenData.prov_nombre,
-                    fecha_creacion: new Date().toISOString().split('T')[0], // Solo la fecha YYYY-MM-DD
+                    area: ordenData.area || '',
+                    subarea: ordenData.subarea || '',
+                    desc_falla: ordenData.desc_falla || '',
+                    desc_solucion: ordenData.desc_solucion || '',
+                    tec_nombre: ordenData.tec_nombre || '',
+                    tec_celular: ordenData.tec_celular || '',
+                    comentario: ordenData.comentario || '',
+                    proveedor: ordenData.prov_nombre || '',
+                    fecha_creacion: new Date().toISOString().split('T')[0],
                     fecha_hora_completa: new Date().toISOString(),
-                    estado_confirmacion: "En proceso", // <--- EL DATO CLAVE
+                    estado_confirmacion: "En proceso",
                     urls_falla: urlsFalla,
                     urls_solucion: urlsSolucion,
                     url_soporte: urlSoporte,
@@ -963,7 +976,7 @@ function processFile(input) {
                 throw error;
             }
         }
-
+        
 // ==========================================
         // EVENTO SUBMIT MODIFICADO (CON FIRMA INTELIGENTE)
         // ==========================================
