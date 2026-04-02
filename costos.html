@@ -37,7 +37,7 @@
 
         .costos-wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
         
-        /* HEADER Y TABS */
+        /* HEADER Y TABS PRINCIPALES (SE MANTIENE IGUAL) */
         .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 1px solid #e5e7eb; padding-bottom: 24px; }
         .page-header-content h1 { font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 8px 0; }
         .page-header-content p { font-size: 14px; color: #6b7280; margin: 0; }
@@ -48,7 +48,7 @@
         .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
         .tab-btn.active .tab-badge { background: #DC2626; }
 
-        /* FILTROS */
+        /* FILTROS PRINCIPALES (SE MANTIENE IGUAL) */
         .co-filters { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
         .co-filters-grid { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
         .co-filter-group { flex: 1; min-width: 160px; }
@@ -58,7 +58,7 @@
         .btn-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         .btn-exportar { height: 42px; background: #16a34a; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
 
-        /* TABLA PRINCIPAL */
+        /* TABLA PRINCIPAL (SE MANTIENE IGUAL) */
         .co-table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
         .co-table { width: 100%; border-collapse: collapse; }
         .co-table th { padding: 16px 20px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #E5E7EB; }
@@ -72,29 +72,40 @@
         .status-dot.green { background-color: #10b981; }
         .status-dot.red { background-color: #ef4444; }
 
-        /* MODAL DE CONCEPTOS NUEVO DISEÑO */
+        /* ========================================================= */
+        /* === MODAL DE CAPTURA DE CONCEPTOS (NUEVO DISEÑO Turn 9) === */
+        /* ========================================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-overlay.active { display: flex; }
         .modal-card { background: white; width: 100%; max-width: 1150px; border-radius: 12px; display: flex; flex-direction: column; max-height: 95vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; position: relative; }
         
+        /* HEADER DEL MODAL MODIFICADO */
         .modal-header-custom { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 10; }
-        .header-left h2 { font-size: 24px; font-weight: 800; margin: 0 0 12px 0; color: #111827; }
+        .header-left h2 { font-size: 24px; font-weight: 800; margin: 0; color: #111827; }
+        .header-left p { font-size: 14px; color: #6b7280; margin: 4px 0 12px 0; }
         .header-left-row { display: flex; align-items: center; gap: 15px; }
-        .btn-ver-pdf { height: 34px; background: #d1d5db; color: #374151; border: 1px solid #9ca3af; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
-        .btn-ver-pdf:hover { background: #e5e7eb; }
         
-        .header-right { text-align: right; font-size: 15px; color: #111827; padding-right: 40px; }
+        /* Botón PDF Rojo */
+        .btn-ver-pdf { height: 34px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
+        .btn-ver-pdf:hover { background: #b91c1c; }
+        
+        /* Totales desglosados arriba a la derecha (Negro y Negrita) */
+        .header-right { text-align: right; font-size: 18px; color: #111827; font-weight: 700; padding-right: 40px; }
+        .header-right div { margin-bottom: 4px; }
+        
         .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: #6b7280; position: absolute; top: 15px; right: 20px; }
         .modal-close:hover { color: #111827; }
         
+        /* Se elimina .modal-total-bar porque se unifica en el header */
+        
         .modal-body { padding: 20px 24px 0 24px; overflow-y: auto; background: #fff; }
         
-        /* TABLA DE CAPTURA DENTRO DEL MODAL */
+        /* TABLA DE CAPTURA DENTRO DEL MODAL (Ajuste de columnas) */
         .captura-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
         .captura-table th { font-size: 12px; font-weight: 700; color: #111827; text-transform: uppercase; padding-bottom: 8px; text-align: left; border-bottom: 2px solid #e5e7eb; }
         .captura-table td { padding: 6px 4px; vertical-align: top; }
         
-        /* Cajas grises y redondeadas para TODO */
+        /* === PRIORIDAD Turn 9: Cajas grises y redondeadas para TODO === */
         .cap-input, .cap-select { 
             width: 100%; 
             height: 36px; 
@@ -116,8 +127,13 @@
         .barra-suma { padding: 12px 24px; background: #f9fafb; text-align: right; border-bottom: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb; }
         .barra-suma-texto { font-size: 14px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-right: 2%; }
 
-        /* Botones agrupados de la derecha */
+        /* === FOOTER DEL MODAL Y BOTONES MODIFICADOS === */
         .modal-footer { padding: 20px 24px; background: #f8fafc; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        
+        /* Botón Agregar concepto arriba, dividido con línea gris */
+        .section-agregar { width: 100%; border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 15px; text-align: right; }
+        
+        /* Botones alineados a la derecha y del mismo ancho */
         .btn-add-concepto { background: #DC2626; color: white; border: none; height: 38px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
         .btn-cancelar { background: #9ca3af; color: white; border: none; height: 38px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
         .btn-confirmar { background: #DC2626; color: white; border: none; height: 38px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
@@ -242,15 +258,16 @@
             <div class="modal-header-custom">
                 <div class="header-left">
                     <h2>Costos de Reparación</h2>
+                    <p>Carga los conceptos empleados para esta orden</p>
                     <div class="header-left-row">
                         <span style="font-size: 15px; color: #111827;">Folio: <strong id="modal-folio-lbl" style="color: #DC2626;"></strong></span>
                         <button type="button" class="btn-ver-pdf" onclick="verPDFDesdeModal()"><i data-lucide="file-text" style="width:16px;"></i> Ver PDF</button>
                     </div>
                 </div>
                 <div class="header-right">
-                    <div style="margin-bottom: 4px;">Importe: <span id="modal-importe-top">$0.00</span></div>
-                    <div style="margin-bottom: 4px;">IVA: <span id="modal-iva-top">$0.00</span></div>
-                    <div style="font-size: 22px; font-weight: 800; color: #DC2626; margin-top: 4px;">Total: <span id="modal-suma-total">$0.00</span></div>
+                    <div>Importe: <span id="modal-importe-top">$0.00</span></div>
+                    <div>IVA: <span id="modal-iva-top">$0.00</span></div>
+                    <div>Total: <span id="modal-suma-total">$0.00</span></div>
                 </div>
             </div>
 
@@ -280,9 +297,12 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn-add-concepto" onclick="agregarFilaConcepto()">
-                    <i data-lucide="plus" style="width:16px;"></i> Agregar concepto
-                </button>
+                <div class="section-agregar">
+                    <button type="button" class="btn-add-concepto" onclick="agregarFilaConcepto()">
+                        <i data-lucide="plus" style="width:16px;"></i> Agregar concepto
+                    </button>
+                </div>
+                
                 <button type="button" class="btn-cancelar" onclick="cerrarModal()">
                     Cancelar
                 </button>
@@ -321,7 +341,7 @@
         cargarTodosLosTickets();
     });
 
-    // === 1. CARGA Y CLASIFICACIÓN DE TICKETS ===
+    // === 1. CARGA Y CLASIFICACIÓN DE TICKETS (SIN CAMBIOS) ===
     function cargarTodosLosTickets() {
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "in", ["Confirmado", "Pendiente de Aprobación", "Costos Rechazados"])
@@ -362,7 +382,7 @@
         renderTablaActual();
     }
 
-    // === 2. DIBUJAR TABLA CON FILTROS ===
+    // === 2. DIBUJAR TABLA CON FILTROS (SIN CAMBIOS) ===
     function renderTablaActual() {
         const tbody = document.getElementById('tabla-costos-body');
         tbody.innerHTML = '';
@@ -434,7 +454,7 @@
         lucide.createIcons();
     }
 
-    // === 3. LÓGICA DEL MODAL ===
+    // === 3. LÓGICA DEL MODAL (Turn 9 MODIFICADO) ===
     const opcionesTipo = `<option value="Material">Material</option><option value="Mano de obra">Mano de obra</option><option value="Suministro">Suministro</option>`;
     const opcionesUnidad = `<option value="Pza">Pza</option><option value="Kg">Kg</option><option value="Lts">Lts</option><option value="Ml">Ml</option><option value="M2">M2</option><option value="M3">M3</option><option value="Mano de obra">Mano de obra</option><option value="Paquete">Paquete</option><option value="Servicio">Servicio</option><option value="Boya">Boya</option><option value="Lata">Lata</option>`;
 
@@ -452,7 +472,7 @@
         tbody.innerHTML = '';
         contadorFilas = 0;
 
-        // Generar 5 filas iniciales grises
+        // Generar 5 filas iniciales grises (Imagen 4 Prioridad)
         for(let i=0; i<5; i++) { agregarFilaConcepto(); }
 
         document.getElementById('modalConceptos').classList.add('active');
@@ -515,7 +535,7 @@
         document.getElementById('modal-suma-total').setAttribute('data-total', totalGran);
     }
 
-    // === 4. GUARDAR EN FIREBASE ===
+    // === 4. GUARDAR EN FIREBASE (SIN CAMBIOS) ===
     async function guardarConceptos() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const subtotalNum = parseFloat(document.getElementById('modal-suma-total').getAttribute('data-subtotal')) || 0;
@@ -545,7 +565,7 @@
 
         const btn = document.getElementById('btn-guardar');
         btn.disabled = true;
-        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:16px;"></i> Guardando...';
+        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:18px;"></i> Guardando...';
         lucide.createIcons();
 
         try {
@@ -567,12 +587,12 @@
             alert("Error al guardar. Revisa tu conexión.");
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<i data-lucide="dollar-sign" style="width:16px;"></i> Confirmar';
+            btn.innerHTML = '<i data-lucide="dollar-sign" style="width:18px;"></i> Confirmar';
             lucide.createIcons();
         }
     }
 
-    // === 5. VER PDF DESDE EL MODAL ===
+    // === 5. VER PDF DESDE EL MODAL (SIN CAMBIOS) ===
     function verPDFDesdeModal() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const t = ticketsGlobales.find(tk => tk.id_ticket === folio);
