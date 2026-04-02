@@ -974,10 +974,23 @@ function processFile(input) {
             const textoOriginal = btnEnviar.innerHTML;
             
             try {
-                // Validar firma (la única que no valida HTML5 por defecto)
-                if(!document.getElementById('firma_tecnico_data').value) {
+                // Validar firma 100% a prueba de fallos
+                const canvasFirmaReal = document.getElementById('firma_tecnico');
+                const firmaDataActual = canvasFirmaReal.toDataURL();
+                
+                // Creamos un canvas invisible en blanco para comparar
+                const canvasBlanco = document.createElement('canvas');
+                canvasBlanco.width = canvasFirmaReal.width;
+                canvasBlanco.height = canvasFirmaReal.height;
+                const firmaBlanca = canvasBlanco.toDataURL();
+
+                // Si la firma actual es idéntica a un lienzo en blanco, lo rebotamos
+                if(firmaDataActual === firmaBlanca) {
                     alert("La firma del técnico es obligatoria.");
                     return;
+                } else {
+                    // Si sí firmó, aseguramos que el input oculto tenga la imagen correcta
+                    document.getElementById('firma_tecnico_data').value = firmaDataActual;
                 }
 
                 // Deshabilitar botón
