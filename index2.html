@@ -15,8 +15,12 @@
         .btn-descargar { position: fixed; top: 15px; right: 15px; background-color: var(--tm-red); color: white; border: none; padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 1000; }
         .btn-descargar:hover { background-color: #a00d24; }
         
-        .btn-regresar { position: fixed; top: 15px; left: 15px; background-color: var(--tm-green); color: white; border: none; padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 1000; }
+        .btn-regresar { position: fixed; top: 15px; left: 15px; background-color: var(--tm-green); color: white; border: none; padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.3); z-index: 1000; transition: background-color 0.2s; }
         .btn-regresar:hover { background-color: #106631; }
+
+        /* NUEVA CLASE PARA EL BOTÓN CERRAR PDF (MODO ADMIN) */
+        .btn-cerrar { background-color: #4b5563 !important; }
+        .btn-cerrar:hover { background-color: #374151 !important; }
 
         @media (max-width: 767px) {
             body:not(.pdf-generating) { padding: 60px 0 0 0; } 
@@ -40,7 +44,6 @@
         .logo-img { width: 140px; margin-bottom: 5px; margin-right: 15px; margin-top: -5px; }
         .store-img { width: 220px; }
 
-        /* FRANJAS ROJAS REDUCIDAS UN 40% (De 12px a 7px) */
         .red-divider { height: 7px; background-color: var(--tm-red); width: 100%; margin: 4px 0; }
         .red-divider-bottom { height: 7px; background-color: var(--tm-red); width: 100%; margin: 3px 0; }
         .red-divider-bottom-sheet2 { height: 7px; background-color: var(--tm-red); width: 100%; margin: 2px 0 5px 0; }
@@ -67,16 +70,13 @@
 
         .red-bar-third { background-color: var(--tm-red); color: white; display: flex; align-items: center; padding: 3px 10px; font-size: 11px; width: calc(33.33% - 10px); box-sizing: border-box; font-weight: normal; }
         
-        /* DESCRIPCIONES REDUCIDAS 10% Y CON ESPACIO EN BLANCO ARRIBA */
         .text-input-box { border: 1px solid var(--tm-border); padding: 4px 8px; min-height: 40px; margin-top: 2px; margin-bottom: 4px; background-color: white; font-weight: normal; } 
 
-        /* TÉCNICO Y FIRMAS: Altura fija a 155px para alinear con la selfie */
         .eval-container { display: flex; gap: 8px; margin-top: 4px; margin-bottom: 4px; align-items: stretch; height: 155px; }
         
         .eval-left-box { width: 33%; border: 1px solid var(--tm-border); background-color: white; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #ccc; font-size: 10px; box-sizing: border-box; }
         .eval-left-box img { width: 100%; height: 100%; object-fit: contain; }
         
-        /* Grid autoajustable para encajar todo sin desbordar */
         .eval-right-grid { width: 67%; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; gap: 6px; height: 100%; }
         .eval-card { border: 1px solid var(--tm-border); display: flex; flex-direction: column; overflow: hidden; }
         .empleado-card { grid-column: span 2; }
@@ -86,7 +86,6 @@
         .eval-card-body { padding: 4px 8px; flex-grow: 1; background-color: white; font-weight: normal; display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; } 
         .eval-card-body .area-line { margin-bottom: 2px; font-size: 10px; font-weight: normal !important; } 
         
-        /* FIRMA AJUSTADA PARA VERSE COMPLETA */
         #pdf-firma { padding: 2px; align-items: center; justify-content: center; width: 100%; height: 100%; box-sizing: border-box; }
         #pdf-firma img { max-width: 100%; max-height: 100%; object-fit: contain; width: 100%; height: 100%; }
 
@@ -110,7 +109,7 @@
 </head>
 <body>
 
-    <button class="btn-regresar" onclick="window.location.href='index.html';">Volver a la App</button>
+    <button class="btn-regresar" id="btn-regresar" onclick="manejarRegreso()">Volver a la App</button>
     <button class="btn-descargar" id="btn-descargar" onclick="generarPDF()">Descargar PDF</button>
 
     <div id="contenido-pdf">
@@ -284,7 +283,28 @@
     </div>
 
     <script>
+        // === NUEVA FUNCIÓN PARA EL BOTÓN DE REGRESAR ===
+        function manejarRegreso() {
+            // Si window.opener existe, significa que el PDF fue abierto en una PESTAÑA NUEVA 
+            // (que es lo que pasa cuando el admin le da a "Ver PDF" en Confirmación)
+            if (window.opener) {
+                window.close(); // Simplemente cerramos esta pestaña y regresas a la anterior que sigue en Confirmación
+            } else {
+                // Si no hay opener, significa que es el flujo normal del técnico (misma pestaña)
+                window.location.href = 'index.html'; // Te regresa al inicio normal
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- DETECTAR SI ESTAMOS EN MODO ADMIN PARA CAMBIAR EL BOTÓN ---
+            if (window.opener) {
+                const btnRegresar = document.getElementById('btn-regresar');
+                btnRegresar.innerText = 'Cerrar PDF';
+                btnRegresar.classList.add('btn-cerrar'); // Aplica color gris
+            }
+            // ---------------------------------------------------------------
+
             const dataStr = sessionStorage.getItem('DatosOrdenPDF');
             
             if(dataStr) {
