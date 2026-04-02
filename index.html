@@ -744,13 +744,37 @@
             else window.alert("Límite de fotos alcanzado para esta sección."); 
         }
         
-        function processFile(input) { 
+function processFile(input) { 
             if (!input.files || input.files.length === 0) return; 
             const reader = new FileReader(); 
             reader.onload = function(e) { 
-                const slotVacio = fotos[activeTarget].findIndex(f => f === null);
-                if(slotVacio > -1) { fotos[activeTarget][slotVacio] = e.target.result; renderSlots(activeTarget); }
-                input.value = ''; 
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    // Reducimos el tamaño máximo para que no sature la memoria del PDF
+                    let w = img.width; 
+                    let h = img.height;
+                    const maxDim = 800; 
+                    if(w > maxDim || h > maxDim) {
+                        if(w > h) { h = (h/w)*maxDim; w = maxDim; }
+                        else { w = (w/h)*maxDim; h = maxDim; }
+                    }
+                    canvas.width = w; 
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    
+                    // Convertimos la imagen ya comprimida
+                    const fotoComprimida = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    const slotVacio = fotos[activeTarget].findIndex(f => f === null);
+                    if(slotVacio > -1) { 
+                        fotos[activeTarget][slotVacio] = fotoComprimida; 
+                        renderSlots(activeTarget); 
+                    }
+                    input.value = ''; 
+                };
+                img.src = e.target.result;
             }; 
             reader.readAsDataURL(input.files[0]); 
         }
