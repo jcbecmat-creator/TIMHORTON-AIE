@@ -59,7 +59,7 @@
         .co-table td { padding: 16px 20px; text-align: center; font-size: 14px; color: #111827; border-bottom: 1px solid #f3f4f6; }
         
         .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
-        .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; box-sizing: border-box; }
+        .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; box-sizing: border-box; }
         .status-en-proceso { background: #FEF3C7; color: #92400E; }
 
         /* === MODAL STYLES === */
@@ -228,7 +228,7 @@
                                 </select>
                             </div>
                             <div class="flex gap-2 flex-shrink-0">
-                                <button class="btn-filtrar" type="button">
+                                <button class="btn-filtrar" type="button" onclick="aplicarFiltros()">
                                     <i data-lucide="filter" style="width: 18px; height: 18px;"></i> Filtrar
                                 </button>
                             </div>
@@ -256,7 +256,7 @@
                                     <td><span class="status-badge status-en-proceso">En proceso</span></td>
                                     <td>
                                         <button class="btn-action-red" onclick="abrirModalEvaluacion('OS-2026-00012')">
-                                            <i data-lucide="search" style="width:14px;"></i> Revisar
+                                            <i data-lucide="search" style="width: 14px; height: 14px;"></i> Revisar
                                         </button>
                                     </td>
                                 </tr>
@@ -353,10 +353,10 @@
                     <div class="photo-container-group">
                         <div class="btn-photo-group">
                             <button type="button" class="btn-photo" onclick="abrirCamaraEvaluacion()">
-                                <i data-lucide="aperture"></i> Tomar Selfie
+                                <i data-lucide="aperture" style="width: 18px; height: 18px;"></i> Tomar Selfie
                             </button>
                             <button type="button" class="btn-photo btn-photo-upload" onclick="document.getElementById('eval-photo-input').click()">
-                                <i data-lucide="upload-cloud"></i> Subir archivos
+                                <i data-lucide="upload-cloud" style="width: 18px; height: 18px;"></i> Subir archivos
                             </button>
                             <input type="file" id="eval-photo-input" accept="image/*" style="display: none;" onchange="handleFileUpload(this)">
                         </div>
@@ -392,10 +392,10 @@
             
             <div class="modal-footer">
                 <button class="btn-cancelar" onclick="cerrarModal()">
-                    Cancelar Evaluación <i data-lucide="x-circle" style="color: #DC2626;"></i>
+                    <i data-lucide="x-circle" style="color: #DC2626; width: 18px; height: 18px;"></i> Cancelar Evaluación 
                 </button>
                 <button class="btn-enviar" onclick="enviarEvaluacion()">
-                    Enviar evaluación <i data-lucide="send"></i>
+                    <i data-lucide="send" style="color: white; width: 18px; height: 18px;"></i> Enviar evaluación 
                 </button>
             </div>
         </div>
@@ -431,6 +431,8 @@
             if(appData.privilegio == 2 || appData.privilegio == "2") {
                 window.location.replace('index.html');
             }
+        } else {
+            window.location.replace('index.html');
         }
 
         if (window.lucide) { lucide.createIcons(); }
@@ -451,4 +453,195 @@
         if (sidebar && toggles.length) {
             const openSidebar = () => { sidebar.classList.add('open'); if (backdrop) backdrop.classList.add('visible'); };
             const closeSidebar = () => { sidebar.classList.remove('open'); if (backdrop) backdrop.classList.remove('visible'); };
-            toggles.forEach(t => t.addEventListener('click', () => { if (sidebar.classList.contains('open')) closeSidebar(); else
+            toggles.forEach(t => t.addEventListener('click', () => { if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar(); }));
+            if (closeButton) closeButton.addEventListener('click', closeSidebar);
+            if (backdrop) backdrop.addEventListener('click', closeSidebar);
+        }
+
+        inicializarFirmaModal();
+    });
+
+    // ==========================================
+    // LÓGICA DEL MODAL DE EVALUACIÓN
+    // ==========================================
+    function abrirModalEvaluacion(folio) {
+        document.getElementById('eval-folio').value = folio;
+        
+        document.getElementById('eval-nombre').value = '';
+        document.getElementById('eval-cargo').value = '';
+        document.getElementById('eval-numero').value = '';
+        document.getElementById('eval-nivel').value = '';
+        document.getElementById('eval-comentario').value = '';
+        
+        quitarFoto(); 
+        limpiarFirmaModal();
+
+        document.getElementById('modalEvaluacion').classList.add('active');
+        
+        setTimeout(() => {
+            redimensionarCanvasFirma();
+        }, 100);
+    }
+
+    function cerrarModal() {
+        const slot = document.getElementById('eval-selfie-slot');
+        if(slot.classList.contains('zoomed')) { slot.classList.remove('zoomed'); }
+        if(document.getElementById('modal-card-eval').classList.contains('maximized')) { toggleMaximizarModal(); }
+        document.getElementById('modalEvaluacion').classList.remove('active');
+    }
+
+    function enviarEvaluacion() {
+        alert("Evaluación simulada.");
+        cerrarModal();
+    }
+
+    function toggleMaximizarModal() {
+        const modal = document.getElementById('modal-card-eval');
+        const maxIcon = document.getElementById('maximize-icon');
+        const minIcon = document.getElementById('minimize-icon');
+        modal.classList.toggle('maximized');
+        maxIcon.style.display = modal.classList.contains('maximized') ? 'none' : 'block';
+        minIcon.style.display = modal.classList.contains('maximized') ? 'block' : 'none';
+        setTimeout(redimensionarCanvasFirma, 200);
+    }
+
+    // ==========================================
+    // CÁMARA Y ARCHIVOS (CUADRO DE FOTO)
+    // ==========================================
+    let currentStreamModal;
+    let currentFacingModeModal = 'user'; 
+    
+    async function abrirCamaraEvaluacion() {
+        if (currentStreamModal) { currentStreamModal.getTracks().forEach(t => t.stop()); }
+        try { 
+            currentStreamModal = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingModeModal } }); 
+            document.getElementById('camera-video').srcObject = currentStreamModal; 
+            document.getElementById('camera-overlay').classList.add('show'); 
+        } catch (err) { window.alert("Permiso denegado o cámara no disponible."); }
+    }
+
+    function switchCameraEvaluacion() {
+        currentFacingModeModal = currentFacingModeModal === 'user' ? 'environment' : 'user';
+        abrirCamaraEvaluacion();
+    }
+    
+    function cerrarCamaraEvaluacion() { 
+        if (currentStreamModal) { currentStreamModal.getTracks().forEach(t => t.stop()); } 
+        document.getElementById('camera-overlay').classList.remove('show'); 
+    }
+    
+    function capturarSelfieEvaluacion() { 
+        const canvasT = document.getElementById('tempCanvasModal'); 
+        const video = document.getElementById('camera-video');
+        canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
+        const ctx = canvasT.getContext('2d');
+        if (currentFacingModeModal === 'user') { ctx.translate(canvasT.width, 0); ctx.scale(-1, 1); }
+        ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); 
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        const base64Img = canvasT.toDataURL('image/jpeg', 0.8);
+        mostrarFotoPreview(base64Img);
+        cerrarCamaraEvaluacion(); 
+    }
+
+    function handleFileUpload(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) { mostrarFotoPreview(e.target.result); };
+        reader.readAsDataURL(file);
+        input.value = ''; 
+    }
+
+    function mostrarFotoPreview(base64Data) {
+        document.getElementById('eval-selfie-data').value = base64Data;
+        const imgEl = document.getElementById('eval-selfie-img');
+        imgEl.src = base64Data;
+        imgEl.style.display = 'block';
+        document.getElementById('eval-selfie-placeholder').style.display = 'none';
+        
+        const slot = document.getElementById('eval-selfie-slot');
+        slot.style.border = 'none'; // Oculta los dashes cuando hay foto
+    }
+
+    function quitarFoto(event) {
+        if(event) event.stopPropagation();
+        const slot = document.getElementById('eval-selfie-slot');
+        if(slot.classList.contains('zoomed')) { slot.classList.remove('zoomed'); }
+        
+        document.getElementById('eval-selfie-data').value = '';
+        
+        const imgEl = document.getElementById('eval-selfie-img');
+        imgEl.src = '';
+        imgEl.style.display = 'none';
+        
+        document.getElementById('eval-selfie-placeholder').style.display = 'flex';
+        slot.style.border = '2px dashed #d1d5db';
+    }
+
+    function toggleZoom(slot) {
+        // Solo hace zoom si hay una imagen cargada
+        if(document.getElementById('eval-selfie-data').value !== '') {
+            slot.classList.toggle('zoomed');
+        }
+    }
+
+    // ==========================================
+    // FIRMA TÁCTIL MODAL
+    // ==========================================
+    let canvasFirmaModal, ctxFirmaModal;
+    function inicializarFirmaModal() {
+        canvasFirmaModal = document.getElementById('eval-firma-canvas');
+        if(!canvasFirmaModal) return;
+        ctxFirmaModal = canvasFirmaModal.getContext('2d'); 
+        ctxFirmaModal.lineWidth = 3; 
+        ctxFirmaModal.lineCap = 'round'; 
+        ctxFirmaModal.strokeStyle = '#000000';
+        
+        let isDrawing = false;
+        function getCoordinates(e) {
+            const rect = canvasFirmaModal.getBoundingClientRect(); 
+            const cx = e.touches ? e.touches[0].clientX : e.clientX; 
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: (cx - rect.left) * (canvasFirmaModal.width / rect.width), y: (cy - rect.top) * (canvasFirmaModal.height / rect.height) };
+        }
+        const startDrawing = (e) => { 
+            isDrawing = true; 
+            const p = getCoordinates(e); 
+            ctxFirmaModal.beginPath(); ctxFirmaModal.moveTo(p.x, p.y); 
+        };
+        const draw = (e) => { 
+            if (!isDrawing) return;
+            e.preventDefault(); const p = getCoordinates(e); 
+            ctxFirmaModal.lineTo(p.x, p.y); ctxFirmaModal.stroke(); 
+        };
+        const stopDrawing = () => { 
+            if(isDrawing) { 
+                isDrawing = false; 
+                document.getElementById('eval-firma-data').value = canvasFirmaModal.toDataURL(); 
+            } 
+        };
+        canvasFirmaModal.addEventListener('mousedown', startDrawing);
+        canvasFirmaModal.addEventListener('mousemove', draw);
+        window.addEventListener('mouseup', stopDrawing);
+        canvasFirmaModal.addEventListener('touchstart', startDrawing, {passive: false});
+        canvasFirmaModal.addEventListener('touchmove', draw, {passive: false});
+        window.addEventListener('touchend', stopDrawing);
+    }
+
+    function redimensionarCanvasFirma() {
+        if(canvasFirmaModal) {
+            const container = canvasFirmaModal.parentElement;
+            canvasFirmaModal.width = container.offsetWidth;
+            canvasFirmaModal.height = container.offsetHeight;
+        }
+    }
+
+    function limpiarFirmaModal() { 
+        if(ctxFirmaModal && canvasFirmaModal) {
+            ctxFirmaModal.clearRect(0, 0, canvasFirmaModal.width, canvasFirmaModal.height); 
+            document.getElementById('eval-firma-data').value = ''; 
+        }
+    }
+</script>
+</body>
+</html>
