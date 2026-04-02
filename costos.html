@@ -30,6 +30,7 @@
         body { margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         
+        /* === ESTILOS DEL MENÚ LATERAL (INTACTOS) === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
@@ -37,7 +38,7 @@
 
         .costos-wrap { max-width: 1280px; margin: 0 auto; padding: 24px; }
         
-        /* HEADER Y TABS PRINCIPALES (SE MANTIENE IGUAL) */
+        /* HEADER Y TABS */
         .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; border-bottom: 1px solid #e5e7eb; padding-bottom: 24px; }
         .page-header-content h1 { font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 8px 0; }
         .page-header-content p { font-size: 14px; color: #6b7280; margin: 0; }
@@ -48,7 +49,7 @@
         .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
         .tab-btn.active .tab-badge { background: #DC2626; }
 
-        /* FILTROS PRINCIPALES (SE MANTIENE IGUAL) */
+        /* FILTROS */
         .co-filters { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
         .co-filters-grid { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
         .co-filter-group { flex: 1; min-width: 160px; }
@@ -58,7 +59,7 @@
         .btn-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         .btn-exportar { height: 42px; background: #16a34a; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
 
-        /* TABLA PRINCIPAL (SE MANTIENE IGUAL) */
+        /* TABLA PRINCIPAL */
         .co-table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
         .co-table { width: 100%; border-collapse: collapse; }
         .co-table th { padding: 16px 20px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #E5E7EB; }
@@ -73,30 +74,29 @@
         .status-dot.red { background-color: #ef4444; }
 
         /* ========================================================= */
-        /* === MODAL DE CAPTURA DE CONCEPTOS (NUEVO DISEÑO Turn 9) === */
+        /* === MODAL DE CAPTURA DE CONCEPTOS NUEVO DISEÑO === */
         /* ========================================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-overlay.active { display: flex; }
         .modal-card { background: white; width: 100%; max-width: 1150px; border-radius: 12px; display: flex; flex-direction: column; max-height: 95vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; position: relative; }
         
-        /* HEADER DEL MODAL MODIFICADO */
+        /* HEADER DEL MODAL */
         .modal-header-custom { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 10; }
-        .header-left h2 { font-size: 24px; font-weight: 800; margin: 0; color: #111827; }
-        .header-left p { font-size: 14px; color: #6b7280; margin: 4px 0 12px 0; }
+        
+        .header-left { flex: 1; }
+        .header-left h2 { font-size: 22px; font-weight: 800; margin: 0 0 4px 0; color: #111827; }
+        .header-left p { font-size: 13px; color: #6b7280; margin: 0 0 12px 0; }
         .header-left-row { display: flex; align-items: center; gap: 15px; }
         
         /* Botón PDF Rojo */
         .btn-ver-pdf { height: 34px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
         .btn-ver-pdf:hover { background: #b91c1c; }
         
-        /* Totales desglosados arriba a la derecha (Negro y Negrita) */
-        .header-right { text-align: right; font-size: 18px; color: #111827; font-weight: 700; padding-right: 40px; }
-        .header-right div { margin-bottom: 4px; }
+        /* Totales (Negro, Negrita, Mismo tamaño) */
+        .header-right { text-align: right; font-size: 16px; font-weight: 700; color: #111827; padding-right: 40px; display: flex; flex-direction: column; gap: 4px; justify-content: flex-end; }
         
         .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: #6b7280; position: absolute; top: 15px; right: 20px; }
         .modal-close:hover { color: #111827; }
-        
-        /* Se elimina .modal-total-bar porque se unifica en el header */
         
         .modal-body { padding: 20px 24px 0 24px; overflow-y: auto; background: #fff; }
         
@@ -105,41 +105,43 @@
         .captura-table th { font-size: 12px; font-weight: 700; color: #111827; text-transform: uppercase; padding-bottom: 8px; text-align: left; border-bottom: 2px solid #e5e7eb; }
         .captura-table td { padding: 6px 4px; vertical-align: top; }
         
-        /* === PRIORIDAD Turn 9: Cajas grises y redondeadas para TODO === */
+        /* Cajas grises y redondeadas para TODOS LOS INPUTS Y SELECTS */
         .cap-input, .cap-select { 
             width: 100%; 
-            height: 36px; 
+            height: 38px; 
             border: 1px solid #d1d5db; 
             border-radius: 8px; 
             padding: 0 12px; 
             font-size: 13px; 
             box-sizing: border-box; 
-            background: #e5e7eb; 
+            background: #f3f4f6; /* Gris de Confirmación Operativa */
             font-family: inherit; 
             color: #111827;
             transition: all 0.2s;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         .cap-input:focus, .cap-select:focus { background: white; outline: none; border-color: #DC2626; box-shadow: 0 0 0 2px rgba(220,38,38,0.1); }
         .cap-input.money { text-align: right; }
-        .cap-input[readonly] { background: #d1d5db; color: #374151; font-weight: 600; cursor: not-allowed; border-color: #d1d5db; }
+        .cap-input[readonly] { background: #e5e7eb; color: #374151; font-weight: 600; cursor: not-allowed; border-color: #d1d5db; box-shadow: none; }
 
         /* Barra de suma de conceptos */
-        .barra-suma { padding: 12px 24px; background: #f9fafb; text-align: right; border-bottom: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb; }
+        .barra-suma { padding: 12px 24px; background: #f9fafb; text-align: right; border-bottom: 1px solid #e5e7eb; border-top: 1px solid #e5e7eb; margin-bottom: 15px; }
         .barra-suma-texto { font-size: 14px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-right: 2%; }
 
-        /* === FOOTER DEL MODAL Y BOTONES MODIFICADOS === */
-        .modal-footer { padding: 20px 24px; background: #f8fafc; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        /* === FOOTER DEL MODAL Y BOTONES === */
+        .modal-footer { padding: 0 24px 24px 24px; background: #fff; display: flex; flex-direction: column; align-items: flex-end; gap: 15px; }
         
-        /* Botón Agregar concepto arriba, dividido con línea gris */
-        .section-agregar { width: 100%; border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 15px; text-align: right; }
+        .btn-add-concepto { background: #DC2626; color: white; border: none; height: 38px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 20px; transition: background 0.2s; }
+        .btn-add-concepto:hover { background: #b91c1c; }
+
+        .botones-accion-group { display: flex; gap: 12px; width: 100%; justify-content: flex-end; border-top: 1px solid #e5e7eb; padding-top: 15px; }
         
-        /* Botones alineados a la derecha y del mismo ancho */
-        .btn-add-concepto { background: #DC2626; color: white; border: none; height: 38px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
-        .btn-cancelar { background: #9ca3af; color: white; border: none; height: 38px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
-        .btn-confirmar { background: #DC2626; color: white; border: none; height: 38px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
+        /* Botones Cancelar y Confirmar agrupados a la derecha del mismo ancho */
+        .btn-cancelar { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
+        .btn-confirmar { background: #DC2626; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
         
-        .btn-add-concepto:hover, .btn-confirmar:hover { background: #b91c1c; }
-        .btn-cancelar:hover { background: #6b7280; }
+        .btn-confirmar:hover { background: #b91c1c; }
+        .btn-cancelar:hover { background: #e2e8f0; }
         
         .btn-eliminar-fila { background: none; border: none; color: #ef4444; cursor: pointer; display: flex; align-items: center; justify-content: center; height: 36px; width: 100%; }
         .btn-eliminar-fila:hover { color: #b91c1c; }
@@ -277,13 +279,13 @@
                 <table class="captura-table">
                     <thead>
                         <tr>
-                            <th style="width: 12%;">TIPO</th>
+                            <th style="width: 10%;">TIPO</th>
                             <th style="width: 25%;">CONCEPTO</th>
-                            <th style="width: 12%;">UNIDAD</th>
-                            <th style="width: 8%;">Cantidad</th>
+                            <th style="width: 10%;">UNIDAD</th>
+                            <th style="width: 10%;">Cantidad</th>
                             <th style="width: 12%;">P. Unitario</th>
                             <th style="width: 12%;">Importe</th>
-                            <th style="width: 15%;">Observación</th>
+                            <th style="width: 17%;">Observación</th>
                             <th style="width: 4%;"></th>
                         </tr>
                     </thead>
@@ -297,18 +299,20 @@
             </div>
 
             <div class="modal-footer">
-                <div class="section-agregar">
+                <div style="width: 100%; text-align: right; margin-bottom: 10px;">
                     <button type="button" class="btn-add-concepto" onclick="agregarFilaConcepto()">
                         <i data-lucide="plus" style="width:16px;"></i> Agregar concepto
                     </button>
                 </div>
                 
-                <button type="button" class="btn-cancelar" onclick="cerrarModal()">
-                    Cancelar
-                </button>
-                <button type="button" class="btn-confirmar" id="btn-guardar" onclick="guardarConceptos()">
-                    <i data-lucide="dollar-sign" style="width:16px;"></i> Confirmar
-                </button>
+                <div class="botones-accion-group">
+                    <button type="button" class="btn-cancelar" onclick="cerrarModal()">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn-confirmar" id="btn-guardar" onclick="guardarConceptos()">
+                        <i data-lucide="dollar-sign" style="width:16px;"></i> Confirmar
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -341,7 +345,7 @@
         cargarTodosLosTickets();
     });
 
-    // === 1. CARGA Y CLASIFICACIÓN DE TICKETS (SIN CAMBIOS) ===
+    // === 1. CARGA Y CLASIFICACIÓN DE TICKETS ===
     function cargarTodosLosTickets() {
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "in", ["Confirmado", "Pendiente de Aprobación", "Costos Rechazados"])
@@ -382,7 +386,7 @@
         renderTablaActual();
     }
 
-    // === 2. DIBUJAR TABLA CON FILTROS (SIN CAMBIOS) ===
+    // === 2. DIBUJAR TABLA CON FILTROS ===
     function renderTablaActual() {
         const tbody = document.getElementById('tabla-costos-body');
         tbody.innerHTML = '';
@@ -409,7 +413,7 @@
         });
 
         if(ticketsFiltrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay tickets en esta sección.</span></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px 0;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay tickets en esta sección.</span></div></td></tr>`;
             lucide.createIcons();
             return;
         }
@@ -454,7 +458,7 @@
         lucide.createIcons();
     }
 
-    // === 3. LÓGICA DEL MODAL (Turn 9 MODIFICADO) ===
+    // === 3. LÓGICA DEL MODAL ===
     const opcionesTipo = `<option value="Material">Material</option><option value="Mano de obra">Mano de obra</option><option value="Suministro">Suministro</option>`;
     const opcionesUnidad = `<option value="Pza">Pza</option><option value="Kg">Kg</option><option value="Lts">Lts</option><option value="Ml">Ml</option><option value="M2">M2</option><option value="M3">M3</option><option value="Mano de obra">Mano de obra</option><option value="Paquete">Paquete</option><option value="Servicio">Servicio</option><option value="Boya">Boya</option><option value="Lata">Lata</option>`;
 
@@ -472,7 +476,7 @@
         tbody.innerHTML = '';
         contadorFilas = 0;
 
-        // Generar 5 filas iniciales grises (Imagen 4 Prioridad)
+        // Generar 5 filas iniciales
         for(let i=0; i<5; i++) { agregarFilaConcepto(); }
 
         document.getElementById('modalConceptos').classList.add('active');
@@ -535,7 +539,7 @@
         document.getElementById('modal-suma-total').setAttribute('data-total', totalGran);
     }
 
-    // === 4. GUARDAR EN FIREBASE (SIN CAMBIOS) ===
+    // === 4. GUARDAR EN FIREBASE ===
     async function guardarConceptos() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const subtotalNum = parseFloat(document.getElementById('modal-suma-total').getAttribute('data-subtotal')) || 0;
@@ -565,7 +569,7 @@
 
         const btn = document.getElementById('btn-guardar');
         btn.disabled = true;
-        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:18px;"></i> Guardando...';
+        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:16px;"></i> Procesando...';
         lucide.createIcons();
 
         try {
@@ -587,12 +591,12 @@
             alert("Error al guardar. Revisa tu conexión.");
         } finally {
             btn.disabled = false;
-            btn.innerHTML = '<i data-lucide="dollar-sign" style="width:18px;"></i> Confirmar';
+            btn.innerHTML = '<i data-lucide="dollar-sign" style="width:16px;"></i> Confirmar';
             lucide.createIcons();
         }
     }
 
-    // === 5. VER PDF DESDE EL MODAL (SIN CAMBIOS) ===
+    // === 5. VER PDF DESDE EL MODAL ===
     function verPDFDesdeModal() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const t = ticketsGlobales.find(tk => tk.id_ticket === folio);
