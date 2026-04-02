@@ -66,6 +66,43 @@
         
         .btn-secondary { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
         .btn-secondary:hover { background: #e5e7eb; }
+        
+        .btn-action-red { background: #DC2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s; }
+        .btn-action-red:hover { background: #B91C1C; }
+
+        /* STATUS BADGE */
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .status-en-proceso { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+        .status-aceptado { background: #D1FAE5; color: #065F46; border: 1px solid #A7F3D0; }
+        .status-no-aceptado { background: #FEE2E2; color: #991B1B; border: 1px solid #FECACA; }
+
+        /* === MODAL STYLES === */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: white; width: 100%; max-width: 600px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .modal-header { padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h2 { margin: 0; font-size: 18px; color: #111827; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #6b7280; }
+        .modal-body { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .modal-footer { padding: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 10px; background: #f9fafb; border-radius: 0 0 16px 16px; }
+
+        .form-label { font-size: 12px; font-weight: bold; color: #4b5563; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .form-input-modal { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; box-sizing: border-box; background: #f9fafb; }
+        .form-input-modal:focus { background: white; border-color: #DC2626; outline: none; }
+        
+        .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #f9fafb; position: relative; width: 100%; overflow: hidden; height: 150px; }
+        .signature-pad { width: 100%; height: 100%; cursor: crosshair; touch-action: none; } 
+
+        .photo-slot { aspect-ratio: 1; border: 2px dashed #d1d5db; border-radius: 12px; background: #f9fafb; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; width: 120px; height: 120px; margin-top: 10px; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+        .btn-photo { background: #DC2626; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px; }
+
+        /* Camera Overlay */
+        #camera-overlay { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        #camera-overlay.show { display: flex !important; }
+        #camera-stream { width: 100%; max-width: 600px; aspect-ratio: 4/3; background: black; border-radius: 12px; overflow: hidden; position: relative; }
+        #camera-video { width: 100%; height: 100%; object-fit: cover; }
+        .camera-controls { display: flex; gap: 10px; margin-top: 20px; }
 
         @media (max-width: 768px) {
             .confirmacion-wrap { padding: var(--space-4) var(--space-4) var(--space-16); }
@@ -73,7 +110,7 @@
             .co-filters-grid { flex-direction: column; }
             .co-filter-group { width: 100%; }
             .co-table-container { overflow-x: auto; }
-            .co-table { min-width: 600px; }
+            .co-table { min-width: 750px; }
         }
     </style>
 </head>
@@ -112,7 +149,6 @@
             <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
-                    
                     <nav class="sidebar-nav">
                         <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
@@ -132,7 +168,6 @@
                             <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
                         </div>
                     </nav>
-
                 </div>
             </aside>
             <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
@@ -155,26 +190,25 @@
                     </header>
 
                     <form method="GET" class="co-filters">
-                        <input type="hidden" name="tab" value="pendientes">
                         <div class="co-filters-grid">
                             <div class="co-filter-group">
                                 <label class="co-filter-label">Fecha inicio</label>
-                                <input type="date" class="co-filter-input" name="fecha_inicio" value="">
+                                <input type="date" class="co-filter-input" id="filtro-fecha-inicio">
                             </div>
                             <div class="co-filter-group">
                                 <label class="co-filter-label">Fecha fin</label>
-                                <input type="date" class="co-filter-input" name="fecha_fin" value="">
+                                <input type="date" class="co-filter-input" id="filtro-fecha-fin">
                             </div>
                             <div class="co-filter-group">
                                 <label class="co-filter-label">Tipo de orden</label>
-                                <select class="co-filter-input" name="tipo">
+                                <select class="co-filter-input" id="filtro-tipo">
                                     <option value="" selected>Todos los tipos</option>
-                                    <option value="mantenimiento">Mantenimiento</option>
-                                    <option value="capex">Capex Supply</option>
+                                    <option value="Correctivo">Correctivo</option>
+                                    <option value="Preventivo">Preventivo</option>
                                 </select>
                             </div>
                             <div class="flex gap-2 flex-shrink-0">
-                                <button class="btn-secondary" type="button">
+                                <button class="btn-secondary" type="button" onclick="aplicarFiltros()">
                                     <i data-lucide="filter" style="width: 18px; height: 18px;"></i> Filtrar
                                 </button>
                             </div>
@@ -189,19 +223,24 @@
                                     <th>Sucursal</th>
                                     <th>Tipo</th>
                                     <th>Fecha</th>
+                                    <th>Estado</th>
                                     <th style="text-align: right;">Acción</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla-confirmacion-body">
                                 <tr>
-                                    <td colspan="5" class="co-table-empty">
-                                        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                                            <i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i>
-                                            <span>No hay registros pendientes por confirmar en este momento.</span>
-                                        </div>
+                                    <td><strong>OS-2026-00012</strong></td>
+                                    <td>Acoxpa</td>
+                                    <td>Correctivo</td>
+                                    <td>10/02/2026</td>
+                                    <td><span class="status-badge status-en-proceso">En Proceso</span></td>
+                                    <td style="text-align: right;">
+                                        <button class="btn-action-red" onclick="abrirModalEvaluacion('OS-2026-00012')">
+                                            <i data-lucide="search" style="width:14px;"></i> Revisar
+                                        </button>
                                     </td>
                                 </tr>
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -210,9 +249,91 @@
         </div>
     </div>
 
+    <div id="modalEvaluacion" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h2>Cuestionario de Evaluación</h2>
+                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="eval-id-ticket">
+
+                <div>
+                    <label class="form-label">Folio</label>
+                    <input type="text" id="eval-folio" class="form-input-modal" readonly style="background:#e5e7eb; font-weight:bold;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label class="form-label">Nombre del Empleado</label>
+                        <input type="text" id="eval-nombre" class="form-input-modal" placeholder="Ej. Juan Pérez">
+                    </div>
+                    <div>
+                        <label class="form-label">Número de Empleado</label>
+                        <input type="text" id="eval-numero" class="form-input-modal" placeholder="Ej. 10452">
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label class="form-label">Cargo de Empleado</label>
+                        <input type="text" id="eval-cargo" class="form-input-modal" placeholder="Ej. Gerente en turno">
+                    </div>
+                    <div>
+                        <label class="form-label">Nivel de Servicio</label>
+                        <select id="eval-nivel" class="form-input-modal">
+                            <option value="">Selecciona...</option>
+                            <option value="Aceptado">Aceptado</option>
+                            <option value="No Aceptado">No Aceptado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">Comentario de Salida</label>
+                    <textarea id="eval-comentario" class="form-input-modal" rows="2" placeholder="Observaciones sobre el trabajo realizado..."></textarea>
+                </div>
+
+                <div>
+                    <label class="form-label">Selfie del Empleado</label>
+                    <button type="button" class="btn-photo" onclick="abrirCamaraEvaluacion()"><i data-lucide="camera"></i> Tomar Selfie</button>
+                    <div class="photo-slot" id="eval-selfie-slot" style="display: none;">
+                        <img id="eval-selfie-img" src="">
+                    </div>
+                    <input type="hidden" id="eval-selfie-data">
+                </div>
+
+                <div>
+                    <label class="form-label">Firma de Autorización</label>
+                    <div class="signature-container">
+                        <canvas id="eval-firma-canvas" class="signature-pad"></canvas>
+                    </div>
+                    <div style="text-align: right; margin-top: 5px;">
+                        <button type="button" onclick="limpiarFirmaModal()" style="background: none; border: none; color: #DC2626; font-size: 12px; font-weight: bold; cursor: pointer;">Limpiar firma</button>
+                    </div>
+                    <input type="hidden" id="eval-firma-data">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="cerrarModal()">Cancelar Evaluación</button>
+                <button class="btn-action-red" onclick="enviarEvaluacion()">Enviar evaluación</button>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="tempCanvasModal" style="display:none"></canvas>
+    <div id="camera-overlay">
+        <div id="camera-stream"><video id="camera-video" autoplay="true" playsinline></video></div>
+        <div class="camera-controls">
+            <button onclick="cerrarCamaraEvaluacion()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; color:#374151; font-weight:bold;">Cerrar</button>
+            <button onclick="switchCameraEvaluacion()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:#f3f4f6; cursor:pointer; color:#374151; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="refresh-cw"></i> Girar</button>
+            <button onclick="capturarSelfieEvaluacion()" style="padding:10px 20px; border-radius:8px; background:#DC2626; color:white; border:none; cursor:pointer; font-weight:bold;">Capturar</button>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Verificar sesión para mostrar el contenedor principal
             const savedSession = sessionStorage.getItem('loginSession');
             const savedUser = sessionStorage.getItem('loginUser');
             
@@ -220,17 +341,14 @@
                 document.getElementById('app-screen').style.display = 'block';
                 const appData = JSON.parse(savedSession);
                 
-                // Setear Iniciales en el Header
                 const inicial = savedUser.charAt(0).toUpperCase();
                 document.querySelectorAll('.user-circle-initial').forEach(el => el.innerText = inicial);
 
-                // Setear Nombre de Bienvenida
                 const welcomeTitle = document.getElementById('welcome-username-display');
                 if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
                 const dropdownName = document.getElementById('dropdown-username');
                 if(dropdownName) dropdownName.innerText = appData.nombreProveedor || savedUser;
 
-                // Bloqueo de seguridad: Si es proveedor (2), expulsar a inicio
                 if(appData.privilegio == 2 || appData.privilegio == "2") {
                     window.location.replace('index.html');
                 }
@@ -238,10 +356,8 @@
                 window.location.replace('index.html');
             }
 
-            // Inicializar íconos
             if (window.lucide) { lucide.createIcons(); }
 
-            // Menú de usuario superior derecho
             const userMenu = document.querySelector('[data-user-menu]');
             if (userMenu) {
                 const trigger = userMenu.querySelector('[data-user-trigger]');
@@ -251,7 +367,6 @@
                 document.addEventListener('click', closeMenus);
             }
 
-            // Lógica para Sidebar Móvil
             const sidebar = document.querySelector('[data-app-sidebar]');
             const toggles = document.querySelectorAll('[data-sidebar-toggle]');
             const closeButton = document.querySelector('[data-sidebar-close]');
@@ -263,7 +378,157 @@
                 if (closeButton) closeButton.addEventListener('click', closeSidebar);
                 if (backdrop) backdrop.addEventListener('click', closeSidebar);
             }
+
+            // Inicializar Canvas de Firma del Modal
+            inicializarFirmaModal();
         });
+
+        // ==========================================
+        // LÓGICA DEL MODAL DE EVALUACIÓN
+        // ==========================================
+        function abrirModalEvaluacion(folio) {
+            document.getElementById('eval-folio').value = folio;
+            
+            // Limpiar campos previos
+            document.getElementById('eval-nombre').value = '';
+            document.getElementById('eval-cargo').value = '';
+            document.getElementById('eval-numero').value = '';
+            document.getElementById('eval-nivel').value = '';
+            document.getElementById('eval-comentario').value = '';
+            
+            document.getElementById('eval-selfie-data').value = '';
+            document.getElementById('eval-selfie-slot').style.display = 'none';
+            document.getElementById('eval-selfie-img').src = '';
+            
+            limpiarFirmaModal();
+
+            document.getElementById('modalEvaluacion').classList.add('active');
+            
+            // Fix para el canvas oculto
+            setTimeout(() => {
+                redimensionarCanvasFirma();
+            }, 100);
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalEvaluacion').classList.remove('active');
+        }
+
+        function enviarEvaluacion() {
+            // LÓGICA TEMPORAL VISUAL (En el siguiente paso conectamos Firebase aquí)
+            alert("Evaluación simulada. En el siguiente paso la conectaremos a Firebase.");
+            cerrarModal();
+        }
+
+        // ==========================================
+        // CÁMARA (SELFIE)
+        // ==========================================
+        let currentStreamModal;
+        let currentFacingModeModal = 'user'; // Selfie por defecto
+        
+        async function abrirCamaraEvaluacion() {
+            if (currentStreamModal) { currentStreamModal.getTracks().forEach(t => t.stop()); }
+            try { 
+                currentStreamModal = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingModeModal } }); 
+                document.getElementById('camera-video').srcObject = currentStreamModal; 
+                document.getElementById('camera-overlay').classList.add('show'); 
+            } catch (err) { window.alert("Permiso denegado o cámara no disponible."); }
+        }
+
+        function switchCameraEvaluacion() {
+            currentFacingModeModal = currentFacingModeModal === 'user' ? 'environment' : 'user';
+            abrirCamaraEvaluacion();
+        }
+        
+        function cerrarCamaraEvaluacion() { 
+            if (currentStreamModal) { currentStreamModal.getTracks().forEach(t => t.stop()); } 
+            document.getElementById('camera-overlay').classList.remove('show'); 
+        }
+        
+        function capturarSelfieEvaluacion() { 
+            const canvasT = document.getElementById('tempCanvasModal'); 
+            const video = document.getElementById('camera-video');
+            canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
+            const ctx = canvasT.getContext('2d');
+            if (currentFacingModeModal === 'user') { ctx.translate(canvasT.width, 0); ctx.scale(-1, 1); }
+            ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); 
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            
+            const base64Img = canvasT.toDataURL('image/jpeg', 0.8);
+            document.getElementById('eval-selfie-data').value = base64Img;
+            document.getElementById('eval-selfie-img').src = base64Img;
+            document.getElementById('eval-selfie-slot').style.display = 'flex';
+
+            cerrarCamaraEvaluacion(); 
+        }
+
+        // ==========================================
+        // FIRMA TÁCTIL MODAL
+        // ==========================================
+        let canvasFirmaModal, ctxFirmaModal;
+        function inicializarFirmaModal() {
+            canvasFirmaModal = document.getElementById('eval-firma-canvas');
+            if(!canvasFirmaModal) return;
+            ctxFirmaModal = canvasFirmaModal.getContext('2d'); 
+            ctxFirmaModal.lineWidth = 3; 
+            ctxFirmaModal.lineCap = 'round'; 
+            ctxFirmaModal.strokeStyle = '#000000';
+            
+            let isDrawing = false;
+            
+            function getCoordinates(e) {
+                const rect = canvasFirmaModal.getBoundingClientRect(); 
+                const cx = e.touches ? e.touches[0].clientX : e.clientX; 
+                const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: (cx - rect.left) * (canvasFirmaModal.width / rect.width), y: (cy - rect.top) * (canvasFirmaModal.height / rect.height) };
+            }
+
+            const startDrawing = (e) => { 
+                isDrawing = true; 
+                const p = getCoordinates(e); 
+                ctxFirmaModal.beginPath(); 
+                ctxFirmaModal.moveTo(p.x, p.y); 
+            };
+
+            const draw = (e) => { 
+                if (!isDrawing) return;
+                e.preventDefault(); 
+                const p = getCoordinates(e); 
+                ctxFirmaModal.lineTo(p.x, p.y); 
+                ctxFirmaModal.stroke(); 
+            };
+
+            const stopDrawing = () => { 
+                if(isDrawing) { 
+                    isDrawing = false; 
+                    document.getElementById('eval-firma-data').value = canvasFirmaModal.toDataURL(); 
+                } 
+            };
+
+            canvasFirmaModal.addEventListener('mousedown', startDrawing);
+            canvasFirmaModal.addEventListener('mousemove', draw);
+            window.addEventListener('mouseup', stopDrawing);
+            
+            canvasFirmaModal.addEventListener('touchstart', startDrawing, {passive: false});
+            canvasFirmaModal.addEventListener('touchmove', draw, {passive: false});
+            window.addEventListener('touchend', stopDrawing);
+        }
+
+        function redimensionarCanvasFirma() {
+            if(canvasFirmaModal) {
+                const container = canvasFirmaModal.parentElement;
+                canvasFirmaModal.width = container.offsetWidth;
+                canvasFirmaModal.height = container.offsetHeight;
+                // Si había firma, se pierde al redimensionar, pero como se hace al abrir el modal, está bien.
+            }
+        }
+
+        function limpiarFirmaModal() { 
+            if(ctxFirmaModal && canvasFirmaModal) {
+                ctxFirmaModal.clearRect(0, 0, canvasFirmaModal.width, canvasFirmaModal.height); 
+                document.getElementById('eval-firma-data').value = ''; 
+            }
+        }
     </script>
 </body>
 </html>
