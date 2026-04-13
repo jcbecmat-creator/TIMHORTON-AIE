@@ -92,7 +92,10 @@
         .header-folio-group { display: flex; align-items: center; gap: 12px; border-left: 2px solid #e5e7eb; padding-left: 24px; }
         .btn-ver-pdf { height: 36px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
         .btn-ver-pdf:hover { background: #b91c1c; }
-        .header-totals-group { display: flex; align-items: center; gap: 24px; font-size: 22px; font-weight: 800; color: #111827; padding-right: 40px; }
+        
+        /* CLASE DE TOTALES (Usada arriba y abajo) */
+        .text-totales-style { font-size: 20px; font-weight: 800; color: #111827; }
+        .header-totals-group { display: flex; align-items: center; gap: 24px; padding-right: 40px; }
         
         .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: #6b7280; position: absolute; top: 15px; right: 20px; }
         .modal-close:hover { color: #111827; }
@@ -104,7 +107,7 @@
         .captura-table th { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; padding-bottom: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; }
         .captura-table td { padding: 8px 4px; vertical-align: top; }
         
-        /* Cajas Grises de Solo Lectura */
+        /* Cajas Grises de Solo Lectura Redondeadas y Grises */
         .cap-input { 
             width: 100% !important; 
             padding: 0 1rem !important; 
@@ -127,43 +130,58 @@
         /* Controles de Aprobación por fila */
         .row-evaluacion { background: #f8fafc; }
         .row-evaluacion td { padding: 12px 16px; border-bottom: 2px solid #e5e7eb; border-radius: 0 0 8px 8px; }
-        .eval-controls-container { display: flex; align-items: center; gap: 15px; justify-content: flex-start; }
         
-        /* BOTONES APROBAR / RECHAZAR (SÓLIDOS) */
-        .btn-aprobar { background: #16a34a; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+        /* === ESTRUCTURA MATEMÁTICA PARA ALINEACIÓN === */
+        .eval-controls-container {
+            display: grid;
+            grid-template-columns: 80% 20%; /* 80% abarca hasta el importe, 20% abarca la observación */
+            align-items: center;
+        }
+        .eval-left-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-right: 15px;
+        }
+        
+        .btn-aprobar { background: #16a34a; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; flex-shrink: 0; }
         .btn-aprobar:hover { background: #15803d; }
         .btn-aprobar.active { background: #15803d; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.3); }
         .btn-aprobar.inactive { opacity: 0.5; }
 
-        .btn-rechazar { background: #DC2626; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+        .btn-rechazar { background: #DC2626; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; flex-shrink: 0; }
         .btn-rechazar:hover { background: #b91c1c; }
         .btn-rechazar.active { background: #b91c1c; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); }
         .btn-rechazar.inactive { opacity: 0.5; }
 
-        /* MOTIVO DE RECHAZO (SIEMPRE VISIBLE Y REDONDEADO) */
+        /* MOTIVO DE RECHAZO (Ancho dinámico hasta "Importe") */
         .motivo-input { 
-            display: block !important; /* Siempre visible */
-            width: 320px !important; /* Ancho fijo para alineación */
+            flex-grow: 1; /* Toma todo el espacio restante del 80% */
             height: 36px !important; 
             padding: 0 12px !important; 
-            border-radius: 8px !important; /* Redondeado igual que inputs */
+            border-radius: 8px !important; 
             border: 1px solid #d1d5db !important; 
             font-size: 13px !important; 
             color: #111827 !important; 
-            background-color: #f3f4f6 !important; /* Fondo gris claro */
+            background-color: #f3f4f6 !important; 
             box-sizing: border-box !important; 
             transition: all 0.2s ease !important;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         .motivo-input:focus { outline: none; background: white !important; border-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important; }
         .motivo-input[readonly] { background-color: #e5e7eb !important; color: #6b7280 !important; font-weight: 600; cursor: not-allowed !important; border-color: #d1d5db !important; box-shadow: none !important; }
         
-        .eval-timestamp { font-size: 13px; font-weight: 600; margin-left: auto; display: flex; align-items: center; gap: 4px; }
+        .eval-timestamp { font-size: 13px; font-weight: 600; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; }
 
         /* Footer del modal */
-        .modal-footer { padding: 20px 24px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px; }
-        .btn-cancelar-modal { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
+        .modal-footer { padding: 20px 24px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+        
+        .footer-counters-group { display: flex; gap: 24px; align-items: center; }
+
+        .botones-accion-group { display: flex; gap: 12px; }
+        .btn-cancelar-modal { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
         .btn-cancelar-modal:hover { background: #e2e8f0; }
-        .btn-enviar-modal { background: #16a34a; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
+        .btn-enviar-modal { background: #16a34a; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
         .btn-enviar-modal:hover { background: #15803d; }
         .btn-enviar-modal:disabled { background: #86efac; cursor: not-allowed; }
 
@@ -171,11 +189,12 @@
             .header-left-group { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-folio-group { border-left: none; padding-left: 0; }
             .header-totals-group { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .modal-footer { flex-direction: column; }
+            .modal-footer { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .botones-accion-group { width: 100%; flex-direction: column; }
             .btn-cancelar-modal, .btn-enviar-modal { width: 100%; }
-            .eval-controls-container { flex-direction: column; align-items: stretch; }
-            .eval-timestamp { margin-left: 0; justify-content: flex-end; }
-            .motivo-input { width: 100% !important; }
+            .eval-controls-container { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
+            .eval-left-wrap { flex-direction: column; align-items: stretch; padding-right: 0; }
+            .eval-timestamp { justify-content: flex-start; text-align: left; }
         }
     </style>
 </head>
@@ -256,8 +275,9 @@
                     </nav>
                 </div>
             </aside>
+            
             <div class="sidebar-backdrop" data-sidebar-backdrop></div>
-
+            
             <main class="main-content app-content">
                 
                 <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
@@ -345,7 +365,7 @@
                         <button type="button" class="btn-ver-pdf" onclick="verPDFDesdeModal()"><i data-lucide="file-text" style="width:16px;"></i> Ver PDF</button>
                     </div>
                 </div>
-                <div class="header-totals-group">
+                <div class="header-totals-group text-totales-style">
                     <div>Importe: <span id="modal-importe-top">$0.00</span></div>
                     <div>IVA: <span id="modal-iva-top">$0.00</span></div>
                     <div>Total: <span id="modal-suma-total">$0.00</span></div>
@@ -372,12 +392,20 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn-cancelar-modal" onclick="cerrarModal()">
-                    <i data-lucide="x-circle" style="width:18px;"></i> Cancelar
-                </button>
-                <button type="button" class="btn-enviar-modal" id="btn-guardar-evaluacion" onclick="enviarEvaluacion()">
-                    <i data-lucide="send" style="width:18px;"></i> Enviar Evaluación
-                </button>
+                <div class="footer-counters-group text-totales-style">
+                    <div># Conceptos: <span id="modal-count-total">0</span></div>
+                    <div>Aprobados: <span id="modal-count-aprobados">0</span></div>
+                    <div>Rechazados: <span id="modal-count-rechazados">0</span></div>
+                </div>
+
+                <div class="botones-accion-group">
+                    <button type="button" class="btn-cancelar-modal" onclick="cerrarModal()">
+                        <i data-lucide="x-circle" style="width:18px;"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn-enviar-modal" id="btn-guardar-evaluacion" onclick="enviarEvaluacion()">
+                        <i data-lucide="send" style="width:18px;"></i> Enviar Evaluación
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -396,7 +424,7 @@
 
     let ticketsGlobales = []; 
     let tabActual = 'pendientes';
-    let estadoEvaluaciones = []; 
+    let estadoEvaluaciones = []; // Almacena el estado de cada concepto
 
     document.addEventListener('DOMContentLoaded', () => {
         if (window.lucide) { lucide.createIcons(); }
@@ -541,6 +569,16 @@
     // === LÓGICA DEL MODAL ===
     function formateaMoneda(valor) { return "$" + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 
+    function actualizarContadoresModal() {
+        let total = estadoEvaluaciones.length;
+        let aprobados = estadoEvaluaciones.filter(e => e.estado === 'aprobado').length;
+        let rechazados = estadoEvaluaciones.filter(e => e.estado === 'rechazado').length;
+        
+        document.getElementById('modal-count-total').innerText = total;
+        document.getElementById('modal-count-aprobados').innerText = aprobados;
+        document.getElementById('modal-count-rechazados').innerText = rechazados;
+    }
+
     function abrirModal(folio, isReadOnly) {
         const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
         if(!ticket) return;
@@ -594,27 +632,28 @@
                 const disabledProp = isReadOnly ? 'disabled' : '';
                 const readonlyProp = isReadOnly ? 'readonly' : '';
                 
-                // Leyenda inteligente (Pendiente / Aprobado / Rechazado)
                 let textFecha = "Pendiente";
-                let colorFecha = "#6b7280"; // Gris
+                let colorFecha = "#6b7280"; 
                 if(estPrevio === 'aprobado') {
                     textFecha = fecPrevio ? 'Aprobado el: ' + fecPrevio : 'Aprobado';
-                    colorFecha = "#16a34a"; // Verde
+                    colorFecha = "#16a34a"; 
                 } else if (estPrevio === 'rechazado') {
                     textFecha = fecPrevio ? 'Rechazado el: ' + fecPrevio : 'Rechazado';
-                    colorFecha = "#DC2626"; // Rojo
+                    colorFecha = "#DC2626"; 
                 }
                 
                 trEval.innerHTML = `
                     <td colspan="7">
                         <div class="eval-controls-container">
-                            <button type="button" class="btn-aprobar ${btnAprActive} ${btnAprInactive}" id="btn-apr-${index}" onclick="marcarEvaluacion(${index}, 'aprobado')" ${disabledProp}>
-                                <i data-lucide="check-circle" style="width:16px;"></i> Aprobar
-                            </button>
-                            <button type="button" class="btn-rechazar ${btnRechActive} ${btnRechInactive}" id="btn-rech-${index}" onclick="marcarEvaluacion(${index}, 'rechazado')" ${disabledProp}>
-                                <i data-lucide="x-circle" style="width:16px;"></i> Rechazar
-                            </button>
-                            <input type="text" class="motivo-input" id="motivo-${index}" placeholder="Motivo del rechazo..." value="${motPrevio}" oninput="actualizarMotivo(${index}, this.value)" ${readonlyProp}>
+                            <div class="eval-left-wrap">
+                                <button type="button" class="btn-aprobar ${btnAprActive} ${btnAprInactive}" id="btn-apr-${index}" onclick="marcarEvaluacion(${index}, 'aprobado')" ${disabledProp}>
+                                    <i data-lucide="check-circle" style="width:16px;"></i> Aprobar
+                                </button>
+                                <button type="button" class="btn-rechazar ${btnRechActive} ${btnRechInactive}" id="btn-rech-${index}" onclick="marcarEvaluacion(${index}, 'rechazado')" ${disabledProp}>
+                                    <i data-lucide="x-circle" style="width:16px;"></i> Rechazar
+                                </button>
+                                <input type="text" class="motivo-input" id="motivo-${index}" placeholder="Motivo del rechazo..." value="${motPrevio}" oninput="actualizarMotivo(${index}, this.value)" ${readonlyProp}>
+                            </div>
                             <span class="eval-timestamp" id="fecha-${index}" style="color: ${colorFecha};">${textFecha}</span>
                         </div>
                     </td>
@@ -623,6 +662,7 @@
             });
         }
 
+        actualizarContadoresModal();
         document.getElementById('modalAprobacion').classList.add('active');
         lucide.createIcons();
     }
@@ -635,7 +675,6 @@
         const inputMotivo = document.getElementById(`motivo-${index}`);
         const lblFecha = document.getElementById(`fecha-${index}`);
 
-        // Reset states
         btnApr.classList.remove('active', 'inactive');
         btnRech.classList.remove('active', 'inactive');
 
@@ -645,18 +684,20 @@
 
         if(estado === 'aprobado') {
             btnApr.classList.add('active');
-            btnRech.classList.add('inactive'); // Opacidad al otro
+            btnRech.classList.add('inactive'); 
             estadoEvaluaciones[index].motivo = ""; 
             inputMotivo.value = "";
             lblFecha.innerText = "Aprobado el: " + fechaActual;
-            lblFecha.style.color = "#16a34a"; // Verde
+            lblFecha.style.color = "#16a34a"; 
         } else {
             btnRech.classList.add('active');
-            btnApr.classList.add('inactive'); // Opacidad al otro
+            btnApr.classList.add('inactive'); 
             inputMotivo.focus();
             lblFecha.innerText = "Rechazado el: " + fechaActual;
-            lblFecha.style.color = "#DC2626"; // Rojo
+            lblFecha.style.color = "#DC2626"; 
         }
+
+        actualizarContadoresModal();
     }
 
     function actualizarMotivo(index, valor) {
