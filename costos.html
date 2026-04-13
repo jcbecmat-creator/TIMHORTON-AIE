@@ -87,7 +87,6 @@
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-overlay.active { display: flex; }
         
-        /* CAMBIO: Se aumentó el max-width a 1350px para dar espacio a los totales horizontales */
         .modal-card { background: white; width: 100%; max-width: 1350px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; position: relative; }
         
         /* Encabezado del modal */
@@ -103,11 +102,11 @@
         .btn-ver-pdf { height: 36px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
         .btn-ver-pdf:hover { background: #b91c1c; }
         
-        /* CAMBIO: Diseño Horizontal en dos líneas para los Totales */
+        /* CAMBIO: Totales en una sola línea horizontal y sin negritas */
         .header-totals-group { display: flex; align-items: center; gap: 32px; padding-right: 40px; }
-        .total-block { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
-        .total-label { font-size: 16px; font-weight: 500; color: #111827; }
-        .total-value { font-size: 20px; font-weight: 700; color: #111827; }
+        .total-block { display: flex; flex-direction: row; align-items: center; gap: 8px; }
+        .total-label { font-size: 18px; font-weight: 400; color: #111827; }
+        .total-value { font-size: 18px; font-weight: 400; color: #111827; }
         
         .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: #6b7280; position: absolute; top: 15px; right: 20px; }
         .modal-close:hover { color: #111827; }
@@ -152,7 +151,7 @@
         .motivo-box { background-color: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 10px 15px; border-radius: 8px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
 
         /* Footer del modal */
-        .modal-footer { padding: 20px 24px; background: #fff; }
+        .modal-footer { padding: 20px 24px; background: #fff; border-top: 1px solid #e5e7eb; }
         
         .section-agregar { width: 100%; padding-bottom: 20px; margin-bottom: 20px; text-align: right; border-bottom: 1px solid #e5e7eb;}
         .btn-add-concepto { background: #DC2626; color: white; border: none; height: 42px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
@@ -504,7 +503,7 @@
         });
 
         if(ticketsFiltrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px 0;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><br>No hay tickets en esta sección.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px 0;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db; margin-bottom: 10px;"></i><br>No hay tickets en esta sección.</td></tr>`;
             lucide.createIcons();
             return;
         }
@@ -618,7 +617,6 @@
             titulo.innerText = "Corrección de Costos";
             subtitulo.innerText = "Modifica los conceptos que fueron rechazados por el administrador";
             
-            // CAMBIO SOLICITADO: Deshabilitar "Agregar Concepto"
             seccionBtnAgregar.style.display = 'none'; 
             
             btnGuardar.style.display = 'inline-flex';
