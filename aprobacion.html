@@ -59,9 +59,8 @@
         .filter-label { font-size: 11px; font-weight: var(--weight-semibold); text-transform: uppercase; color: var(--gray-500); }
         .input { padding: var(--space-3) var(--space-4); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--gray-900); width: 100%; box-sizing: border-box; }
         .filter-actions { display: flex; gap: var(--space-2); }
-        
-        .btn-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
-        .btn-exportar { height: 42px; background: #16a34a; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
+        .btn-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-exportar { height: 42px; background: #16a34a; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
 
         .data-table-container { background: white; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
         .data-table { width: 100%; border-collapse: collapse; }
@@ -122,47 +121,45 @@
             transition: all 0.2s ease !important; 
         }
         .cap-input.money { text-align: right; }
-        .cap-input[readonly] { background-color: #e5e7eb !important; color: #374151 !important; font-weight: 600; cursor: not-allowed !important; border-color: #d1d5db !important; box-shadow: none !important; }
+        .cap-input[readonly] { background-color: #e5e7eb !important; color: #4b5563 !important; font-weight: 600; cursor: not-allowed !important; border-color: #e5e7eb !important; box-shadow: none !important; }
         
         /* Controles de Aprobación por fila */
         .row-evaluacion { background: #f8fafc; }
         .row-evaluacion td { padding: 12px 16px; border-bottom: 2px solid #e5e7eb; border-radius: 0 0 8px 8px; }
-        .eval-controls-container { display: flex; align-items: center; gap: 15px; justify-content: flex-start; }
+        .eval-controls-container { display: flex; align-items: center; gap: 12px; justify-content: flex-start; }
         
-        .btn-aprobar { background: #16a34a; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
-        .btn-aprobar:hover { background: #15803d; }
-        .btn-aprobar.active { background: #15803d; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.3); }
-        .btn-aprobar.inactive { background: #86efac; opacity: 0.7; }
+        .btn-aprobar { background: white; color: #16a34a; border: 1px solid #16a34a; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .btn-aprobar:hover { background: #dcfce7; }
+        .btn-aprobar.active { background: #16a34a; color: white; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2); }
+        
+        .btn-rechazar { background: white; color: #ef4444; border: 1px solid #ef4444; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .btn-rechazar:hover { background: #fee2e2; }
+        .btn-rechazar.active { background: #ef4444; color: white; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); }
 
-        .btn-rechazar { background: #DC2626; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
-        .btn-rechazar:hover { background: #b91c1c; }
-        .btn-rechazar.active { background: #b91c1c; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); }
-        .btn-rechazar.inactive { background: #fca5a5; opacity: 0.7; }
-
-        /* NUEVO: Motivo de rechazo siempre visible y gris */
+        /* CORRECCIÓN: Bordes redondeados y ancho predeterminado para alineación */
         .motivo-input { 
-            flex: 1; 
-            height: 36px; 
-            border: 1px solid #d1d5db; 
-            border-radius: 8px; 
-            padding: 0 12px; 
-            font-size: 13px; 
-            display: block; 
-            background: #f3f4f6; 
-            color: #111827; 
-            transition: all 0.2s ease; 
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            display: none; 
+            width: 320px !important; /* Ancho predeterminado para alineación */
+            height: 36px !important; 
+            padding: 0 12px !important; 
+            border-radius: 8px !important; /* Bordes redondeados */
+            border: 1px solid #d1d5db !important; 
+            font-size: 13px !important; 
+            color: #111827 !important; 
+            background-color: #ffffff !important; 
+            box-sizing: border-box !important; 
         }
-        .motivo-input:focus { outline: none; background: white; border-color: #DC2626; box-shadow: 0 0 0 2px rgba(220,38,38,0.1); }
-        .motivo-input[readonly] { background-color: #e5e7eb; color: #374151; font-weight: 600; cursor: not-allowed; border-color: #d1d5db; box-shadow: none; }
+        .motivo-input.show { display: block; }
+        .motivo-input:focus { outline: none; border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1); }
+        .motivo-input[readonly] { background-color: #f3f4f6 !important; color: #6b7280 !important; font-weight: 600; cursor: not-allowed !important; border-color: #d1d5db !important; box-shadow: none !important; }
         
-        .eval-timestamp { font-size: 13px; font-weight: 600; margin-left: auto; display: flex; align-items: center; gap: 4px; }
+        .eval-timestamp { font-size: 12px; color: #6b7280; font-weight: 600; margin-left: auto; }
 
         /* Footer del modal */
         .modal-footer { padding: 20px 24px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px; }
-        .btn-cancelar-modal { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+        .btn-cancelar-modal { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
         .btn-cancelar-modal:hover { background: #e2e8f0; }
-        .btn-enviar-modal { background: #16a34a; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+        .btn-enviar-modal { background: #16a34a; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; }
         .btn-enviar-modal:hover { background: #15803d; }
         .btn-enviar-modal:disabled { background: #86efac; cursor: not-allowed; }
 
@@ -182,28 +179,25 @@
     <div id="app-screen" style="display: block;">
         <header class="main-header">
             <div class="header-left">
-                <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
-                    <span class="hamburger"></span>
-                </button>
-                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
+                <button class="header-hamburger" type="button" data-sidebar-toggle aria-label="Abrir menú"><span class="hamburger"></span></button>
+                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo"></a>
                 <h1 class="system-title">Ordenes de Servicio</h1>
             </div>
             <div class="header-right">
                 <div class="user-menu" data-user-menu>
-                    <button class="user-circle-btn" type="button" aria-label="Abrir menú de usuario" data-user-trigger>
+                    <button class="user-circle-btn" type="button" data-user-trigger>
                         <span class="user-circle-initial" id="user-initial-header">U</span>
                     </button>
                     <div class="user-dropdown" data-user-dropdown>
                         <div class="user-card">
                             <div class="user-circle-avatar user-circle-initial">U</div>
                             <div class="user-meta">
-                                <div class="user-name">Cargando...</div>
+                                <div class="user-name" id="dropdown-username">Cargando...</div>
                             </div>
                         </div>
                         <div class="user-actions">
                             <a href="index.html" class="dropdown-link destructive" onclick="sessionStorage.clear();">
-                                <i data-lucide="log-out"></i>
-                                Cerrar sesión
+                                <i data-lucide="log-out"></i> Cerrar sesión
                             </a>
                         </div>
                     </div>
@@ -216,38 +210,22 @@
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a class="sidebar-link" href="index.html">
-                            <i data-lucide="home"></i> Inicio
-                        </a>
+                        <a href="index.html" class="sidebar-link"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
-                            <a class="sidebar-link" href="index.html">
-                                <i data-lucide="wrench"></i> Mantenimiento correctivo
-                            </a>
-                            <a class="sidebar-link" href="index.html">
-                                <i data-lucide="calendar-check"></i> Mantenimientos Preventivos
-                            </a>
+                            <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a href="index.html" class="sidebar-link"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
-                            <a class="sidebar-link" href="confirmacion.html">
-                                <i data-lucide="check-circle-2"></i> Confirmación operativa
-                            </a>
-                            <a class="sidebar-link" href="costos.html">
-                                <i data-lucide="calculator"></i> Costos de reparación
-                            </a>
-                            <a class="sidebar-link activa" href="aprobacion.html">
-                                <i data-lucide="badge-check"></i> Aprobación de costos
-                            </a>
-                            <a class="sidebar-link" href="facturacion.html">
-                                <i data-lucide="file-text"></i> Facturación
-                            </a>
+                            <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a href="costos.html" class="sidebar-link"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a href="aprobacion.html" class="sidebar-link activa"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-reportes">
                             <div class="sidebar-section-title">Reportes</div>
-                            <a class="sidebar-link" href="index.html">
-                                <i data-lucide="bar-chart-3"></i> Reportes
-                            </a>
+                            <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
                         </div>
                     </nav>
                 </div>
@@ -494,7 +472,7 @@
         });
 
         if(ticketsFiltrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay costos pendientes de aprobación en este momento.</span></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay tickets en esta sección.</span></div></td></tr>`;
             lucide.createIcons();
             return;
         }
@@ -588,35 +566,23 @@
                 
                 const btnAprActive = estPrevio === 'aprobado' ? 'active' : '';
                 const btnRechActive = estPrevio === 'rechazado' ? 'active' : '';
-                const btnAprInactive = estPrevio === 'rechazado' ? 'inactive' : '';
-                const btnRechInactive = estPrevio === 'aprobado' ? 'inactive' : '';
+                const displayMotivo = estPrevio === 'rechazado' ? 'block' : 'none';
                 
                 // Si es solo lectura, deshabilitamos botones y inputs
                 const disabledProp = isReadOnly ? 'disabled' : '';
                 const readonlyProp = isReadOnly ? 'readonly' : '';
                 
-                // Texto de fecha dinámico
-                let textFecha = "Pendiente";
-                let colorFecha = "#6b7280"; // Gris
-                if(estPrevio === 'aprobado') {
-                    textFecha = fecPrevio ? 'Aprobado el: ' + fecPrevio : '';
-                    colorFecha = "#16a34a"; // Verde
-                } else if (estPrevio === 'rechazado') {
-                    textFecha = fecPrevio ? 'Rechazado el: ' + fecPrevio : '';
-                    colorFecha = "#DC2626"; // Rojo
-                }
-                
                 trEval.innerHTML = `
                     <td colspan="7">
                         <div class="eval-controls-container">
-                            <button type="button" class="btn-aprobar ${btnAprActive} ${btnAprInactive}" id="btn-apr-${index}" onclick="marcarEvaluacion(${index}, 'aprobado')" ${disabledProp}>
-                                <i data-lucide="check" style="width:16px;"></i> Aprobar
+                            <button type="button" class="btn-aprobar ${btnAprActive}" id="btn-apr-${index}" onclick="marcarEvaluacion(${index}, 'aprobado')" ${disabledProp}>
+                                <i data-lucide="check-circle" style="width:16px;"></i> Aprobar
                             </button>
-                            <button type="button" class="btn-rechazar ${btnRechActive} ${btnRechInactive}" id="btn-rech-${index}" onclick="marcarEvaluacion(${index}, 'rechazado')" ${disabledProp}>
-                                <i data-lucide="x" style="width:16px;"></i> Rechazar
+                            <button type="button" class="btn-rechazar ${btnRechActive}" id="btn-rech-${index}" onclick="marcarEvaluacion(${index}, 'rechazado')" ${disabledProp}>
+                                <i data-lucide="x-circle" style="width:16px;"></i> Rechazar
                             </button>
-                            <input type="text" class="motivo-input" id="motivo-${index}" placeholder="Motivo del rechazo..." value="${motPrevio}" oninput="actualizarMotivo(${index}, this.value)" ${readonlyProp}>
-                            <span class="eval-timestamp" id="fecha-${index}" style="color: ${colorFecha};">${textFecha}</span>
+                            <input type="text" class="motivo-input ${estPrevio==='rechazado' ? 'show' : ''}" id="motivo-${index}" placeholder="Motivo del rechazo..." value="${motPrevio}" oninput="actualizarMotivo(${index}, this.value)" ${readonlyProp}>
+                            <span class="eval-timestamp" id="fecha-${index}">${fecPrevio ? 'Evaluado el: ' + fecPrevio : ''}</span>
                         </div>
                     </td>
                 `;
@@ -636,27 +602,25 @@
         const inputMotivo = document.getElementById(`motivo-${index}`);
         const lblFecha = document.getElementById(`fecha-${index}`);
 
-        // Reset
-        btnApr.classList.remove('active', 'inactive');
-        btnRech.classList.remove('active', 'inactive');
+        // Reset states
+        btnApr.classList.remove('active');
+        btnRech.classList.remove('active');
+        inputMotivo.classList.remove('show');
 
+        // Apply new state
         estadoEvaluaciones[index].estado = estado;
         const fechaActual = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
         estadoEvaluaciones[index].fecha = fechaActual;
+        lblFecha.innerText = "Evaluado el: " + fechaActual;
 
         if(estado === 'aprobado') {
             btnApr.classList.add('active');
-            btnRech.classList.add('inactive'); // Palidece rechazar
-            estadoEvaluaciones[index].motivo = ""; 
+            estadoEvaluaciones[index].motivo = ""; // Clean reason if approved
             inputMotivo.value = "";
-            lblFecha.innerText = "Aprobado el: " + fechaActual;
-            lblFecha.style.color = "#16a34a"; // Verde
         } else {
             btnRech.classList.add('active');
-            btnApr.classList.add('inactive'); // Palidece aprobar
+            inputMotivo.classList.add('show');
             inputMotivo.focus();
-            lblFecha.innerText = "Rechazado el: " + fechaActual;
-            lblFecha.style.color = "#DC2626"; // Rojo
         }
     }
 
