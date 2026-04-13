@@ -72,6 +72,11 @@
         
         .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
         .btn-action-disabled { height: 32px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        
+        /* NUEVO BOTÓN PARA VER COSTOS */
+        .btn-action-view { height: 32px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: background 0.2s; }
+        .btn-action-view:hover { background: #e5e7eb; }
+
         .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; box-sizing: border-box; }
         
         .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
@@ -131,7 +136,9 @@
         }
         .cap-input:focus, .cap-select:focus { outline: none; background-color: #ffffff !important; border-color: #DC2626 !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important; }
         .cap-input.money { text-align: right; }
-        .cap-input[readonly] { background-color: #e5e7eb !important; color: #4b5563 !important; font-weight: 600; cursor: not-allowed !important; border-color: #e5e7eb !important; box-shadow: none !important; }
+        
+        /* Estilos cuando están bloqueados (readonly o disabled) */
+        .cap-input[readonly], .cap-select:disabled { background-color: #e5e7eb !important; color: #4b5563 !important; font-weight: 600; cursor: not-allowed !important; border-color: #d1d5db !important; box-shadow: none !important; opacity: 1; }
         
         select.cap-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; }
 
@@ -494,17 +501,18 @@
 
             if(tabActual === 'pendientes') {
                 estadoHtml = `<span class="status-badge" style="background:#FEF3C7; color:#92400E;"><i class="status-dot yellow"></i> Sin capturar</span>`;
-                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}')"><i data-lucide="plus-circle" style="width:14px;"></i> Capturar</button>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="plus-circle" style="width:14px;"></i> Capturar</button>`;
             } else if (tabActual === 'enviados') {
                 conceptos = t.cantidad_conceptos || 0;
                 totalTxt = formateaMoneda(t.costo_total || 0);
                 estadoHtml = `<span class="status-badge" style="background:#D1FAE5; color:#065F46;"><i class="status-dot green"></i> Capturado</span>`;
-                accionHtml = `<button class="btn-action-disabled" disabled><i data-lucide="check" style="width:14px;"></i> Capturado</button>`;
+                // Nuevo botón de "Ver Costos" (Solo lectura)
+                accionHtml = `<button class="btn-action-view" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Costos</button>`;
             } else if (tabActual === 'rechazados') {
                 conceptos = t.cantidad_conceptos || 0;
                 totalTxt = formateaMoneda(t.costo_total || 0);
                 estadoHtml = `<span class="status-badge" style="background:#FEE2E2; color:#B91C1C;"><i class="status-dot red"></i> Rechazado</span>`;
-                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}')"><i data-lucide="edit-2" style="width:14px;"></i> Corregir</button>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="edit-2" style="width:14px;"></i> Corregir</button>`;
             }
 
             const tr = document.createElement('tr');
@@ -522,11 +530,11 @@
         lucide.createIcons();
     }
 
-    // === LÓGICA DEL MODAL ===
+    // === LÓGICA DEL MODAL INTELIGENTE (LECTURA Y ESCRITURA) ===
     const opcionesTipo = `<option value="Material">Material</option><option value="Mano de obra">Mano de obra</option><option value="Suministro">Suministro</option>`;
     const opcionesUnidad = `<option value="Pza">Pza</option><option value="Kg">Kg</option><option value="Lts">Lts</option><option value="Ml">Ml</option><option value="M2">M2</option><option value="M3">M3</option><option value="Mano de obra">Mano de obra</option><option value="Paquete">Paquete</option><option value="Servicio">Servicio</option><option value="Boya">Boya</option><option value="Lata">Lata</option>`;
 
-    function abrirModal(folio) {
+    function abrirModal(folio, isReadOnly = false) {
         document.getElementById('modal-folio-lbl').innerText = folio;
         document.getElementById('modal-folio-hidden').value = folio;
         
@@ -534,36 +542,86 @@
         document.getElementById('modal-iva-top').innerText = "$0.00";
         document.getElementById('modal-suma-total').innerText = "$0.00";
         
+        // Mostrar u ocultar controles si es Modo Lectura
+        const btnAdd = document.querySelector('.section-agregar');
+        const btnConfirmar = document.getElementById('btn-guardar');
+        const btnCancelar = document.querySelector('.btn-cancelar');
+        
+        if (isReadOnly) {
+            btnAdd.style.display = 'none';
+            btnConfirmar.style.display = 'none';
+            btnCancelar.innerHTML = '<i data-lucide="x-circle" style="width:18px;"></i> Cerrar';
+        } else {
+            btnAdd.style.display = 'block';
+            btnConfirmar.style.display = 'inline-flex';
+            btnCancelar.innerHTML = '<i data-lucide="x-circle" style="width:18px;"></i> Cancelar';
+        }
+
         const tbody = document.getElementById('conceptos-body');
         tbody.innerHTML = '';
         contadorFilas = 0;
 
-        for(let i=0; i<5; i++) { agregarFilaConcepto(); }
+        // Buscar el ticket
+        const t = ticketsGlobales.find(tk => tk.id_ticket === folio);
+        
+        // Si el ticket ya tiene conceptos guardados, los dibujamos
+        if (t && t.conceptos_costos && t.conceptos_costos.length > 0) {
+            t.conceptos_costos.forEach(conceptoData => {
+                agregarFilaConcepto(conceptoData, isReadOnly);
+            });
+        } else {
+            // Si es nuevo, dibujamos 5 filas vacías
+            for(let i=0; i<5; i++) { agregarFilaConcepto(null, isReadOnly); }
+        }
 
+        calcularTotalModal();
         document.getElementById('modalConceptos').classList.add('active');
+        lucide.createIcons();
     }
 
     function cerrarModal() { document.getElementById('modalConceptos').classList.remove('active'); }
 
-    function agregarFilaConcepto() {
-        if(contadorFilas >= 20) { alert("Has alcanzado el límite máximo de 20 conceptos por ticket."); return; }
+    function agregarFilaConcepto(datos = null, isReadOnly = false) {
+        if(contadorFilas >= 20 && !datos) { alert("Has alcanzado el límite máximo de 20 conceptos por ticket."); return; }
         
         const tbody = document.getElementById('conceptos-body');
         const tr = document.createElement('tr');
         tr.className = 'cap-row';
+        
+        // Valores por defecto o recuperados
+        const tVal = datos ? datos.tipo : '';
+        const cVal = datos ? datos.concepto : '';
+        const uVal = datos ? datos.unidad : '';
+        const cantVal = datos ? datos.cantidad : '';
+        const precVal = datos ? datos.precio_unitario : '';
+        const impVal = datos ? formateaMoneda(datos.importe) : '$0.00';
+        const obsVal = datos ? datos.observacion : '';
+        
+        // Atributos de Solo Lectura
+        const roAttr = isReadOnly ? 'readonly' : '';
+        const disAttr = isReadOnly ? 'disabled' : '';
+        const hideBtn = isReadOnly ? 'display:none;' : '';
+
+        // Construir opciones seleccionadas
+        const optTipo = `<option value="Material" ${tVal==='Material'?'selected':''}>Material</option>
+                         <option value="Mano de obra" ${tVal==='Mano de obra'?'selected':''}>Mano de obra</option>
+                         <option value="Suministro" ${tVal==='Suministro'?'selected':''}>Suministro</option>`;
+                         
+        const unis = ["Pza","Kg","Lts","Ml","M2","M3","Mano de obra","Paquete","Servicio","Boya","Lata"];
+        const optUni = unis.map(u => `<option value="${u}" ${uVal===u?'selected':''}>${u}</option>`).join('');
+
         tr.innerHTML = `
-            <td><select class="cap-select inp-tipo">${opcionesTipo}</select></td>
-            <td><input type="text" class="cap-input inp-concepto" placeholder="Concepto..."></td>
-            <td><select class="cap-select inp-unidad">${opcionesUnidad}</select></td>
-            <td><input type="number" min="0" step="1" class="cap-input inp-cant" oninput="calcularTotalModal()" placeholder="0"></td>
-            <td><input type="number" min="0" step="0.01" class="cap-input money inp-precio" placeholder="0.00" oninput="calcularTotalModal()"></td>
-            <td><input type="text" class="cap-input money inp-importe" value="$0.00" readonly></td>
-            <td><input type="text" class="cap-input inp-obs" placeholder="Nota..."></td>
-            <td><button class="btn-eliminar-fila" onclick="eliminarFila(this)" tabindex="-1"><i data-lucide="trash-2" style="width:18px;"></i></button></td>
+            <td><select class="cap-select inp-tipo" ${disAttr}>${optTipo}</select></td>
+            <td><input type="text" class="cap-input inp-concepto" placeholder="Concepto..." value="${cVal}" ${roAttr}></td>
+            <td><select class="cap-select inp-unidad" ${disAttr}>${optUni}</select></td>
+            <td><input type="number" min="0" step="1" class="cap-input inp-cant" oninput="calcularTotalModal()" placeholder="0" value="${cantVal}" ${roAttr}></td>
+            <td><input type="number" min="0" step="0.01" class="cap-input money inp-precio" placeholder="0.00" oninput="calcularTotalModal()" value="${precVal}" ${roAttr}></td>
+            <td><input type="text" class="cap-input money inp-importe" value="${impVal}" readonly></td>
+            <td><input type="text" class="cap-input inp-obs" placeholder="Nota..." value="${obsVal}" ${roAttr}></td>
+            <td><button class="btn-eliminar-fila" onclick="eliminarFila(this)" tabindex="-1" style="${hideBtn}"><i data-lucide="trash-2" style="width:18px;"></i></button></td>
         `;
         tbody.appendChild(tr);
         contadorFilas++;
-        lucide.createIcons();
     }
 
     function eliminarFila(btn) {
