@@ -71,13 +71,15 @@
         .co-table-empty { text-align: center; padding: 40px 20px !important; color: #6b7280; font-size: 14px; }
 
         .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-action-disabled { height: 32px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-action-gray { height: 32px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-action-gray:hover { background: #e5e7eb; }
+        
         .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; }
         
         .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
         .status-dot.yellow { background-color: #f59e0b; }
-        .status-dot.green { background-color: #10b981; }
-        .status-dot.red { background-color: #ef4444; }
+        .status-dot.green { background-color: #15803d; }
+        .status-dot.red { background-color: #b91c1c; }
 
         /* === MODAL STYLES === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
@@ -235,7 +237,7 @@
         </header>
 
         <div class="main-layout">
-            <aside class="sidebar app-sidebar" data-app-sidebar>
+            <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
                 <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
                     <span class="close-icon">X</span>
                 </button>
@@ -277,7 +279,7 @@
                     </nav>
                 </div>
             </aside>
-            <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+            <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
 
             <main class="main-content app-content">
                 
@@ -366,7 +368,6 @@
                         <button type="button" class="btn-ver-pdf" onclick="verPDFDesdeModal()"><i data-lucide="file-text" style="width:16px;"></i> Ver PDF</button>
                     </div>
                 </div>
-                
                 <div class="header-totals-wrapper">
                     <div class="header-totals-row">
                         <div>Importe: <span id="modal-importe-top">$0.00</span></div>
@@ -543,8 +544,21 @@
             const folio = t.id_ticket;
             const suc = t.sucursal || "N/A";
             const prov = t.prov_nombre || t.proveedor || "N/A";
-            const fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : t.fecha_creacion;
-            const totalTxt = formateaMoneda(t.costo_total || 0);
+            
+            // Usamos fecha de captura_costos que es la que se graba cuando envían desde Costos.html
+            let fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : (t.fecha_creacion ? new Date(t.fecha_creacion).toLocaleDateString('es-MX') : "N/A");
+            
+            // Para la pestaña de Aprobados y Rechazados, la fecha es la de aprobación (enviarEvaluacion)
+            if (tabActual === 'aprobados' || tabActual === 'rechazados') {
+                fecha = t.fecha_aprobacion_costos ? new Date(t.fecha_aprobacion_costos).toLocaleDateString('es-MX') : fecha;
+            }
+
+            let totalTxt = "";
+            if (tabActual === 'rechazados') {
+                totalTxt = formateaMoneda(t.costo_total_aprobado || 0); // Solo lo aprobado
+            } else {
+                totalTxt = formateaMoneda(t.costo_total || 0);
+            }
             
             let estadoHtml = "";
             let accionHtml = "";
@@ -553,11 +567,11 @@
                 estadoHtml = `<span class="status-badge" style="background:#FEF3C7; color:#92400E;"><i class="status-dot yellow"></i> Pendiente</span>`;
                 accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="check-square" style="width:14px;"></i> Revisar</button>`;
             } else if (tabActual === 'aprobados') {
-                estadoHtml = `<span class="status-badge" style="background:#D1FAE5; color:#065F46;"><i class="status-dot green"></i> Aprobado</span>`;
-                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                estadoHtml = `<span class="status-badge" style="background:#dcfce7; color:#166534;"><i class="status-dot" style="background-color:#15803d;"></i> Aprobado</span>`;
+                accionHtml = `<button class="btn-action-gray" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Aprobación</button>`;
             } else if (tabActual === 'rechazados') {
-                estadoHtml = `<span class="status-badge" style="background:#FEE2E2; color:#B91C1C;"><i class="status-dot red"></i> Rechazado</span>`;
-                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                estadoHtml = `<span class="status-badge" style="background:#fee2e2; color:#991b1b;"><i class="status-dot" style="background-color:#b91c1c;"></i> Rechazado</span>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="edit-2" style="width:14px;"></i> Editar</button>`;
             }
 
             const tr = document.createElement('tr');
