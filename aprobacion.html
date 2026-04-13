@@ -71,15 +71,15 @@
         .co-table-empty { text-align: center; padding: 40px 20px !important; color: #6b7280; font-size: 14px; }
 
         .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-action-gray { height: 32px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-action-gray:hover { background: #e5e7eb; }
+        .btn-action-disabled { height: 32px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
         
-        .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; }
+        /* CORRECCIÓN DE BADGES PARA EVITAR MAYÚSCULAS */
+        .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; }
         
         .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
         .status-dot.yellow { background-color: #f59e0b; }
-        .status-dot.green { background-color: #15803d; }
-        .status-dot.red { background-color: #b91c1c; }
+        .status-dot.green { background-color: #10b981; }
+        .status-dot.red { background-color: #ef4444; }
 
         /* === MODAL STYLES === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
@@ -95,7 +95,6 @@
         .btn-ver-pdf { height: 36px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
         .btn-ver-pdf:hover { background: #b91c1c; }
         
-        /* CLASE DE TOTALES */
         .text-totales-style { font-size: 20px; font-weight: 800; color: #111827; }
         .header-totals-wrapper { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding-right: 40px; }
         .header-totals-row { display: flex; align-items: center; gap: 24px; font-size: 20px; font-weight: 800; color: #111827; }
@@ -187,6 +186,14 @@
         .btn-enviar-modal { background: #16a34a; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
         .btn-enviar-modal:hover { background: #15803d; }
         .btn-enviar-modal:disabled { background: #86efac; cursor: not-allowed; }
+
+        /* === ESTILOS DEL MODAL DE ALERTA PERSONALIZADO === */
+        #custom-alert .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
+        #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
+        #alert-msg { margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5; }
+        #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+        #alert-btn:hover { opacity: 0.9; }
 
         @media (max-width: 900px) {
             .header-left-group { flex-direction: column; align-items: flex-start; gap: 10px; }
@@ -420,6 +427,15 @@
         </div>
     </div>
 
+    <div id="custom-alert" class="modal-overlay" style="z-index: 10000;">
+        <div class="modal-card-alert" style="background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+            <div id="alert-icon-container" style="margin-bottom: 16px; display: flex; justify-content: center;"></div>
+            <h3 id="alert-title" style="margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700;"></h3>
+            <p id="alert-msg" style="margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5;"></p>
+            <button id="alert-btn" onclick="closeCustomAlert()" style="width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s;">Aceptar</button>
+        </div>
+    </div>
+
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
@@ -466,6 +482,33 @@
 
         cargarTodosLosTickets();
     });
+
+    // === FUNCIONES DE ALERTA PERSONALIZADA ===
+    function showCustomAlert(title, message, isSuccess = true) {
+        const alertBox = document.getElementById('custom-alert');
+        const alertTitle = document.getElementById('alert-title');
+        const alertMsg = document.getElementById('alert-msg');
+        const alertIcon = document.getElementById('alert-icon-container');
+        const alertBtn = document.getElementById('alert-btn');
+
+        alertTitle.innerText = title;
+        alertMsg.innerText = message;
+
+        if(isSuccess) {
+            alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
+            alertBtn.style.background = '#16a34a';
+        } else {
+            alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
+            alertBtn.style.background = '#DC2626';
+        }
+
+        alertBox.style.display = 'flex';
+        lucide.createIcons();
+    }
+
+    function closeCustomAlert() {
+        document.getElementById('custom-alert').style.display = 'none';
+    }
 
     // === CARGA Y CLASIFICACIÓN DE TICKETS ===
     function cargarTodosLosTickets() {
@@ -544,34 +587,22 @@
             const folio = t.id_ticket;
             const suc = t.sucursal || "N/A";
             const prov = t.prov_nombre || t.proveedor || "N/A";
-            
-            // Usamos fecha de captura_costos que es la que se graba cuando envían desde Costos.html
-            let fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : (t.fecha_creacion ? new Date(t.fecha_creacion).toLocaleDateString('es-MX') : "N/A");
-            
-            // Para la pestaña de Aprobados y Rechazados, la fecha es la de aprobación (enviarEvaluacion)
-            if (tabActual === 'aprobados' || tabActual === 'rechazados') {
-                fecha = t.fecha_aprobacion_costos ? new Date(t.fecha_aprobacion_costos).toLocaleDateString('es-MX') : fecha;
-            }
-
-            let totalTxt = "";
-            if (tabActual === 'rechazados') {
-                totalTxt = formateaMoneda(t.costo_total_aprobado || 0); // Solo lo aprobado
-            } else {
-                totalTxt = formateaMoneda(t.costo_total || 0);
-            }
+            const fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : t.fecha_creacion;
+            const totalTxt = formateaMoneda(t.costo_total || 0);
             
             let estadoHtml = "";
             let accionHtml = "";
 
+            // Estados forzados a Minúsculas (Title Case)
             if(tabActual === 'pendientes') {
                 estadoHtml = `<span class="status-badge" style="background:#FEF3C7; color:#92400E;"><i class="status-dot yellow"></i> Pendiente</span>`;
                 accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="check-square" style="width:14px;"></i> Revisar</button>`;
             } else if (tabActual === 'aprobados') {
-                estadoHtml = `<span class="status-badge" style="background:#dcfce7; color:#166534;"><i class="status-dot" style="background-color:#15803d;"></i> Aprobado</span>`;
-                accionHtml = `<button class="btn-action-gray" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Aprobación</button>`;
+                estadoHtml = `<span class="status-badge" style="background:#D1FAE5; color:#065F46;"><i class="status-dot green"></i> Aprobado</span>`;
+                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
             } else if (tabActual === 'rechazados') {
-                estadoHtml = `<span class="status-badge" style="background:#fee2e2; color:#991b1b;"><i class="status-dot" style="background-color:#b91c1c;"></i> Rechazado</span>`;
-                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="edit-2" style="width:14px;"></i> Editar</button>`;
+                estadoHtml = `<span class="status-badge" style="background:#FEE2E2; color:#B91C1C;"><i class="status-dot red"></i> Rechazado</span>`;
+                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
             }
 
             const tr = document.createElement('tr');
@@ -760,14 +791,14 @@
         for (let i = 0; i < estadoEvaluaciones.length; i++) {
             const eval = estadoEvaluaciones[i];
             if (!eval.estado) {
-                alert(`Falta evaluar el concepto #${i + 1}.`);
+                showCustomAlert("Atención", `Falta evaluar el concepto #${i + 1}.`, false);
                 validacionExitosa = false;
                 break;
             }
             if (eval.estado === 'rechazado') {
                 algunRechazado = true;
                 if (eval.motivo.trim() === '') {
-                    alert(`Debes proporcionar un motivo de rechazo para el concepto #${i + 1}.`);
+                    showCustomAlert("Atención", `Debes proporcionar un motivo de rechazo para el concepto #${i + 1}.`, false);
                     document.getElementById(`motivo-${i}`).focus();
                     validacionExitosa = false;
                     break;
@@ -792,7 +823,6 @@
 
             const nuevoEstado = algunRechazado ? "Costos Rechazados" : "Costos Aprobados";
 
-            // Guardamos también los totales aprobados
             const subtotalAprobadoNum = parseFloat(document.getElementById('modal-importe-aprobado').innerText.replace(/[^0-9.-]+/g,""));
             const ivaAprobadoNum = parseFloat(document.getElementById('modal-iva-aprobado').innerText.replace(/[^0-9.-]+/g,""));
             const totalAprobadoNum = parseFloat(document.getElementById('modal-total-aprobado').innerText.replace(/[^0-9.-]+/g,""));
@@ -806,12 +836,12 @@
                 fecha_aprobacion_costos: new Date().toISOString()
             });
 
-            alert(`Evaluación guardada exitosamente. El ticket pasó a ${nuevoEstado}.`);
+            showCustomAlert("¡Éxito!", `Evaluación guardada exitosamente. El ticket pasó a ${nuevoEstado}.`, true);
             cerrarModal();
             cargarTodosLosTickets(); 
         } catch(err) {
             console.error(err);
-            alert("Error al guardar la evaluación. Revisa tu conexión.");
+            showCustomAlert("Error", "Error al guardar la evaluación. Revisa tu conexión.", false);
         } finally {
             btnGuardar.disabled = false;
             btnGuardar.innerHTML = '<i data-lucide="send" style="width:18px;"></i> Enviar Evaluación';
@@ -823,7 +853,7 @@
     function verPDFDesdeModal() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const t = ticketsGlobales.find(tk => tk.id_ticket === folio);
-        if(!t) { alert("Error al cargar datos del ticket."); return; }
+        if(!t) { showCustomAlert("Error", "Error al cargar datos del ticket.", false); return; }
 
         const datosParaPDF = {
             sucursal: t.sucursal || '',
