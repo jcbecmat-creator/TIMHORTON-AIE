@@ -129,7 +129,8 @@
         
         /* Controles de Aprobación por fila */
         .row-evaluacion { background: #f8fafc; }
-        .row-evaluacion td { padding: 12px 16px; border-bottom: 2px solid #e5e7eb; border-radius: 0 0 8px 8px; }
+        /* CORRECCIÓN DE ALINEACIÓN: Padding horizontal a 4px para coincidir con los td de arriba */
+        .row-evaluacion td { padding: 12px 4px; border-bottom: 2px solid #e5e7eb; border-radius: 0 0 8px 8px; }
         
         /* === ESTRUCTURA MATEMÁTICA PARA ALINEACIÓN === */
         .eval-controls-container {
@@ -141,7 +142,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding-right: 15px;
+            padding-right: 4px; /* Ajustado para que el borde termine exacto */
         }
         
         .btn-aprobar { background: #16a34a; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; flex-shrink: 0; }
@@ -233,7 +234,7 @@
         </header>
 
         <div class="main-layout">
-            <aside class="sidebar app-sidebar" data-app-sidebar>
+            <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
                 <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
                     <span class="close-icon">X</span>
                 </button>
@@ -275,9 +276,8 @@
                     </nav>
                 </div>
             </aside>
-            
-            <div class="sidebar-backdrop" data-sidebar-backdrop></div>
-            
+            <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
+
             <main class="main-content app-content">
                 
                 <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
