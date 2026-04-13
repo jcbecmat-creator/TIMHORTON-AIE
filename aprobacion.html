@@ -93,9 +93,11 @@
         .btn-ver-pdf { height: 36px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
         .btn-ver-pdf:hover { background: #b91c1c; }
         
-        /* CLASE DE TOTALES (Usada arriba y abajo) */
+        /* CLASE DE TOTALES */
         .text-totales-style { font-size: 20px; font-weight: 800; color: #111827; }
-        .header-totals-group { display: flex; align-items: center; gap: 24px; padding-right: 40px; }
+        .header-totals-wrapper { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding-right: 40px; }
+        .header-totals-row { display: flex; align-items: center; gap: 24px; font-size: 20px; font-weight: 800; color: #111827; }
+        .header-totals-row.red-row { color: #DC2626; }
         
         .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: #6b7280; position: absolute; top: 15px; right: 20px; }
         .modal-close:hover { color: #111827; }
@@ -129,20 +131,19 @@
         
         /* Controles de Aprobación por fila */
         .row-evaluacion { background: #f8fafc; }
-        /* CORRECCIÓN DE ALINEACIÓN: Padding horizontal a 4px para coincidir con los td de arriba */
         .row-evaluacion td { padding: 12px 4px; border-bottom: 2px solid #e5e7eb; border-radius: 0 0 8px 8px; }
         
-        /* === ESTRUCTURA MATEMÁTICA PARA ALINEACIÓN === */
+        /* ESTRUCTURA MATEMÁTICA PARA ALINEACIÓN */
         .eval-controls-container {
             display: grid;
-            grid-template-columns: 80% 20%; /* 80% abarca hasta el importe, 20% abarca la observación */
+            grid-template-columns: 80% 20%; 
             align-items: center;
         }
         .eval-left-wrap {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding-right: 4px; /* Ajustado para que el borde termine exacto */
+            padding-right: 4px; 
         }
         
         .btn-aprobar { background: #16a34a; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; flex-shrink: 0; }
@@ -155,9 +156,8 @@
         .btn-rechazar.active { background: #b91c1c; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); }
         .btn-rechazar.inactive { opacity: 0.5; }
 
-        /* MOTIVO DE RECHAZO (Ancho dinámico hasta "Importe") */
         .motivo-input { 
-            flex-grow: 1; /* Toma todo el espacio restante del 80% */
+            flex-grow: 1; 
             height: 36px !important; 
             padding: 0 12px !important; 
             border-radius: 8px !important; 
@@ -189,7 +189,8 @@
         @media (max-width: 900px) {
             .header-left-group { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-folio-group { border-left: none; padding-left: 0; }
-            .header-totals-group { flex-direction: column; align-items: flex-start; gap: 5px; }
+            .header-totals-wrapper { align-items: flex-start; padding-right: 0; gap: 12px; }
+            .header-totals-row { flex-direction: column; align-items: flex-start; gap: 4px; }
             .modal-footer { flex-direction: column; align-items: flex-start; gap: 20px; }
             .botones-accion-group { width: 100%; flex-direction: column; }
             .btn-cancelar-modal, .btn-enviar-modal { width: 100%; }
@@ -234,7 +235,7 @@
         </header>
 
         <div class="main-layout">
-            <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
+            <aside class="sidebar app-sidebar" data-app-sidebar>
                 <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
                     <span class="close-icon">X</span>
                 </button>
@@ -276,7 +277,7 @@
                     </nav>
                 </div>
             </aside>
-            <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
+            <div class="sidebar-backdrop" data-sidebar-backdrop></div>
 
             <main class="main-content app-content">
                 
@@ -365,10 +366,18 @@
                         <button type="button" class="btn-ver-pdf" onclick="verPDFDesdeModal()"><i data-lucide="file-text" style="width:16px;"></i> Ver PDF</button>
                     </div>
                 </div>
-                <div class="header-totals-group text-totales-style">
-                    <div>Importe: <span id="modal-importe-top">$0.00</span></div>
-                    <div>IVA: <span id="modal-iva-top">$0.00</span></div>
-                    <div>Total: <span id="modal-suma-total">$0.00</span></div>
+                
+                <div class="header-totals-wrapper">
+                    <div class="header-totals-row">
+                        <div>Importe: <span id="modal-importe-top">$0.00</span></div>
+                        <div>IVA: <span id="modal-iva-top">$0.00</span></div>
+                        <div>Total: <span id="modal-suma-total">$0.00</span></div>
+                    </div>
+                    <div class="header-totals-row red-row">
+                        <div>Importe: <span id="modal-importe-aprobado">$0.00</span></div>
+                        <div>IVA: <span id="modal-iva-aprobado">$0.00</span></div>
+                        <div>Total: <span id="modal-total-aprobado">$0.00</span></div>
+                    </div>
                 </div>
             </div>
 
@@ -579,6 +588,26 @@
         document.getElementById('modal-count-rechazados').innerText = rechazados;
     }
 
+    function calcularTotalesAprobados() {
+        const folio = document.getElementById('modal-folio-hidden').value;
+        const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
+        if (!ticket || !ticket.conceptos_costos) return;
+
+        let sumaAprobados = 0;
+        ticket.conceptos_costos.forEach((c, i) => {
+            if (estadoEvaluaciones[i] && estadoEvaluaciones[i].estado === 'aprobado') {
+                sumaAprobados += parseFloat(c.importe) || 0;
+            }
+        });
+
+        const ivaAprobados = sumaAprobados * 0.16;
+        const totalAprobados = sumaAprobados + ivaAprobados;
+
+        document.getElementById('modal-importe-aprobado').innerText = formateaMoneda(sumaAprobados);
+        document.getElementById('modal-iva-aprobado').innerText = formateaMoneda(ivaAprobados);
+        document.getElementById('modal-total-aprobado').innerText = formateaMoneda(totalAprobados);
+    }
+
     function abrirModal(folio, isReadOnly) {
         const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
         if(!ticket) return;
@@ -663,6 +692,7 @@
         }
 
         actualizarContadoresModal();
+        calcularTotalesAprobados();
         document.getElementById('modalAprobacion').classList.add('active');
         lucide.createIcons();
     }
@@ -698,6 +728,7 @@
         }
 
         actualizarContadoresModal();
+        calcularTotalesAprobados();
     }
 
     function actualizarMotivo(index, valor) {
@@ -747,9 +778,17 @@
 
             const nuevoEstado = algunRechazado ? "Costos Rechazados" : "Costos Aprobados";
 
+            // Guardamos también los totales aprobados
+            const subtotalAprobadoNum = parseFloat(document.getElementById('modal-importe-aprobado').innerText.replace(/[^0-9.-]+/g,""));
+            const ivaAprobadoNum = parseFloat(document.getElementById('modal-iva-aprobado').innerText.replace(/[^0-9.-]+/g,""));
+            const totalAprobadoNum = parseFloat(document.getElementById('modal-total-aprobado').innerText.replace(/[^0-9.-]+/g,""));
+
             await db.collection("tickets_mantenimiento").doc(folio).update({
                 conceptos_costos: conceptosActualizados,
                 estado_confirmacion: nuevoEstado,
+                costo_subtotal_aprobado: subtotalAprobadoNum,
+                costo_iva_aprobado: ivaAprobadoNum,
+                costo_total_aprobado: totalAprobadoNum,
                 fecha_aprobacion_costos: new Date().toISOString()
             });
 
