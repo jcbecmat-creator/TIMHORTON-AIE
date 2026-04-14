@@ -5,848 +5,603 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Facturación | Tim Hortons</title>
     
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/fonts.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/style.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/components.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/design-system.css">
     <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/app-shell.css">
-    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/data-table-enhanced.css">
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
     <script>
         if (!sessionStorage.getItem('loginSession')) {
-            window.location.replace('index.html');
+            window.location.href = 'index.html';
+        } else {
+            document.documentElement.classList.add('is-logged-in');
         }
-    </script>
-
-    <script>
-        tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
     </script>
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
-        .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
+        .app-content { overflow-y: auto; height: 100vh; padding-bottom: 120px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
+        html.is-logged-in #app-screen { display: block !important; }
         
-        /* === ESTILOS DEL MENÚ EXACTOS A INDEX.HTML === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
-        .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* ========================================
-           FACTURACIÓN - Diseño Empresarial
-           ======================================== */
+        .facturacion-wrap { max-width: 1400px; margin: 0 auto; padding: 24px; }
+        .page-header-content h1 { font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 8px 0; }
+        .page-header-content p { font-size: 14px; color: #6b7280; margin: 0 0 24px 0; }
 
-        .facturacion-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-16); }
-        .page-header-section { margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--gray-200); }
-        .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-6); }
-        .page-header-content h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-2) 0; }
-        .page-header-content p { font-size: var(--text-sm); color: var(--gray-500); margin: 0; }
+        /* === MÉTRICAS SUPERIORES === */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+        .metric-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; display: flex; flex-direction: column; justify-content: center; }
+        .metric-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; letter-spacing: 0.5px;}
+        .metric-value { font-size: 18px; font-weight: 800; color: #111827; }
 
-        /* Stats Cards */
-        .fc-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-8); }
-        .fc-stat-card { background: white; border-radius: var(--radius-sm); padding: var(--space-5); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
-        .fc-stat-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); margin-bottom: var(--space-2); }
-        .fc-stat-value { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); }
-        .fc-stat-value.success { color: var(--success); }
-        .fc-stat-value.warning { color: var(--warning); }
-        .fc-stat-value.accent { color: #DC2626; }
-
-        /* Filters Card */
-        .fc-filters { background: white; border-radius: var(--radius-sm); padding: var(--space-6); margin-bottom: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
-        .fc-filters .btn { border-radius: var(--radius-sm); }
-        .fc-filters-grid { display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-end; }
-        .fc-filter-group { flex: 1; min-width: 140px; }
-        .fc-filter-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); margin-bottom: var(--space-2); display: block; }
-        .fc-filter-input { width: 100%; padding: var(--space-3) var(--space-4); border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); background: var(--gray-50); font-size: var(--text-sm); color: var(--gray-900); transition: all var(--duration-fast); }
-        .fc-filter-input:hover { background: var(--gray-100); }
-        .fc-filter-input:focus { outline: none; background: white; border-color: #DC2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15); }
-
-        /* Selection Bar */
-        .fc-selection-bar { background: white; border-radius: var(--radius-sm); padding: var(--space-5) var(--space-6); margin-bottom: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); }
-        .fc-selection-info { display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; }
-        .fc-selection-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); }
-        .fc-selection-count { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--gray-900); }
-        .fc-selection-total { font-size: var(--text-sm); color: var(--gray-600); }
-        .fc-selection-actions { display: flex; gap: var(--space-3); }
-
-        /* Data Table */
-        .fc-table-container { background: white; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
-        .fc-table { width: 100%; border-collapse: collapse; }
-        .fc-table thead { background: var(--gray-50); }
-        .fc-table th { padding: var(--space-4); text-align: left; font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--gray-500); border-bottom: 1px solid var(--gray-200); }
-        .fc-table td { padding: var(--space-4); font-size: var(--text-sm); color: var(--gray-900); border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
-        .fc-table tbody tr { transition: background var(--duration-fast); }
-        .fc-table tbody tr:hover { background: var(--gray-50); }
-        .fc-select-cell { width: 48px; text-align: center; }
-        .fc-select-order { width: 18px; height: 18px; cursor: pointer; accent-color: #DC2626; }
-        .fc-select-order:disabled { cursor: not-allowed; opacity: 0.5; }
-
-        /* Action Buttons */
-        .fc-actions { display: flex; gap: var(--space-2); justify-content: flex-end; }
-        .btn-secondary { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-secondary:hover { background: #e5e7eb; }
-        .btn-secondary:disabled { background: var(--gray-100); color: var(--gray-400); cursor: not-allowed; border-color: var(--gray-200); }
-        .btn-success { background: #15803d; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-        .btn-primary { background: #DC2626; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary:hover { background: #B91C1C; }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Badges */
-        .fc-badge { display: inline-flex; align-items: center; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); font-size: var(--text-xs); font-weight: var(--weight-semibold); }
-        .fc-badge-pending { background: var(--warning-soft); color: #92400E; }
-        .fc-badge-partial { background: var(--info-soft); color: #1e40af; }
-        .fc-badge-paid { background: var(--success-soft); color: #065F46; }
-
-        /* Empty State */
-        .fc-empty { text-align: center; padding: 40px 20px; color: #6b7280; font-size: 14px; }
-
-        /* XML Interpreter */
-        .fc-xml-upload { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
-        .fc-xml-upload input[type="file"] { flex: 1; min-width: 220px; padding: var(--space-2); border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); background: var(--gray-50); font-size: var(--text-sm); color: var(--gray-700); }
-        .fc-xml-upload input[type="file"]::file-selector-button { margin-right: var(--space-3); border: none; background: #DC2626; color: white; padding: var(--space-2) var(--space-4); border-radius: var(--radius-sm); font-size: var(--text-xs); font-weight: var(--weight-semibold); cursor: pointer; }
+        /* === FILTROS === */
+        .filters-bar { background: white; border-radius: 12px; padding: 20px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+        .filter-group { display: flex; flex-direction: column; gap: 8px; min-width: 140px; flex: 1; }
+        .filter-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; }
+        .input { padding: 0 16px; height: 42px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #111827; width: 100%; box-sizing: border-box; background: #f9fafb; transition: all 0.2s;}
+        .input:focus { background: white; outline: none; border-color: #DC2626; }
+        .filter-actions { display: flex; gap: 12px; }
+        .btn-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         
-        .fc-xml-result { display: grid; gap: var(--space-4); margin-top: var(--space-5); }
-        .fc-xml-card { background: var(--gray-50); border-radius: var(--radius-sm); padding: var(--space-4); border: 1px solid var(--gray-200); }
-        .fc-xml-card-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--gray-800); margin: 0 0 var(--space-3) 0; display: flex; align-items: center; gap: var(--space-2); }
-        .fc-xml-kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-3); }
-        .fc-xml-kv { display: grid; gap: var(--space-1); }
-        .fc-xml-kv-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--gray-500); text-transform: uppercase; }
-        .fc-xml-kv-value { font-size: var(--text-sm); color: var(--gray-900); font-weight: var(--weight-medium); word-break: break-word; }
+        /* === TABLA === */
+        .data-table-container { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
+        .data-table thead { background: #f8fafc; }
+        .data-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; padding: 16px 12px; text-align: center; border-bottom: 1px solid #E5E7EB; white-space: nowrap;}
+        .data-table td { padding: 16px 12px; border-bottom: 1px solid #f3f4f6; font-size: 13px; color: #111827; vertical-align: middle; text-align: center; }
+        
+        .co-table-empty { text-align: center; padding: 60px 20px !important; color: #6b7280; font-size: 14px; }
 
-        .fc-xml-error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); font-size: var(--text-sm); }
-        .fc-xml-validation { background: #ecfdf3; border: 1px solid #86efac; color: #166534; border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); font-size: var(--text-sm); }
-        .fc-xml-validation.error { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+        /* Componentes de la tabla */
+        .chk-custom { width: 18px; height: 18px; cursor: pointer; accent-color: #DC2626; }
+        .btn-download-red { height: 28px; background: #DC2626; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+        .btn-download-red:hover { background: #b91c1c; }
+        .btn-download-disabled { height: 28px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 
-        .fc-xml-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
-        .fc-xml-table th, .fc-xml-table td { padding: var(--space-3); border-bottom: 1px solid var(--gray-100); text-align: left; }
-        .fc-xml-table th { font-size: var(--text-xs); text-transform: uppercase; color: white; font-weight: var(--weight-semibold); background: #DC2626; }
-        .fc-xml-cuenta-select { min-width: 200px; padding: 4px; border: 1px solid var(--gray-200); border-radius: 4px; }
+        .status-badge { height: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 14px; font-size: 11px; font-weight: 700; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .bg-yellow { background: #fef3c7; color: #92400e; } .dot-yellow { background-color: #f59e0b; }
+        .bg-blue { background: #dbeafe; color: #1e40af; } .dot-blue { background-color: #2563eb; }
+        .bg-green { background: #dcfce7; color: #166534; } .dot-green { background-color: #16a34a; }
 
-        /* Form Fields inside Modals */
-        .fc-form-section { margin-bottom: var(--space-6); }
-        .fc-form-section-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--gray-900); margin: 0 0 var(--space-4) 0; display: flex; align-items: center; gap: var(--space-2); }
-        .fc-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); }
-        .fc-field { display: flex; flex-direction: column; gap: var(--space-2); }
-        .fc-field.full-width { grid-column: 1 / -1; }
-        .fc-field-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; color: var(--gray-500); }
-        .fc-field-input { padding: var(--space-3) var(--space-4); border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: var(--text-sm); color: var(--gray-900); }
-        .fc-field-hint { font-size: var(--text-xs); color: var(--gray-500); }
+        /* === BARRA FLOTANTE DE SUBIDA === */
+        .upload-bottom-bar { 
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); 
+            background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 0 1px #e5e7eb; 
+            padding: 16px 24px; display: flex; align-items: center; gap: 24px; z-index: 50; 
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 90%; max-width: 1000px; 
+        }
+        .upload-bottom-bar.show { bottom: 24px; }
+        .up-info { flex-grow: 1; font-size: 14px; color: #6b7280; display: flex; align-items: center; gap: 12px; }
+        .up-info strong { color: #111827; font-weight: 800; font-size: 15px; }
+        
+        .btn-limpiar { background: white; color: #6b7280; border: 1px solid #e5e7eb; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;}
+        .btn-limpiar:hover { background: #f3f4f6; color: #111827; }
+        .btn-adjuntar { background: #DC2626; color: white; border: none; height: 40px; padding: 0 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s;}
+        .btn-adjuntar:hover { background: #b91c1c; }
 
-        .fc-orden-info { background: var(--gray-50); border-radius: var(--radius-sm); padding: var(--space-5); margin-bottom: var(--space-6); border: 1px solid var(--gray-200); }
-        .fc-orden-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-4); }
-        .fc-orden-info-item { display: flex; flex-direction: column; gap: var(--space-1); }
-        .fc-orden-info-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; color: var(--gray-500); }
-        .fc-orden-info-value { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--gray-900); }
+        /* === MODAL DE ALERTA PERSONALIZADO === */
+        #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
+        #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
+        #alert-msg { margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5; }
+        #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+        #alert-btn:hover { opacity: 0.9; }
 
-        /* Modals overrides */
-        #modalFactura .modal-header, #modalXml .modal-header { background: #DC2626; color: white; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
-        #modalFactura .modal-title, #modalXml .modal-title { color: white; }
-
-        @media (max-width: 768px) {
-            .facturacion-wrap { padding: var(--space-4); }
-            .fc-filters-grid { flex-direction: column; }
-            .fc-filter-group { width: 100%; }
-            .fc-table-container { overflow-x: auto; }
-            .fc-table { min-width: 900px; }
+        @media (max-width: 900px) {
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+            .upload-bottom-bar { flex-direction: column; gap: 12px; padding: 16px; bottom: -200px;}
+            .up-info { flex-direction: column; text-align: center; gap: 4px; }
+            .btn-adjuntar, .btn-limpiar { width: 100%; justify-content: center; }
+        }
+        @media (max-width: 600px) {
+            .metrics-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body class="has-sidebar">
-    <header class="main-header">
-        <div class="header-left">
-            <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
-                <span class="hamburger"></span>
-            </button>
-            <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
-            <h1 class="system-title">Ordenes de Servicio</h1>
-        </div>
-        <div class="header-right">
-            <div class="user-menu" data-user-menu>
-                <button class="user-circle-btn" type="button" aria-label="Abrir menú de usuario" data-user-trigger>
-                    <span class="user-circle-initial" id="user-initial-header">U</span>
+
+    <div id="app-screen" style="display: block;">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
+                    <span class="hamburger"></span>
                 </button>
-                <div class="user-dropdown" data-user-dropdown>
-                    <div class="user-card">
-                        <div class="user-circle-avatar user-circle-initial">U</div>
-                        <div class="user-meta">
-                            <div class="user-name" id="dropdown-username">Cargando...</div>
+                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
+                <h1 class="system-title">Ordenes de Servicio</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-menu" data-user-menu>
+                    <button class="user-circle-btn" type="button" data-user-trigger>
+                        <span class="user-circle-initial" id="user-initial-header">U</span>
+                    </button>
+                    <div class="user-dropdown" data-user-dropdown>
+                        <div class="user-card">
+                            <div class="user-circle-avatar user-circle-initial">U</div>
+                            <div class="user-meta">
+                                <div class="user-name">Cargando...</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="user-actions">
-                        <a href="index.html" class="dropdown-link destructive" onclick="sessionStorage.clear();">
-                            <i data-lucide="log-out"></i>
-                            Cerrar sesión
-                        </a>
+                        <div class="user-actions">
+                            <a href="index.html" class="dropdown-link destructive" onclick="sessionStorage.clear();">
+                                <i data-lucide="log-out"></i> Cerrar sesión
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <div class="main-layout">
-        <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
-            <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
-            <div class="sidebar-content">
-                <nav class="sidebar-nav">
-                    <a class="sidebar-link" href="index.html">
-                        <i data-lucide="home"></i> Inicio
-                    </a>
-                    <div class="sidebar-section">
-                        <div class="sidebar-section-title">Formas</div>
-                        <a class="sidebar-link" href="index.html">
-                            <i data-lucide="wrench"></i> Mantenimiento correctivo
-                        </a>
-                        <a class="sidebar-link" href="index.html">
-                            <i data-lucide="calendar-check"></i> Mantenimientos Preventivos
-                        </a>
-                    </div>
-                    <div class="sidebar-section" id="nav-seccion-admin">
-                        <div class="sidebar-section-title">Administración</div>
-                        <a class="sidebar-link" href="confirmacion.html">
-                            <i data-lucide="check-circle-2"></i> Confirmación operativa
-                        </a>
-                        <a class="sidebar-link" href="costos.html">
-                            <i data-lucide="calculator"></i> Costos de reparación
-                        </a>
-                        <a class="sidebar-link" href="aprobacion.html">
-                            <i data-lucide="badge-check"></i> Aprobación de costos
-                        </a>
-                        <a class="sidebar-link activa" href="facturacion.html">
-                            <i data-lucide="file-text"></i> Facturación
-                        </a>
-                    </div>
-                    <div class="sidebar-section" id="nav-seccion-reportes">
-                        <div class="sidebar-section-title">Reportes</div>
-                        <a class="sidebar-link" href="index.html">
-                            <i data-lucide="bar-chart-3"></i> Reportes
-                        </a>
-                    </div>
-                </nav>
-            </div>
-        </aside>
-        
-        <div class="sidebar-backdrop" data-sidebar-backdrop></div>
-        
-        <main class="main-content app-content">
-            
-            <div id="global-welcome-section" style="text-align: center; padding-top: 25px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
-                <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
-                <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
-            </div>
-
-            <div class="facturacion-wrap">
-                <header class="page-header-section">
-                    <div class="page-header-row">
-                        <div class="page-header-content">
-                            <h1>Facturación</h1>
-                            <p>Vincula facturas fiscales (CFDI) a órdenes con costos aprobados</p>
+        <div class="main-layout">
+            <aside class="sidebar app-sidebar" data-app-sidebar>
+                <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
+                <div class="sidebar-content">
+                    <nav class="sidebar-nav">
+                        <a class="sidebar-link" href="index.html"><i data-lucide="home"></i> Inicio</a>
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Formas</div>
+                            <a class="sidebar-link" href="index.html"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a class="sidebar-link" href="index.html"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
-                    </div>
-                </header>
+                        <div class="sidebar-section" id="nav-seccion-admin">
+                            <div class="sidebar-section-title">Administración</div>
+                            <a class="sidebar-link" href="confirmacion.html"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a class="sidebar-link" href="costos.html"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a class="sidebar-link" href="aprobacion.html"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a class="sidebar-link activa" href="facturacion.html"><i data-lucide="file-text"></i> Facturación</a>
+                        </div>
+                        <div class="sidebar-section" id="nav-seccion-reportes">
+                            <div class="sidebar-section-title">Reportes</div>
+                            <a class="sidebar-link" href="index.html"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                        </div>
+                    </nav>
+                </div>
+            </aside>
+            <div class="sidebar-backdrop" data-sidebar-backdrop></div>
 
-                <div class="fc-stats">
-                    <div class="fc-stat-card">
-                        <div class="fc-stat-label">Órdenes pendientes</div>
-                        <div class="fc-stat-value accent">0</div>
-                    </div>
-                    <div class="fc-stat-card">
-                        <div class="fc-stat-label">Facturas pendientes</div>
-                        <div class="fc-stat-value warning">0</div>
-                    </div>
-                    <div class="fc-stat-card">
-                        <div class="fc-stat-label">Facturas pagadas</div>
-                        <div class="fc-stat-value success">0</div>
-                    </div>
-                    <div class="fc-stat-card">
-                        <div class="fc-stat-label">Total facturado</div>
-                        <div class="fc-stat-value">$0.00</div>
-                    </div>
+            <main class="main-content app-content">
+                
+                <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
+                    <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
+                    <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">CARGANDO...</h2>
                 </div>
 
-                <form method="GET" class="fc-filters">
-                    <div class="fc-filters-grid">
-                        <div class="fc-filter-group">
-                            <label class="fc-filter-label">Fecha inicio</label>
-                            <input type="date" class="fc-filter-input" name="fecha_inicio" value="">
+                <div class="facturacion-wrap">
+                    <div class="page-header-content">
+                        <h1>Facturación y Pagos</h1>
+                        <p>Carga de comprobantes fiscales y seguimiento de pagos de órdenes aprobadas</p>
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-title">FOLIOS PENDIENTES</div>
+                            <div class="metric-value" id="met-pendientes">0 - $0.00</div>
                         </div>
-                        <div class="fc-filter-group">
-                            <label class="fc-filter-label">Fecha fin</label>
-                            <input type="date" class="fc-filter-input" name="fecha_fin" value="">
+                        <div class="metric-card">
+                            <div class="metric-title">FOLIOS FACTURADOS</div>
+                            <div class="metric-value" id="met-facturados" style="color: #2563eb;">0 - $0.00</div>
                         </div>
-                        <div class="fc-filter-group">
-                            <label class="fc-filter-label">Estado</label>
-                            <select class="fc-filter-input" name="estado">
-                                <option value="">Todos</option>
-                                <option value="sin_factura">Sin factura</option>
-                                <option value="pendiente">Pago pendiente</option>
-                                <option value="pagado_parcial">Pago parcial</option>
+                        <div class="metric-card">
+                            <div class="metric-title">FOLIOS PAGADOS</div>
+                            <div class="metric-value" id="met-pagados" style="color: #16a34a;">0 - $0.00</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-title">TOTAL GENERAL</div>
+                            <div class="metric-value" id="met-total">0 - $0.00</div>
+                        </div>
+                    </div>
+
+                    <form class="filters-bar">
+                        <div class="filter-group">
+                            <label class="filter-label">Fecha inicio</label>
+                            <input type="date" class="input" id="filtro-inicio">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Fecha fin</label>
+                            <input type="date" class="input" id="filtro-fin">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Estado</label>
+                            <select class="input" id="filtro-estado">
+                                <option value="todos">Todos</option>
+                                <option value="pendiente">Pendiente</option>
+                                <option value="facturado">Facturado</option>
                                 <option value="pagado">Pagado</option>
                             </select>
                         </div>
-                        <div class="fc-filter-group">
-                            <label class="fc-filter-label">Buscar</label>
-                            <input type="text" class="fc-filter-input" name="buscar" value="" placeholder="Folio, UUID o sucursal...">
+                        <div class="filter-group flex-grow" style="flex: 2;">
+                            <label class="filter-label">Buscar</label>
+                            <input type="text" class="input" id="filtro-buscar" placeholder="Folio o sucursal...">
                         </div>
-                        <div class="flex gap-2 flex-shrink-0">
-                            <button class="btn btn-secondary" type="submit">
-                                <i data-lucide="filter" style="width: 16px;"></i> Filtrar
-                            </button>
-                            <button type="button" class="btn btn-success">
-                                <i data-lucide="download" style="width: 16px;"></i> Exportar Excel
+                        <div class="filter-actions">
+                            <button class="btn-secondary" type="button" onclick="renderTablaActual()">
+                                <i data-lucide="search" style="width: 16px;"></i> Buscar
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </form>
 
-                <div class="fc-selection-bar">
-                    <div class="fc-selection-info">
-                        <span class="fc-selection-label">Selección actual</span>
-                        <span class="fc-selection-count" id="selectedCount">0 folios</span>
-                        <span class="fc-selection-total" id="selectedTotal">$0.00 aprobados</span>
-                    </div>
-                    <div class="fc-selection-actions">
-                        <button type="button" class="btn btn-secondary" id="btnLimpiarSeleccion" disabled>
-                            <i data-lucide="x-circle" style="width: 16px;"></i> Limpiar
-                        </button>
-                        <button type="button" class="btn btn-primary" id="btnAdjuntarXml" disabled>
-                            <i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar XML
-                        </button>
-                    </div>
-                </div>
-
-                <div class="fc-table-container">
-                    <table class="fc-table">
-                        <thead>
-                            <tr>
-                                <th style="width: 48px;">Sel.</th>
-                                <th>Folio</th>
-                                <th>Sucursal</th>
-                                <th>Centro de costos</th>
-                                <th>Costo Aprobado</th>
-                                <th>Facturas</th>
-                                <th>Total XML</th>
-                                <th>% Pagado</th>
-                                <th style="text-align: right;">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-facturacion-body">
-                            <tr>
-                                <td colspan="9" class="fc-empty">
-                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                                        <i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i>
-                                        <span>No hay facturas pendientes en este momento.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </main>
-    </div>
-
-    <div class="modal-overlay" id="modalFactura">
-        <div class="modal modal-lg">
-            <div class="modal-header">
-                <h2 class="modal-title">Facturas vinculadas</h2>
-                <button type="button" class="modal-close" onclick="cerrarModal('modalFactura')"><i data-lucide="x"></i></button>
-            </div>
-            <form id="formFactura" method="POST">
-                <input type="hidden" name="factura_id" id="modalFacturaId" value="">
-                <input type="hidden" name="action" id="modalAction" value="editar">
-                <div class="modal-body">
-                    <div class="fc-orden-info">
-                        <div class="fc-orden-info-grid">
-                            <div class="fc-orden-info-item">
-                                <span class="fc-orden-info-label">Folio</span>
-                                <span class="fc-orden-info-value" id="modalFolio">—</span>
-                            </div>
-                            <div class="fc-orden-info-item">
-                                <span class="fc-orden-info-label">Sucursal</span>
-                                <span class="fc-orden-info-value" id="modalSucursal">—</span>
-                            </div>
-                            <div class="fc-orden-info-item">
-                                <span class="fc-orden-info-label">Costo Aprobado</span>
-                                <span class="fc-orden-info-value" id="modalCostoAprobado">—</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="facturasExistentes" class="fc-existing-facturas" style="display: none;">
-                        <h3 class="fc-form-section-title"><i data-lucide="files"></i>Facturas vinculadas</h3>
-                        <div id="facturasListContainer"></div>
-                    </div>
-
-                    <div class="fc-form-section">
-                        <h3 class="fc-form-section-title"><i data-lucide="wallet"></i>Actualizar pago</h3>
-                        <p class="fc-field-hint" id="facturaSeleccionHint">Selecciona una factura para editar su pago.</p>
-                        <div class="fc-form-grid">
-                            <div class="fc-field">
-                                <label class="fc-field-label">% Pagado</label>
-                                <input type="number" step="0.01" min="0" max="100" class="fc-field-input" name="porcentaje_pagado" id="inputPorcentaje">
-                            </div>
-                            <div class="fc-field">
-                                <label class="fc-field-label">Fecha de pago</label>
-                                <input type="date" class="fc-field-input" name="fecha_pago" id="inputFechaPago">
-                            </div>
-                            <div class="fc-field">
-                                <label class="fc-field-label">Fecha de vencimiento</label>
-                                <input type="date" class="fc-field-input" name="fecha_vencimiento" id="inputFechaVencimiento">
-                            </div>
-                            <div class="fc-field full-width">
-                                <label class="fc-field-label">Notas</label>
-                                <input type="text" class="fc-field-input" name="notas" id="inputNotas" placeholder="Comentarios adicionales...">
-                            </div>
-                        </div>
+                    <div class="data-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th title="Seleccionar para adjuntar facturas">SEL.</th>
+                                    <th>FOLIO</th>
+                                    <th>SUCURSAL</th>
+                                    <th style="text-align: right;">TOTAL</th>
+                                    <th>FECHA DE ENVÍO</th>
+                                    <th>PDF</th>
+                                    <th>XML</th>
+                                    <th>FECHA DE FACTURA</th>
+                                    <th title="Marcar como pagado">SEL. (PAGO)</th>
+                                    <th>FECHA DE PAGO</th>
+                                    <th>ESTADO</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-facturas-body">
+                                <tr><td colspan="11" class="co-table-empty">Cargando datos...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalFactura')"><i data-lucide="x"></i>Cerrar</button>
-                    <button type="submit" class="btn btn-success" id="btnGuardarPago" disabled><i data-lucide="save"></i>Guardar cambios</button>
-                </div>
-            </form>
+            </main>
         </div>
     </div>
 
-    <div class="modal-overlay" id="modalXml">
-        <div class="modal modal-lg">
-            <div class="modal-header">
-                <h2 class="modal-title">Adjuntar XML (CFDI)</h2>
-                <button type="button" class="modal-close" onclick="cerrarModal('modalXml')"><i data-lucide="x"></i></button>
-            </div>
-            <form id="formXml" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="adjuntar_xml">
-                <input type="hidden" name="orden_ids" id="xmlOrdenIds">
-                <div class="modal-body">
-                    <div class="fc-orden-info">
-                        <div class="fc-orden-info-grid">
-                            <div class="fc-orden-info-item">
-                                <span class="fc-orden-info-label">Folios seleccionados</span>
-                                <span class="fc-orden-info-value" id="xmlModalFolios">—</span>
-                            </div>
-                            <div class="fc-orden-info-item">
-                                <span class="fc-orden-info-label">Total aprobado</span>
-                                <span class="fc-orden-info-value" id="xmlModalTotalAprobado">—</span>
-                            </div>
-                            <div class="fc-orden-info-item">
-                                <span class="fc-orden-info-label">Total XML</span>
-                                <span class="fc-orden-info-value" id="xmlModalTotalXml">—</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="fc-form-section">
-                        <h3 class="fc-form-section-title"><i data-lucide="layers"></i>Formulario contable</h3>
-                        <div class="fc-field">
-                            <label class="fc-field-label" for="xmlFormularioContable">Formulario</label>
-                            <select class="fc-field-input" id="xmlFormularioContable" name="formulario_contable_id">
-                                <option value="">Selecciona un formulario</option>
-                                <option value="7">Mantenimiento</option>
-                                <option value="6">Supply chain</option>
-                            </select>
-                            <span class="fc-field-hint" id="xmlFormularioContableHint">Selecciona el formulario contable para asignar cuentas a los conceptos.</span>
-                        </div>
-                        <div class="fc-field">
-                            <label class="fc-field-label" for="xmlCuentaContableGlobal">Cuenta contable (todos)</label>
-                            <div class="fc-xml-upload">
-                                <select class="fc-field-input" id="xmlCuentaContableGlobal">
-                                    <option value="">Selecciona cuenta</option>
-                                </select>
-                                <button type="button" class="btn btn-secondary" id="btnAplicarCuentaGlobal"><i data-lucide="check"></i>Aplicar a todos</button>
-                            </div>
-                            <span class="fc-field-hint">Asigna la misma cuenta contable a todos los conceptos.</span>
-                        </div>
-                    </div>
-
-                    <div class="fc-form-section">
-                        <h3 class="fc-form-section-title"><i data-lucide="file-search"></i>Cargar XML CFDI</h3>
-                        <div class="fc-xml-upload">
-                            <input type="file" class="fc-field-input" id="xmlFileInput" name="xml_file" accept=".xml">
-                            <button type="button" class="btn btn-secondary" onclick="limpiarXml()"><i data-lucide="rotate-ccw"></i>Limpiar</button>
-                        </div>
-                        <span class="fc-field-hint">Se valida contra los folios seleccionados (±$1).</span>
-                    </div>
-
-                    <div id="xmlValidation" class="fc-xml-validation" style="display: none;"></div>
-                    <div id="xmlError" class="fc-xml-error" style="display: none;"></div>
-
-                    <div id="xmlResult" class="fc-xml-result" style="display: none;">
-                        <div class="fc-xml-card">
-                            <h4 class="fc-xml-card-title"><i data-lucide="file-text"></i>Comprobante</h4>
-                            <div class="fc-xml-kv-grid" id="xmlComprobanteGrid"></div>
-                        </div>
-                        <div class="fc-xml-card">
-                            <h4 class="fc-xml-card-title"><i data-lucide="user"></i>Emisor</h4>
-                            <div class="fc-xml-kv-grid" id="xmlEmisorGrid"></div>
-                        </div>
-                        <div class="fc-xml-card">
-                            <h4 class="fc-xml-card-title"><i data-lucide="users"></i>Receptor</h4>
-                            <div class="fc-xml-kv-grid" id="xmlReceptorGrid"></div>
-                        </div>
-                        <div class="fc-xml-card">
-                            <h4 class="fc-xml-card-title"><i data-lucide="badge-check"></i>Timbre</h4>
-                            <div class="fc-xml-kv-grid" id="xmlTimbreGrid"></div>
-                        </div>
-                        <div class="fc-xml-card">
-                            <h4 class="fc-xml-card-title"><i data-lucide="list"></i>Conceptos</h4>
-                            <div id="xmlConceptosContainer"></div>
-                        </div>
-                        <div class="fc-xml-card">
-                            <h4 class="fc-xml-card-title"><i data-lucide="calculator"></i>Totales</h4>
-                            <div class="fc-xml-kv-grid" id="xmlTotalesGrid"></div>
-                            <div id="xmlImpuestosBreakdown" style="margin-top: var(--space-4);"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="cerrarModal('modalXml')"><i data-lucide="x"></i>Cerrar</button>
-                    <button type="submit" class="btn btn-success" id="btnGuardarXml" disabled><i data-lucide="save"></i>Guardar factura</button>
-                </div>
-            </form>
+    <div class="upload-bottom-bar" id="upload-bar">
+        <div class="up-info">
+            <span>SELECCIÓN ACTUAL</span>
+            <span style="display: flex; align-items: center; gap: 8px;">
+                <strong id="lbl-sel-count">0 folios</strong> 
+                <strong id="lbl-sel-sum" style="color: #16a34a;">$0.00</strong> aprobados
+            </span>
         </div>
+        <button class="btn-limpiar" onclick="limpiarSeleccion()">
+            <i data-lucide="x-circle" style="width: 16px;"></i> Limpiar
+        </button>
+        <button class="btn-adjuntar" onclick="triggerUpload('pdf')">
+            <i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar PDF
+        </button>
+        <button class="btn-adjuntar" onclick="triggerUpload('xml')">
+            <i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar XML
+        </button>
     </div>
 
-    <script src="https://tims-orden-de-servicio.onrender.com/static/js/components.js"></script>
+    <input type="file" id="file-pdf" accept=".pdf" style="display:none" onchange="handleUpload(event, 'pdf')">
+    <input type="file" id="file-xml" accept=".xml" style="display:none" onchange="handleUpload(event, 'xml')">
+
+    <div id="custom-alert">
+        <div class="modal-card-alert">
+            <div id="alert-icon-container"></div>
+            <h3 id="alert-title"></h3>
+            <p id="alert-msg"></p>
+            <button id="alert-btn" onclick="closeCustomAlert()">Aceptar</button>
+        </div>
+    </div>
 
 <script>
-    // Se vació la variable 'ordenesData' para no mostrar datos de prueba
-    const ordenesData = {};
-    const formulariosContables = [{"id": 7, "nombre": "Mantenimiento", "slug": "mantenimiento"}, {"id": 6, "nombre": "Supply chain", "slug": "supply-chain"}];
-    const cuentasContables = [{"codigo": "602-56-019", "formulario_id": 6, "id": 6, "nombre": "Mtto correctivo maquinaria causa operativa"}, {"codigo": "602-56-020", "formulario_id": 6, "id": 5, "nombre": "Mtto correctivo maquinaria naturaleza del activo"}, {"codigo": "602-56-021", "formulario_id": 6, "id": 7, "nombre": "Mtto correctivo maquinaria causa instalaci\u00f3n"}, {"codigo": "602-56-035", "formulario_id": 6, "id": 4, "nombre": "Mtto Correctivo Repcops Espresso"}, {"codigo": "602-56-026", "formulario_id": 7, "id": 3, "nombre": "Mtto de Inmuebles correctivo causa operativa"}, {"codigo": "602-56-027", "formulario_id": 7, "id": 2, "nombre": "Mtto de Inmuebles correctivo deterioro del restaurante"}, {"codigo": "602-56-028", "formulario_id": 7, "id": 1, "nombre": "Mtto de Inmuebles correctivo naturaleza del equipo"}];
-    
-    const seleccionOrdenes = new Map();
-    let ultimoXmlParseado = null;
-    const cuentasContablesByFormulario = new Map();
+    const firebaseConfig = {
+        apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
+        authDomain: "timhortons-mantenimiento.firebaseapp.com",
+        projectId: "timhortons-mantenimiento",
+        storageBucket: "timhortons-mantenimiento.firebasestorage.app",
+        messagingSenderId: "892024009722",
+        appId: "1:892024009722:web:fd43a68570f78cedcaea43"
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    cuentasContables.forEach((cuenta) => {
-        const key = Number(cuenta.formulario_id || 0);
-        if (!key) return;
-        if (!cuentasContablesByFormulario.has(key)) { cuentasContablesByFormulario.set(key, []); }
-        cuentasContablesByFormulario.get(key).push(cuenta);
-    });
+    let facturasGlobales = [];
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', () => {
         if (window.lucide) { lucide.createIcons(); }
-
-        // RECUPERAR USUARIO Y SESIÓN
-        const savedSession = sessionStorage.getItem('loginSession');
-        const savedUser = sessionStorage.getItem('loginUser');
         
-        if (savedSession && savedUser) {
-            const appData = JSON.parse(savedSession);
-            
-            // Setear Iniciales en el Header
-            const inicial = savedUser.charAt(0).toUpperCase();
-            document.querySelectorAll('.user-circle-initial').forEach(el => el.innerText = inicial);
+        const savedUser = sessionStorage.getItem('loginUser');
+        if(savedUser) document.getElementById('user-initial-header').innerText = savedUser.charAt(0).toUpperCase();
 
-            // Setear Nombre
+        const appDataStr = sessionStorage.getItem('loginSession');
+        if(appDataStr) {
+            const appData = JSON.parse(appDataStr);
             const welcomeTitle = document.getElementById('welcome-username-display');
             if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
-            const dropdownName = document.getElementById('dropdown-username');
+            const dropdownName = document.querySelector('.user-name');
             if(dropdownName) dropdownName.innerText = appData.nombreProveedor || savedUser;
-
-            if(appData.privilegio == 2 || appData.privilegio == "2") {
-                window.location.replace('index.html');
-            }
-        } else {
-            window.location.replace('index.html');
         }
 
-        // Lógica de menús interactivos (sidebar / user dropdown)
-        const userMenu = document.querySelector('[data-user-menu]');
-        if (userMenu) {
-            const trigger = userMenu.querySelector('[data-user-trigger]');
-            const dropdown = userMenu.querySelector('[data-user-dropdown]');
-            const closeMenus = (event) => { if (!userMenu.contains(event.target)) dropdown.classList.remove('show'); };
-            trigger.addEventListener('click', (event) => { event.stopPropagation(); dropdown.classList.toggle('show'); });
-            document.addEventListener('click', closeMenus);
-        }
-
-        const sidebar = document.querySelector('[data-app-sidebar]');
         const toggles = document.querySelectorAll('[data-sidebar-toggle]');
-        const closeButton = document.querySelector('[data-sidebar-close]');
-        const backdrop = document.querySelector('[data-sidebar-backdrop]');
-        if (sidebar && toggles.length) {
-            const openSidebar = () => { sidebar.classList.add('open'); if (backdrop) backdrop.classList.add('visible'); };
-            const closeSidebar = () => { sidebar.classList.remove('open'); if (backdrop) backdrop.classList.remove('visible'); };
-            toggles.forEach(t => t.addEventListener('click', () => { if (sidebar.classList.contains('open')) closeSidebar(); else openSidebar(); }));
-            if (closeButton) closeButton.addEventListener('click', closeSidebar);
-            if (backdrop) backdrop.addEventListener('click', closeSidebar);
-        }
+        toggles.forEach(t => t.addEventListener('click', () => document.querySelector('.app-sidebar').classList.toggle('open')));
+        document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.querySelector('.app-sidebar').classList.remove('open'));
 
-        // Event listeners Facturación
-        document.querySelectorAll('.fc-select-order').forEach((checkbox) => { checkbox.addEventListener('change', onSeleccionChange); });
-        const xmlInput = document.getElementById('xmlFileInput');
-        if (xmlInput) xmlInput.addEventListener('change', handleXmlFile);
-        const btnAdjuntarXml = document.getElementById('btnAdjuntarXml');
-        if (btnAdjuntarXml) btnAdjuntarXml.addEventListener('click', abrirModalXml);
-        const btnLimpiarSeleccion = document.getElementById('btnLimpiarSeleccion');
-        if (btnLimpiarSeleccion) btnLimpiarSeleccion.addEventListener('click', limpiarSeleccion);
-        const formularioSelect = document.getElementById('xmlFormularioContable');
-        if (formularioSelect) formularioSelect.addEventListener('change', () => actualizarFormularioContable(false));
-        const btnAplicarCuentaGlobal = document.getElementById('btnAplicarCuentaGlobal');
-        if (btnAplicarCuentaGlobal) btnAplicarCuentaGlobal.addEventListener('click', aplicarCuentaGlobal);
-        const formXml = document.getElementById('formXml');
-        if (formXml) {
-            formXml.addEventListener('submit', (event) => {
-                if (!validarCuentasConceptos()) {
-                    event.preventDefault();
-                    alert('Selecciona una cuenta contable para todos los conceptos.');
-                }
-            });
-        }
+        cargarDatosFacturacion();
     });
 
-    // Lógica principal de XML extraída y mantenida intacta de tu Código 4 original.
-    function formatMoney(value) { return (Number(value) || 0).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); }
-    function getTotalSeleccionado() { let total = 0; seleccionOrdenes.forEach((item) => { total += Number(item.costo || 0); }); return total; }
+    // === ALERTAS PERSONALIZADAS ===
+    function showCustomAlert(title, message, isSuccess = true) {
+        const alertBox = document.getElementById('custom-alert');
+        const alertTitle = document.getElementById('alert-title');
+        const alertMsg = document.getElementById('alert-msg');
+        const alertIcon = document.getElementById('alert-icon-container');
+        const alertBtn = document.getElementById('alert-btn');
 
-    function actualizarBarraSeleccion() {
-        const count = seleccionOrdenes.size;
-        const total = getTotalSeleccionado();
-        const countEl = document.getElementById('selectedCount');
-        const totalEl = document.getElementById('selectedTotal');
-        if (countEl) countEl.textContent = `${count} folio${count === 1 ? '' : 's'}`;
-        if (totalEl) totalEl.textContent = `$${formatMoney(total)} aprobados`;
-        const btnAdjuntar = document.getElementById('btnAdjuntarXml');
-        const btnLimpiar = document.getElementById('btnLimpiarSeleccion');
-        if (btnAdjuntar) btnAdjuntar.disabled = count === 0;
-        if (btnLimpiar) btnLimpiar.disabled = count === 0;
-    }
+        alertTitle.innerText = title;
+        alertMsg.innerText = message;
 
-    function getFormularioContableIdSeleccionado() {
-        const select = document.getElementById('xmlFormularioContable');
-        if (!select || !select.value) return null;
-        return select.value ? Number(select.value) : null;
-    }
-
-    function getFormulariosContablesSeleccionados() {
-        const ids = new Set(); let hasMissing = false;
-        seleccionOrdenes.forEach((_, ordenId) => {
-            const data = ordenesData[ordenId];
-            if (!data) return;
-            const id = Number(data.formulario_contable_id || 0);
-            if (id) ids.add(id); else hasMissing = true;
-        });
-        return { ids, hasMissing };
-    }
-
-    function buildCuentaOptions(formularioId, selectedValue) {
-        const cuentas = formularioId ? (cuentasContablesByFormulario.get(formularioId) || []) : [];
-        let options = '<option value="">Selecciona cuenta</option>';
-        cuentas.forEach((cuenta) => {
-            const label = `${cuenta.codigo} - ${cuenta.nombre}`;
-            const selected = String(cuenta.id) === String(selectedValue) ? ' selected' : '';
-            options += `<option value="${cuenta.id}"${selected}>${label}</option>`;
-        });
-        return { options, hasCuentas: cuentas.length > 0 };
-    }
-
-    function actualizarOpcionesCuentas() {
-        const formularioId = getFormularioContableIdSeleccionado();
-        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
-        if (globalSelect) {
-            const { options, hasCuentas } = buildCuentaOptions(formularioId, globalSelect.value);
-            globalSelect.innerHTML = options;
-            globalSelect.disabled = !formularioId || !hasCuentas;
+        if(isSuccess) {
+            alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
+            alertBtn.style.background = '#16a34a';
+        } else {
+            alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
+            alertBtn.style.background = '#DC2626';
         }
-        document.querySelectorAll('.fc-xml-cuenta-select').forEach((select) => {
-            const { options, hasCuentas } = buildCuentaOptions(formularioId, select.value);
-            select.innerHTML = options; select.required = hasCuentas; select.disabled = !formularioId || !hasCuentas;
+
+        alertBox.style.display = 'flex';
+        lucide.createIcons();
+    }
+    function closeCustomAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+    // === CARGA DE DATOS ===
+    function cargarDatosFacturacion() {
+        // Solo traemos los que pasaron la etapa de Aprobación con éxito
+        db.collection("tickets_mantenimiento")
+          .where("estado_confirmacion", "==", "Costos Aprobados")
+          .get()
+          .then((querySnapshot) => {
+              facturasGlobales = [];
+              querySnapshot.forEach((doc) => { 
+                  let data = doc.data();
+                  // Determinar estado de facturación localmente para agilizar filtros
+                  if (data.estado_pago === 'Pagado') {
+                      data._estado_factura = 'pagado';
+                  } else if (data.url_factura_pdf || data.url_factura_xml) {
+                      data._estado_factura = 'facturado';
+                  } else {
+                      data._estado_factura = 'pendiente';
+                  }
+                  facturasGlobales.push(data); 
+              });
+              
+              facturasGlobales.sort((a, b) => {
+                  let fA = a.fecha_aprobacion_costos || "";
+                  let fB = b.fecha_aprobacion_costos || "";
+                  return fA.localeCompare(fB);
+              });
+
+              actualizarMetricas();
+              renderTablaActual();
+          })
+          .catch((error) => {
+              console.error("Error: ", error);
+              document.getElementById('tabla-facturas-body').innerHTML = '<tr><td colspan="11" class="co-table-empty" style="color: red;">Error cargando datos.</td></tr>';
+          });
+    }
+
+    function formateaMoneda(valor) { return "$" + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+    function actualizarMetricas() {
+        let cPend = 0, sumPend = 0;
+        let cFact = 0, sumFact = 0;
+        let cPag = 0, sumPag = 0;
+        let cTot = 0, sumTot = 0;
+
+        facturasGlobales.forEach(t => {
+            const val = parseFloat(t.costo_total_aprobado) || 0;
+            cTot++; sumTot += val;
+            
+            if (t._estado_factura === 'pendiente') { cPend++; sumPend += val; }
+            else if (t._estado_factura === 'facturado') { cFact++; sumFact += val; }
+            else if (t._estado_factura === 'pagado') { cPag++; sumPag += val; }
         });
+
+        document.getElementById('met-pendientes').innerText = `${cPend} - ${formateaMoneda(sumPend)}`;
+        document.getElementById('met-facturados').innerText = `${cFact} - ${formateaMoneda(sumFact)}`;
+        document.getElementById('met-pagados').innerText = `${cPag} - ${formateaMoneda(sumPag)}`;
+        document.getElementById('met-total').innerText = `${cTot} - ${formateaMoneda(sumTot)}`;
     }
 
-    function aplicarCuentaGlobal() {
-        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
-        if (!globalSelect || !globalSelect.value) return;
-        document.querySelectorAll('.fc-xml-cuenta-select').forEach(select => select.value = globalSelect.value);
-    }
+    function renderTablaActual() {
+        const tbody = document.getElementById('tabla-facturas-body');
+        tbody.innerHTML = '';
+        
+        const fInicio = document.getElementById('filtro-inicio').value;
+        const fFin = document.getElementById('filtro-fin').value;
+        const fBuscar = document.getElementById('filtro-buscar').value.toLowerCase();
+        const fEstado = document.getElementById('filtro-estado').value;
 
-    function actualizarFormularioContable(force) {
-        const select = document.getElementById('xmlFormularioContable');
-        const hint = document.getElementById('xmlFormularioContableHint');
-        if (!select) return;
-        const { ids, hasMissing } = getFormulariosContablesSeleccionados();
-        if (force || !select.value) {
-            select.value = ids.size === 1 ? String(Array.from(ids)[0]) : '';
+        let filtrados = facturasGlobales.filter(t => {
+            if(fEstado !== 'todos' && t._estado_factura !== fEstado) return false;
+
+            const fDoc = t.fecha_aprobacion_costos ? t.fecha_aprobacion_costos.split('T')[0] : "";
+            if(fInicio && fDoc < fInicio) return false;
+            if(fFin && fDoc > fFin) return false;
+
+            if(fBuscar) {
+                const folio = (t.id_ticket || "").toLowerCase();
+                const suc = (t.sucursal || "").toLowerCase();
+                if(!folio.includes(fBuscar) && !suc.includes(fBuscar)) return false;
+            }
+            return true;
+        });
+
+        if(filtrados.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="11" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay folios que coincidan con la búsqueda.</span></div></td></tr>`;
+            lucide.createIcons();
+            limpiarSeleccion();
+            return;
         }
-        let mensaje = 'Selecciona el formulario contable para asignar cuentas a los conceptos.';
-        if (ids.size > 1) mensaje = 'Los folios seleccionados tienen formularios distintos; selecciona uno.';
-        else if (ids.size === 0 && hasMissing) mensaje = 'Los folios seleccionados no tienen formulario contable asociado; selecciona uno.';
-        if (hint) hint.textContent = mensaje;
-        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
-        if (globalSelect) globalSelect.value = '';
-        actualizarOpcionesCuentas();
+
+        filtrados.forEach(t => {
+            const folio = t.id_ticket;
+            const suc = t.sucursal || "N/A";
+            const totalVal = parseFloat(t.costo_total_aprobado) || 0;
+            const totalTxt = formateaMoneda(totalVal);
+            
+            // Fechas
+            const fEnvio = t.fecha_aprobacion_costos ? new Date(t.fecha_aprobacion_costos).toLocaleDateString('es-MX') : "—";
+            const fFact = t.fecha_facturacion ? new Date(t.fecha_facturacion).toLocaleDateString('es-MX') : "—";
+            const fPago = t.fecha_pago ? new Date(t.fecha_pago).toLocaleDateString('es-MX') : "—";
+
+            // Botones PDF / XML
+            const btnPdf = t.url_factura_pdf 
+                ? `<button class="btn-download-red" onclick="window.open('${t.url_factura_pdf}', '_blank')"><i data-lucide="download" style="width:12px;"></i> PDF</button>` 
+                : `<button class="btn-download-disabled" disabled><i data-lucide="minus" style="width:12px;"></i> PDF</button>`;
+            
+            const btnXml = t.url_factura_xml 
+                ? `<button class="btn-download-red" onclick="window.open('${t.url_factura_xml}', '_blank')"><i data-lucide="download" style="width:12px;"></i> XML</button>` 
+                : `<button class="btn-download-disabled" disabled><i data-lucide="minus" style="width:12px;"></i> XML</button>`;
+
+            // Checkbox Pago (Activo si ya se subió factura, o si ya estaba pagado)
+            const isPagado = (t._estado_factura === 'pagado');
+            const canPay = (t._estado_factura === 'facturado' || isPagado);
+            const chkPago = `<input type="checkbox" class="chk-custom" onchange="marcarComoPagado('${folio}', this.checked)" ${isPagado ? 'checked' : ''} ${!canPay ? 'disabled title="Sube la factura primero"' : ''}>`;
+
+            // Badge de Estado
+            let estadoHtml = "";
+            if (t._estado_factura === 'pendiente') {
+                estadoHtml = `<span class="status-badge bg-yellow"><i class="status-dot dot-yellow"></i> Pendiente</span>`;
+            } else if (t._estado_factura === 'facturado') {
+                estadoHtml = `<span class="status-badge bg-blue"><i class="status-dot dot-blue"></i> Facturado</span>`;
+            } else if (t._estado_factura === 'pagado') {
+                estadoHtml = `<span class="status-badge bg-green"><i class="status-dot dot-green"></i> Pagado</span>`;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="checkbox" class="chk-custom chk-row-upload" value="${folio}" data-total="${totalVal}" onchange="actualizarBarraFlotante()"></td>
+                <td><strong>${folio}</strong></td>
+                <td>${suc}</td>
+                <td style="text-align: right; font-weight: 600;">${totalTxt}</td>
+                <td>${fEnvio}</td>
+                <td>${btnPdf}</td>
+                <td>${btnXml}</td>
+                <td>${fFact}</td>
+                <td>${chkPago}</td>
+                <td>${fPago}</td>
+                <td>${estadoHtml}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+        lucide.createIcons();
     }
 
-    function validarCuentasConceptos() {
-        const formularioId = getFormularioContableIdSeleccionado();
-        if (!formularioId) return true;
-        const cuentas = cuentasContablesByFormulario.get(formularioId) || [];
-        if (!cuentas.length) return true;
-        for (const select of document.querySelectorAll('.fc-xml-cuenta-select')) {
-            if (!select.value) return false;
-        }
-        return true;
-    }
+    // === LÓGICA DE BARRA FLOTANTE (ADJUNTAR) ===
+    function actualizarBarraFlotante() {
+        const checkboxes = document.querySelectorAll('.chk-row-upload:checked');
+        let count = 0;
+        let sum = 0;
+        
+        checkboxes.forEach(cb => {
+            count++;
+            sum += parseFloat(cb.getAttribute('data-total')) || 0;
+        });
 
-    function onSeleccionChange(event) {
-        const checkbox = event.target;
-        const ordenId = Number(checkbox.dataset.ordenId || 0);
-        if (checkbox.checked) seleccionOrdenes.set(ordenId, { folio: checkbox.dataset.folio || '', costo: Number(checkbox.dataset.costo || 0) });
-        else seleccionOrdenes.delete(ordenId);
-        actualizarBarraSeleccion();
-        if (document.getElementById('modalXml')?.classList.contains('active')) {
-            actualizarResumenXml(); actualizarFormularioContable(false);
-            if (ultimoXmlParseado) validarXmlContraSeleccion(ultimoXmlParseado);
+        document.getElementById('lbl-sel-count').innerText = `${count} folio${count !== 1 ? 's' : ''}`;
+        document.getElementById('lbl-sel-sum').innerText = formateaMoneda(sum);
+
+        const bar = document.getElementById('upload-bar');
+        if (count > 0) {
+            bar.classList.add('show');
+        } else {
+            bar.classList.remove('show');
         }
     }
 
     function limpiarSeleccion() {
-        seleccionOrdenes.clear();
-        document.querySelectorAll('.fc-select-order').forEach(checkbox => { if (!checkbox.disabled) checkbox.checked = false; });
-        actualizarBarraSeleccion(); actualizarResumenXml();
-        const fSelect = document.getElementById('xmlFormularioContable');
-        if (fSelect) fSelect.value = '';
-        actualizarFormularioContable(true); limpiarXml();
+        document.querySelectorAll('.chk-row-upload').forEach(cb => cb.checked = false);
+        actualizarBarraFlotante();
+        // Limpiar inputs de archivo
+        document.getElementById('file-pdf').value = "";
+        document.getElementById('file-xml').value = "";
     }
 
-    function abrirModalXml() {
-        if (seleccionOrdenes.size === 0) return alert('Selecciona al menos un folio para adjuntar el XML.');
-        actualizarResumenXml(); limpiarXml(); actualizarFormularioContable(true);
-        const globalSelect = document.getElementById('xmlCuentaContableGlobal');
-        if (globalSelect) globalSelect.value = '';
-        document.getElementById('modalXml').classList.add('active');
-        if (window.lucide) { lucide.createIcons(); }
+    function triggerUpload(tipo) {
+        if(tipo === 'pdf') document.getElementById('file-pdf').click();
+        if(tipo === 'xml') document.getElementById('file-xml').click();
     }
 
-    function actualizarResumenXml() {
-        const folios = Array.from(seleccionOrdenes.values()).map(i => i.folio).filter(Boolean);
-        document.getElementById('xmlModalFolios').textContent = folios.length ? folios.join(', ') : '—';
-        document.getElementById('xmlModalTotalAprobado').textContent = `$${formatMoney(getTotalSeleccionado())}`;
-        document.getElementById('xmlModalTotalXml').textContent = '—';
-        document.getElementById('xmlOrdenIds').value = Array.from(seleccionOrdenes.keys()).join(',');
-    }
+    async function handleUpload(event, tipo) {
+        const file = event.target.files[0];
+        if(!file) return;
 
-    function limpiarXml() {
-        const input = document.getElementById('xmlFileInput');
-        if (input) input.value = '';
-        ultimoXmlParseado = null;
-        ['xmlValidation', 'xmlError', 'xmlResult'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) { el.style.display = 'none'; if(id !== 'xmlResult') el.textContent = ''; }
-        });
-        ['xmlComprobanteGrid', 'xmlEmisorGrid', 'xmlReceptorGrid', 'xmlTimbreGrid', 'xmlConceptosContainer', 'xmlTotalesGrid', 'xmlImpuestosBreakdown'].forEach(id => {
-            const el = document.getElementById(id); if (el) el.innerHTML = '';
-        });
-        document.getElementById('xmlModalTotalXml').textContent = '—';
-        document.getElementById('btnGuardarXml').disabled = true;
-    }
+        const checkboxes = document.querySelectorAll('.chk-row-upload:checked');
+        if(checkboxes.length === 0) return;
 
-    function mostrarXmlError(mensaje) {
-        ultimoXmlParseado = null;
-        document.getElementById('xmlResult').style.display = 'none';
-        const errorEl = document.getElementById('xmlError');
-        errorEl.textContent = mensaje; errorEl.style.display = 'block';
-        document.getElementById('xmlValidation').style.display = 'none';
-        document.getElementById('btnGuardarXml').disabled = true;
-    }
-
-    async function handleXmlFile(event) {
-        const file = event.target.files && event.target.files[0];
-        if (!file) return;
-        limpiarXml();
-        try {
-            const xmlText = await file.text();
-            const parsed = parseCfdiXml(xmlText);
-            if (parsed.error) return mostrarXmlError(parsed.error);
-            renderXmlData(parsed);
-            ultimoXmlParseado = parsed;
-            validarXmlContraSeleccion(parsed);
-        } catch (error) { mostrarXmlError('No se pudo leer el archivo XML.'); }
-    }
-
-    function validarXmlContraSeleccion(data) {
-        const totalXml = parseFloat(data?.totales?.total || data?.comprobante?.total || '');
-        if (seleccionOrdenes.size === 0) return setXmlValidation('error', 'Selecciona al menos un folio.');
-        if (Number.isFinite(totalXml)) document.getElementById('xmlModalTotalXml').textContent = `$${formatMoney(totalXml)}`;
-        if (!Number.isFinite(totalXml)) return setXmlValidation('error', 'No se pudo leer el total del XML.');
+        const selectedFolios = Array.from(checkboxes).map(cb => cb.value);
         
-        const diff = Math.abs(totalXml - getTotalSeleccionado());
-        if (diff <= 1) setXmlValidation('ok', `Validación OK. Diferencia: $${formatMoney(diff)}.`);
-        else setXmlValidation('error', `El total del XML difiere $${formatMoney(diff)} del total aprobado.`);
+        // Modal de carga
+        const alertBtn = document.getElementById('alert-btn');
+        alertBtn.style.display = 'none'; // ocultar botón aceptar temporalmente
+        showCustomAlert("Subiendo Archivo", `Subiendo ${tipo.toUpperCase()} para ${selectedFolios.length} folio(s)...`, true);
+
+        try {
+            // 1. Subir a Firebase Storage
+            const ext = file.name.split('.').pop();
+            const filePath = `facturas/${Date.now()}_bloque.${ext}`;
+            const ref = storage.ref(filePath);
+            
+            const snapshot = await ref.put(file);
+            const downloadURL = await snapshot.ref.getDownloadURL();
+
+            // 2. Actualizar Firestore
+            const batch = db.batch();
+            const isoDate = new Date().toISOString();
+
+            selectedFolios.forEach(folio => {
+                const docRef = db.collection('tickets_mantenimiento').doc(folio);
+                const updateData = { fecha_facturacion: isoDate };
+                if (tipo === 'pdf') updateData.url_factura_pdf = downloadURL;
+                if (tipo === 'xml') updateData.url_factura_xml = downloadURL;
+                batch.update(docRef, updateData);
+            });
+
+            await batch.commit();
+
+            // 3. Éxito
+            alertBtn.style.display = 'block'; 
+            showCustomAlert("¡Éxito!", `Archivo ${tipo.toUpperCase()} vinculado correctamente.`, true);
+            
+            limpiarSeleccion();
+            cargarDatosFacturacion(); // Recarga la tabla para ver botones y estados
+
+        } catch (error) {
+            console.error("Error al subir archivo:", error);
+            alertBtn.style.display = 'block'; 
+            showCustomAlert("Error", "No se pudo subir el archivo. Revisa tu conexión.", false);
+        }
     }
 
-    function setXmlValidation(type, mensaje) {
-        const validationEl = document.getElementById('xmlValidation');
-        validationEl.textContent = mensaje; validationEl.style.display = 'block';
-        validationEl.classList.toggle('error', type === 'error');
-        document.getElementById('btnGuardarXml').disabled = type === 'error';
+    // === LÓGICA DE PAGO ===
+    async function marcarComoPagado(folio, isChecked) {
+        const nuevoEstado = isChecked ? 'Pagado' : 'Pendiente'; // Si desmarca, quitamos el pago
+        const fechaPago = isChecked ? new Date().toISOString() : null;
+
+        try {
+            await db.collection("tickets_mantenimiento").doc(folio).update({
+                estado_pago: nuevoEstado,
+                fecha_pago: fechaPago
+            });
+            // Recargar silenciosamente
+            cargarDatosFacturacion();
+        } catch (error) {
+            console.error("Error actualizando pago:", error);
+            showCustomAlert("Error", "No se pudo actualizar el estado de pago.", false);
+            cargarDatosFacturacion(); // Revertir checkbox visual
+        }
     }
 
-    function parseCfdiXml(xmlText) {
-        const parser = new DOMParser(); const xmlDoc = parser.parseFromString(xmlText, 'application/xml');
-        if (xmlDoc.getElementsByTagName('parsererror')[0]) return { error: 'XML inválido o mal formado.' };
-        const getNodeByTag = (names) => names.reduce((found, name) => found || xmlDoc.getElementsByTagName(name)[0], null);
-        const findFirstChildByLocalName = (parent, name) => parent ? Array.from(parent.children).find(c => c.localName.toLowerCase() === name.toLowerCase()) : null;
-        const findChildrenByLocalName = (parent, name) => parent ? Array.from(parent.children).filter(c => c.localName.toLowerCase() === name.toLowerCase()) : [];
-        const getAttr = (node, names) => { if (!node) return ''; for (const n of names) { const val = node.getAttribute(n); if (val !== null && val !== '') return val; } return ''; };
-        const toNumber = (val) => { const num = parseFloat(val); return Number.isFinite(num) ? num : null; };
-
-        const comprobante = getNodeByTag(['cfdi:Comprobante', 'Comprobante']);
-        const emisor = getNodeByTag(['cfdi:Emisor', 'Emisor']);
-        const receptor = getNodeByTag(['cfdi:Receptor', 'Receptor']);
-        const timbre = getNodeByTag(['tfd:TimbreFiscalDigital', 'TimbreFiscalDigital']);
-        const conceptosNode = findFirstChildByLocalName(comprobante, 'Conceptos');
-        const conceptosNodes = findChildrenByLocalName(conceptosNode, 'Concepto');
-
-        return {
-            comprobante: { version: getAttr(comprobante, ['Version', 'version']), serie: getAttr(comprobante, ['Serie', 'serie']), folio: getAttr(comprobante, ['Folio', 'folio']), fecha: getAttr(comprobante, ['Fecha', 'fecha']), subtotal: getAttr(comprobante, ['SubTotal', 'subTotal']), total: getAttr(comprobante, ['Total', 'total']), moneda: getAttr(comprobante, ['Moneda', 'moneda']) },
-            emisor: { rfc: getAttr(emisor, ['Rfc', 'rfc']), nombre: getAttr(emisor, ['Nombre', 'nombre']) },
-            receptor: { rfc: getAttr(receptor, ['Rfc', 'rfc']), nombre: getAttr(receptor, ['Nombre', 'nombre']) },
-            timbre: { uuid: getAttr(timbre, ['UUID', 'Uuid', 'uuid']) },
-            totales: { subtotal: getAttr(comprobante, ['SubTotal', 'subTotal']), total: getAttr(comprobante, ['Total', 'total']) },
-            conceptos: conceptosNodes.map(c => ({ clave: getAttr(c, ['ClaveProdServ', 'claveprodserv']), descripcion: getAttr(c, ['Descripcion', 'descripcion']), cantidad: getAttr(c, ['Cantidad', 'cantidad']), unidad: getAttr(c, ['Unidad', 'unidad']), valorUnitario: getAttr(c, ['ValorUnitario', 'valorUnitario']), importe: getAttr(c, ['Importe', 'importe']) }))
-        };
-    }
-
-    function renderXmlData(data) {
-        document.getElementById('xmlError').style.display = 'none';
-        renderKvGrid('xmlComprobanteGrid', [['Versión', data.comprobante.version], ['Folio', data.comprobante.folio], ['Total', data.comprobante.total]]);
-        renderKvGrid('xmlEmisorGrid', [['RFC', data.emisor.rfc], ['Nombre', data.emisor.nombre]]);
-        renderKvGrid('xmlReceptorGrid', [['RFC', data.receptor.rfc], ['Nombre', data.receptor.nombre]]);
-        renderKvGrid('xmlTimbreGrid', [['UUID', data.timbre.uuid]]);
-        renderConceptos(data.conceptos || []);
-        document.getElementById('xmlResult').style.display = 'grid';
-        if (window.lucide) { lucide.createIcons(); }
-    }
-
-    function renderKvGrid(id, pairs) {
-        const container = document.getElementById(id);
-        container.innerHTML = '';
-        pairs.forEach(([l, v]) => {
-            container.innerHTML += `<div class="fc-xml-kv"><span class="fc-xml-kv-label">${l}</span><span class="fc-xml-kv-value">${v || '—'}</span></div>`;
-        });
-    }
-
-    function renderConceptos(conceptos) {
-        const container = document.getElementById('xmlConceptosContainer');
-        container.innerHTML = conceptos.length ? `<table class="fc-xml-table"><thead><tr><th>Descripción</th><th>Importe</th></tr></thead><tbody>${conceptos.map(c => `<tr><td>${c.descripcion || '—'}</td><td>${c.importe || '—'}</td></tr>`).join('')}</tbody></table>` : '<div class="fc-xml-kv-value">Sin conceptos.</div>';
-    }
-
-    function cerrarModal(id = '') {
-        if (id) { document.getElementById(id)?.classList.remove('active'); return; }
-        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
-    }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarModal(); });
-    document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); }));
 </script>
 </body>
 </html>
