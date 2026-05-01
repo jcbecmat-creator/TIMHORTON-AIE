@@ -44,10 +44,18 @@
 
         /* === CONFIRMACIÓN OPERATIVA STYLES === */
         .confirmacion-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-16); }
-        .page-header-section { margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--gray-200); }
+        .page-header-section { margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 1px solid var(--gray-200); }
         .page-header-content h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-2) 0; }
         .page-header-content p { font-size: var(--text-sm); color: var(--gray-500); margin: 0; }
         
+        /* === ESTILOS DE PESTAÑAS (TABS) === */
+        .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px;}
+        .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn:hover { background: #e5e7eb; }
+        .tab-btn.active { background: white !important; color: #111827 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb !important; }
+        .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .tab-btn.active .tab-badge { background: #DC2626; }
+
         /* === FILTROS === */
         .co-filters { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
         .co-filters-grid { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
@@ -63,9 +71,11 @@
         .co-table td { padding: 16px 20px; text-align: center; font-size: 14px; color: #111827; border-bottom: 1px solid #f3f4f6; }
         
         .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
+        .btn-action-gray { height: 32px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: background 0.2s; }
+        .btn-action-gray:hover { background: #e5e7eb; }
+
         .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; box-sizing: border-box; }
         .status-en-proceso { background: #FEF3C7; color: #92400E; }
-        /* Nuevos estilos de badge por si acaso */
         .status-confirmado { background: #D1FAE5; color: #065F46; } 
 
         /* === MODAL STYLES === */
@@ -89,15 +99,13 @@
         .modal-footer button { height: 44px; padding: 0 24px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; gap: 8px; }
         .btn-cancelar { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
         .btn-enviar { background: #DC2626; color: white; border: none; }
-        .btn-enviar:disabled { background: #fca5a5; cursor: not-allowed; } /* Estilo de botón deshabilitado */
+        .btn-enviar:disabled { background: #fca5a5; cursor: not-allowed; } 
 
         /* === PREGUNTAS Y RESPUESTAS === */
         .eval-field-group { width: 100%; display: flex; flex-direction: column; }
-        /* Pregunta alineada a la izquierda */
         .eval-label { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; }
         .eval-label i { color: #374151; width: 16px; height: 16px; flex-shrink: 0; }
         
-        /* === RESPUESTAS: SOLICITUD DE FONDO GRIS, BORDES REDONDEADOS Y CENTRADO DE TEXTO === */
         .eval-input-wrapper { display: flex; flex-direction: column; width: 100%; }
         .eval-input-control { 
             width: 100% !important; 
@@ -131,11 +139,9 @@
 
         /* === FOTO Y FIRMA === */
         .btn-photo-group { display: flex; gap: 10px; margin-bottom: 10px; }
-        /* Botones de Foto */
         .btn-photo { background: #DC2626; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-photo-upload { background: #ffffff; color: #374151; border: 1px solid #d1d5db; }
         
-        /* Contenedor de la foto centrado */
         .photo-container-centered { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
         .photo-slot { aspect-ratio: 4/3; width: 160px; border: 2px dashed #d1d5db; border-radius: 8px; background: #f3f4f6; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: zoom-in; }
         .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
@@ -147,11 +153,9 @@
         .btn-remove-photo { display: none; position: absolute; top: 8px; right: 8px; width: 24px; height: 24px; border-radius: 50%; background: rgba(220, 38, 38, 0.9); color: white; border: none; cursor: pointer; align-items: center; justify-content: center; padding: 0; z-index: 10; }
         .photo-slot:hover .btn-remove-photo, .photo-slot.zoomed .btn-remove-photo { display: flex; }
 
-        /* Contenedor de firma punteado */
         .signature-pad-container { background: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; width: 100%; height: 150px; position: relative; cursor: crosshair; touch-action: none; overflow: hidden; }
         .firma-canvas { width: 100%; height: 100%; }
 
-        /* Camera Overlay Invisible */
         #camera-overlay { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
         #camera-overlay.show { display: flex !important; }
         #camera-stream { width: 100%; max-width: 600px; aspect-ratio: 4/3; background: black; border-radius: 12px; overflow: hidden; position: relative; }
@@ -236,13 +240,21 @@
 
                 <div class="confirmacion-wrap">
                     <header class="page-header-section">
-                        <div class="page-header-row">
-                            <div class="page-header-content">
-                                <h1>Confirmación Operativa</h1>
-                                <p>Revisa y aprueba las órdenes de servicio pendientes</p>
-                            </div>
+                        <div class="page-header-content">
+                            <h1>Confirmación Operativa</h1>
+                            <p>Revisa y aprueba las órdenes de servicio generadas por los técnicos</p>
                         </div>
                     </header>
+
+                    <!-- PESTAÑAS (TABS) AÑADIDAS AQUÍ -->
+                    <div class="tabs-container">
+                        <button class="tab-btn active" onclick="cambiarTab('En proceso')" id="tab-En proceso">
+                            Pendientes <span class="tab-badge" id="badge-pendientes">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="cambiarTab('Confirmado')" id="tab-Confirmado">
+                            Confirmados <span class="tab-badge" id="badge-confirmados">0</span>
+                        </button>
+                    </div>
 
                     <form method="GET" class="co-filters">
                         <div class="co-filters-grid">
@@ -254,16 +266,12 @@
                                 <label class="co-filter-label">Fecha fin</label>
                                 <input type="date" class="co-filter-input" id="filtro-fecha-fin">
                             </div>
-                            <div class="co-filter-group">
-                                <label class="co-filter-label">Tipo de orden</label>
-                                <select class="co-filter-input" id="filtro-tipo">
-                                    <option value="" selected>Todos los tipos</option>
-                                    <option value="Correctivo">Correctivo</option>
-                                    <option value="Preventivo">Preventivo</option>
-                                </select>
+                            <div class="co-filter-group" style="flex: 2;">
+                                <label class="co-filter-label">Buscar Folio / Sucursal</label>
+                                <input type="text" class="co-filter-input" id="filtro-buscar" placeholder="Ej. MC-0001">
                             </div>
                             <div class="flex gap-2 flex-shrink-0">
-                                <button class="btn-filtrar" type="button" onclick="cargarTablaConfirmacion()">
+                                <button class="btn-filtrar" type="button" onclick="renderTablaConfirmacion()">
                                     <i data-lucide="filter" style="width: 18px; height: 18px;"></i> Filtrar
                                 </button>
                             </div>
@@ -276,8 +284,8 @@
                                 <tr>
                                     <th>Folio</th>
                                     <th>Sucursal</th>
-                                    <th>Tipo</th>
-                                    <th>Fecha</th>
+                                    <th>Técnico / Proveedor</th>
+                                    <th>Fecha Envío</th>
                                     <th>Estado</th>
                                     <th>Acción</th>
                                 </tr>
@@ -295,17 +303,15 @@
         </div>
     </div>
 
+    <!-- MODAL DE EVALUACIÓN -->
     <div id="modalEvaluacion" class="modal-overlay">
         <div class="modal-card" id="modal-card-eval">
             <div class="modal-header">
                 <div>
                     <h2>Confirmación Operativa</h2>
-                    <p>Aprueba las órdenes de servicio</p>
+                    <p>Aprueba la orden de servicio</p>
                 </div>
                 <div class="modal-header-actions">
-                    <button class="modal-header-btn" title="Ver fotos">
-                        <i data-lucide="copy" style="width: 20px; height: 20px;"></i>
-                    </button>
                     <button class="modal-header-btn" title="Maximizar" onclick="toggleMaximizarModal()">
                         <i data-lucide="maximize-2" id="maximize-icon" style="width: 20px; height: 20px;"></i>
                         <i data-lucide="minimize-2" id="minimize-icon" style="width: 20px; height: 20px; display: none;"></i>
@@ -326,14 +332,14 @@
                     </div>
                     <div class="eval-field-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
                         <button type="button" onclick="verPDF()" style="height: 42px; background: #DC2626; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; transition: background 0.2s;">
-                        <i data-lucide="file-text" style="width: 18px; height: 18px; color: white;"></i> Ver PDF
+                        <i data-lucide="file-text" style="width: 18px; height: 18px; color: white;"></i> Ver PDF de la Orden
                     </button>
                     </div>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="eval-field-group">
-                        <label class="eval-label"><i data-lucide="user"></i>Nombre del Empleado</label>
+                        <label class="eval-label"><i data-lucide="user"></i>Nombre del Empleado (Tienda)</label>
                         <div class="eval-input-wrapper">
                             <input type="text" id="eval-nombre" class="eval-input-control" placeholder="Ej. Juan Pérez">
                         </div>
@@ -417,15 +423,16 @@
             
             <div class="modal-footer">
                 <button class="btn-cancelar" onclick="cerrarModal()" id="btn-cancelar-eval">
-                    <i data-lucide="x-circle" style="color: currentColor; width: 18px; height: 18px;"></i> Cancelar Evaluación 
+                    <i data-lucide="x-circle" style="color: currentColor; width: 18px; height: 18px;"></i> Cancelar 
                 </button>
                 <button class="btn-enviar" onclick="enviarEvaluacion()" id="btn-enviar-eval">
-                    <i data-lucide="send" style="color: white; width: 18px; height: 18px;"></i> Enviar evaluación 
+                    <i data-lucide="check-circle" style="color: white; width: 18px; height: 18px;"></i> Confirmar Orden
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- UTILIDADES OCULTAS -->
     <canvas id="tempCanvasModal" style="display:none"></canvas>
     <div id="camera-overlay">
         <div id="camera-stream"><video id="camera-video" autoplay="true" playsinline></video></div>
@@ -455,6 +462,9 @@
     const db = firebase.firestore();
     const storage = firebase.storage();
 
+    let ticketsGlobales = []; 
+    let tabActual = 'En proceso'; // Pestaña por defecto
+
     // ==========================================
     // 2. INICIALIZACIÓN DE LA PÁGINA
     // ==========================================
@@ -483,7 +493,6 @@
 
         if (window.lucide) { lucide.createIcons(); }
 
-        // Inicializar menú lateral
         const userMenu = document.querySelector('[data-user-menu]');
         if (userMenu) {
             const trigger = userMenu.querySelector('[data-user-trigger]');
@@ -506,111 +515,143 @@
         }
 
         inicializarFirmaModal();
-        cargarTablaConfirmacion(); // Cargar la tabla al inicio
+        cargarTodosLosTickets(); 
     });
 
-// ==========================================
-    // 3. CARGAR DATOS DESDE FIRESTORE (CON FILTROS)
     // ==========================================
-    function cargarTablaConfirmacion() {
-        const tbody = document.getElementById('tabla-confirmacion-body');
-        tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center;">Cargando...</td></tr>';
-
-        // Objeto global para guardar la info de los tickets y usarla en el PDF
-        window.ticketsPendientes = {};
-
-        // 1. LEER VALORES DE LOS FILTROS
-        const fechaInicio = document.getElementById('filtro-fecha-inicio').value;
-        const fechaFin = document.getElementById('filtro-fecha-fin').value;
-        const tipoFiltro = document.getElementById('filtro-tipo').value;
-
-        // Traemos los tickets que tengan estado "En proceso"
+    // 3. CARGA DE DATOS Y PESTAÑAS (TABS)
+    // ==========================================
+    function cargarTodosLosTickets() {
+        // Traemos todos los tickets que ya salieron de "Borrador"
         db.collection("tickets_mantenimiento")
-          .where("estado_confirmacion", "==", "En proceso")
+          .where("estado_confirmacion", "!=", "Borrador")
           .get()
           .then((querySnapshot) => {
-              tbody.innerHTML = '';
-              let ticketsMostrados = 0;
-
-              if (querySnapshot.empty) {
-                  tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #6b7280;">No hay órdenes pendientes de evaluación.</td></tr>';
-                  return;
-              }
-
-              querySnapshot.forEach((doc) => {
-                  const data = doc.data();
-                  
-                  // 2. LÓGICA DE FILTRADO
-                  let pasaFiltro = true;
-                  const fechaTicket = data.fecha_creacion || ""; // Formato YYYY-MM-DD
-                  const tipoTicket = data.tipo || "Correctivo";
-
-                  // Validar Fecha Inicio
-                  if (fechaInicio && fechaTicket < fechaInicio) pasaFiltro = false;
-                  
-                  // Validar Fecha Fin
-                  if (fechaFin && fechaTicket > fechaFin) pasaFiltro = false;
-                  
-                  // Validar Tipo de Orden
-                  if (tipoFiltro && tipoFiltro !== "Todos los tipos" && tipoFiltro !== "") {
-                      if (tipoTicket !== tipoFiltro) pasaFiltro = false;
-                  }
-
-                  // Si el ticket no cumple con los filtros, lo saltamos y no lo dibujamos
-                  if (!pasaFiltro) return; 
-
-                  // Si sí pasó los filtros, lo contamos y lo dibujamos
-                  ticketsMostrados++;
-                  const folio = data.id_ticket || doc.id;
-                  
-                  // Guardamos todos los datos del ticket en la memoria para el PDF
-                  window.ticketsPendientes[folio] = data;
-                  
-                  const sucursal = data.sucursal || "No especificada";
-                  
-                  const tr = document.createElement('tr');
-                  tr.innerHTML = `
-                      <td><strong>${folio}</strong></td>
-                      <td>${sucursal}</td>
-                      <td>${tipoTicket}</td>
-                      <td>${fechaTicket}</td>
-                      <td><span class="status-badge status-en-proceso">En proceso</span></td>
-                      <td>
-                          <button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}')">
-                              <i data-lucide="search" style="width: 14px; height: 14px;"></i> Revisar
-                          </button>
-                      </td>
-                  `;
-                  tbody.appendChild(tr);
+              ticketsGlobales = [];
+              querySnapshot.forEach((doc) => { 
+                  // Guardar el id del documento también
+                  let data = doc.data();
+                  data.doc_id = doc.id;
+                  ticketsGlobales.push(data); 
+              });
+              
+              // Ordenar por fecha de creación (los más nuevos primero)
+              ticketsGlobales.sort((a, b) => {
+                  let fA = a.fecha_creacion || "";
+                  let fB = b.fecha_creacion || "";
+                  return fB.localeCompare(fA);
               });
 
-              // Si después de filtrar no quedó ninguno, mostramos un mensaje
-              if (ticketsMostrados === 0) {
-                  tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #6b7280;">No hay resultados que coincidan con estos filtros.</td></tr>';
-              }
+              window.ticketsPendientes = {};
+              ticketsGlobales.forEach(t => { window.ticketsPendientes[t.id_ticket || t.doc_id] = t; });
 
-              lucide.createIcons();
+              actualizarBadges();
+              renderTablaConfirmacion();
           })
           .catch((error) => {
-              console.error("Error obteniendo documentos: ", error);
-              tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #DC2626;">Error al cargar los datos. Revisa la consola.</td></tr>';
+              console.error("Error: ", error);
+              document.getElementById('tabla-confirmacion-body').innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error cargando datos.</td></tr>';
           });
     }
-// ==========================================
-    // 3.5. RECONSTRUIR Y VER PDF ORIGINAL
-    // ==========================================
-    function verPDF() {
-        const folio = document.getElementById('eval-folio').value;
-        const ticketData = window.ticketsPendientes[folio];
+
+    function actualizarBadges() {
+        const pend = ticketsGlobales.filter(t => t.estado_confirmacion === 'En proceso').length;
+        // Consideramos Confirmados o cualquier etapa posterior
+        const conf = ticketsGlobales.filter(t => t.estado_confirmacion !== 'En proceso' && t.estado_confirmacion !== 'Borrador').length;
         
-        if(!ticketData) {
-            alert("No se encontraron los datos del ticket para generar el PDF.");
+        document.getElementById('badge-pendientes').innerText = pend;
+        document.getElementById('badge-confirmados').innerText = conf;
+    }
+
+    function cambiarTab(tab) {
+        tabActual = tab;
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        renderTablaConfirmacion();
+    }
+
+    // ==========================================
+    // 4. DIBUJAR LA TABLA CON FILTROS
+    // ==========================================
+    function renderTablaConfirmacion() {
+        const tbody = document.getElementById('tabla-confirmacion-body');
+        tbody.innerHTML = '';
+        
+        const fInicio = document.getElementById('filtro-fecha-inicio').value;
+        const fFin = document.getElementById('filtro-fecha-fin').value;
+        const fBuscar = document.getElementById('filtro-buscar').value.toLowerCase();
+
+        let ticketsFiltrados = ticketsGlobales.filter(t => {
+            // Filtro de Pestaña
+            if (tabActual === 'En proceso') {
+                if (t.estado_confirmacion !== 'En proceso') return false;
+            } else {
+                // "Confirmados" abarca cualquier etapa después de 'En proceso'
+                if (t.estado_confirmacion === 'En proceso' || t.estado_confirmacion === 'Borrador') return false;
+            }
+
+            // Filtros de fecha
+            const fDoc = t.fecha_creacion || ""; 
+            if (fInicio && fDoc < fInicio) return false;
+            if (fFin && fDoc > fFin) return false;
+
+            // Filtro de texto (Folio o sucursal)
+            if (fBuscar) {
+                const folio = (t.id_ticket || "").toLowerCase();
+                const suc = (t.sucursal || "").toLowerCase();
+                if (!folio.includes(fBuscar) && !suc.includes(fBuscar)) return false;
+            }
+            return true;
+        });
+
+        if (ticketsFiltrados.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px 0;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay órdenes en esta sección.</span></div></td></tr>`;
+            lucide.createIcons();
             return;
         }
 
-        // Reconstruir el objeto idéntico al que usa index.html para generar el PDF
-        // PERO AHORA TOMANDO TODO DIRECTO DE FIREBASE
-        const datosParaPDF = {
+        ticketsFiltrados.forEach(t => {
+            const folio = t.id_ticket || t.doc_id;
+            const suc = t.sucursal || "N/A";
+            const tec = t.tec_nombre || t.proveedor || "N/A";
+            const fecha = t.fecha_creacion || "—";
+            
+            let estadoHtml = "";
+            let accionHtml = "";
+
+            if (tabActual === 'En proceso') {
+                estadoHtml = `<span class="status-badge status-en-proceso">En proceso</span>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}')">
+                                <i data-lucide="search" style="width: 14px; height: 14px;"></i> Revisar
+                              </button>`;
+            } else {
+                estadoHtml = `<span class="status-badge status-confirmado">Confirmado</span>`;
+                // Si ya está confirmado, el botón solo ve el PDF, ya no evalúa.
+                accionHtml = `<button class="btn-action-gray" onclick="verPDFDirecto('${folio}')">
+                                <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> Ver PDF
+                              </button>`;
+            }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${folio}</strong></td>
+                <td>${suc}</td>
+                <td>${tec}</td>
+                <td>${fecha}</td>
+                <td>${estadoHtml}</td>
+                <td>${accionHtml}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        lucide.createIcons();
+    }
+
+    // ==========================================
+    // 5. FUNCIONES PARA VER EL PDF
+    // ==========================================
+    function prepararDatosParaPDF(ticketData) {
+        return {
             sucursal: ticketData.sucursal || '',
             suc_dir: ticketData.suc_dir || '',
             suc_col: ticketData.suc_col || '',
@@ -642,13 +683,27 @@
                 ? new Date(ticketData.fecha_hora_completa).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }) 
                 : (ticketData.fecha_creacion || '')
         };
+    }
 
-        sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(datosParaPDF));
+    function verPDF() {
+        const folio = document.getElementById('eval-folio').value;
+        const ticketData = window.ticketsPendientes[folio];
+        if(!ticketData) { alert("No se encontraron los datos del ticket."); return; }
+        
+        sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(prepararDatosParaPDF(ticketData)));
+        window.open('index2.html', '_blank');
+    }
+
+    function verPDFDirecto(folio) {
+        const ticketData = window.ticketsPendientes[folio];
+        if(!ticketData) { alert("No se encontraron los datos del ticket."); return; }
+        
+        sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(prepararDatosParaPDF(ticketData)));
         window.open('index2.html', '_blank');
     }
     
     // ==========================================
-    // 4. LÓGICA DEL MODAL DE EVALUACIÓN
+    // 6. LÓGICA DEL MODAL DE EVALUACIÓN
     // ==========================================
     function abrirModalEvaluacion(folio) {
         document.getElementById('eval-folio').value = folio;
@@ -665,10 +720,8 @@
 
         document.getElementById('modalEvaluacion').classList.add('active');
         
-        // Timeout para que el canvas de la firma agarre bien su tamaño cuando se hace visible
-        setTimeout(() => {
-            redimensionarCanvasFirma();
-        }, 100);
+        // Timeout para que el canvas se ajuste a la pantalla visible
+        setTimeout(() => { redimensionarCanvasFirma(); }, 100);
     }
 
     function cerrarModal() {
@@ -689,7 +742,7 @@
     }
 
     // ==========================================
-    // 5. CÁMARA Y ARCHIVOS (SELFIE)
+    // 7. CÁMARA Y ARCHIVOS (SELFIE)
     // ==========================================
     let currentStreamModal;
     let currentFacingModeModal = 'user'; 
@@ -768,7 +821,7 @@
     }
 
     // ==========================================
-    // 6. FIRMA TÁCTIL
+    // 8. FIRMA TÁCTIL
     // ==========================================
     let canvasFirmaModal, ctxFirmaModal;
     function inicializarFirmaModal() {
@@ -815,8 +868,6 @@
             const container = canvasFirmaModal.parentElement;
             canvasFirmaModal.width = container.offsetWidth;
             canvasFirmaModal.height = container.offsetHeight;
-            // Para mantener la firma si se redimensiona la ventana, idealmente se debería re-dibujar la imagen guardada
-            // Por simplicidad en este prototipo, solo redimensionamos el lienzo.
         }
     }
 
@@ -828,10 +879,8 @@
     }
 
     // ==========================================
-    // 7. ENVÍO DE DATOS A FIREBASE (STORAGE Y FIRESTORE)
+    // 9. ENVÍO DE DATOS A FIREBASE (STORAGE Y FIRESTORE)
     // ==========================================
-    
-    // Función auxiliar para convertir Base64 a Blob (para subir a Storage)
     function dataURItoBlob(dataURI) {
         const byteString = atob(dataURI.split(',')[1]);
         const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
@@ -853,7 +902,6 @@
         const selfieBase64 = document.getElementById('eval-selfie-data').value;
         const firmaBase64 = document.getElementById('eval-firma-data').value;
 
-        // Validaciones básicas
         if (!nombre || !nivel) {
             alert("Por favor, completa al menos el Nombre del Empleado y el Nivel de Servicio.");
             return;
@@ -863,7 +911,6 @@
             return;
         }
 
-        // Deshabilitar botón para evitar doble envío
         const btnEnviar = document.getElementById('btn-enviar-eval');
         const btnCancelar = document.getElementById('btn-cancelar-eval');
         btnEnviar.disabled = true;
@@ -889,7 +936,9 @@
             firmaUrl = await firmaRef.getDownloadURL();
 
             // 3. Actualizar Firestore
-            await db.collection("tickets_mantenimiento").doc(folio).update({
+            const docRealId = window.ticketsPendientes[folio].doc_id || folio;
+            
+            await db.collection("tickets_mantenimiento").doc(docRealId).update({
                 evaluacion_nombre: nombre,
                 evaluacion_numero: numero,
                 evaluacion_cargo: cargo,
@@ -897,23 +946,22 @@
                 evaluacion_comentario: comentario,
                 evaluacion_selfie_url: selfieUrl,
                 evaluacion_firma_url: firmaUrl,
-                estado_confirmacion: "Confirmado", // Cambiamos el estado para que salga de esta tabla
+                estado_confirmacion: "Confirmado", // Avanza a la siguiente etapa
                 fecha_evaluacion: new Date().toISOString()
             });
 
-            alert("¡Evaluación enviada y guardada correctamente!");
+            alert("¡Orden Confirmada exitosamente!");
             cerrarModal();
-            cargarTablaConfirmacion(); // Recargar la tabla para que desaparezca el ticket confirmado
+            cargarTodosLosTickets(); // Recargar la tabla y badges
 
         } catch (error) {
-            console.error("Error guardando la evaluación:", error);
-            alert("Ocurrió un error al guardar la evaluación. Revisa la consola.");
+            console.error("Error confirmando la orden:", error);
+            alert("Ocurrió un error al guardar. Revisa la consola.");
         } finally {
-            // Restaurar botones
             btnEnviar.disabled = false;
-            btnEnviar.innerHTML = '<i data-lucide="send" style="color: white; width: 18px; height: 18px;"></i> Enviar evaluación';
+            btnEnviar.innerHTML = '<i data-lucide="check-circle" style="color: white; width: 18px; height: 18px;"></i> Confirmar Orden';
             btnCancelar.disabled = false;
-            lucide.createIcons(); // Re-renderizar iconos
+            lucide.createIcons();
         }
     }
 </script>
