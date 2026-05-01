@@ -1,136 +1,1365 @@
-// ==========================================
-// 1. REEMPLAZA LA FUNCIÓN renderTablaMisOrdenes()
-// ==========================================
-function renderTablaMisOrdenes() {
-    const tbody = document.getElementById('tabla-mis-ordenes');
-    const thead = document.querySelector('#dashboard-ordenes thead tr');
-    tbody.innerHTML = '';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mesa de Servicio | Tim Hortons</title>
     
-    // Cambiamos los encabezados dinámicamente según la pestaña
-    if (tabMttoActual === 'Borrador') {
-        thead.innerHTML = `
-            <th style="padding: 15px; width: 40px;" title="Seleccionar todos">
-                <input type="checkbox" id="chk-all-drafts" onchange="toggleAllDrafts(this.checked)" style="width:16px; height:16px; cursor:pointer; accent-color:#DC2626;">
-            </th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Folio</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Sucursal</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Fecha</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Estado</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Acción</th>
-        `;
-    } else {
-        thead.innerHTML = `
-            <th style="padding: 15px; text-transform: uppercase; font-size: 11px; color: #6b7280;">Folio</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Sucursal</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Fecha</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Estado</th>
-            <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Acción</th>
-        `;
-    }
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/fonts.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/style.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/components.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/design-system.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/app-shell.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/crear-orden-enhanced.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/data-table-enhanced.css">
 
-    let filtrados = misOrdenes.filter(o => {
-        if(tabMttoActual === 'En proceso') {
-            return ['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion);
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+
+    <script>
+        tailwind.config = { darkMode: "class", corePlugins: { preflight: false }, theme: { extend: { colors: { primary: "#DC2626", "primary-dark": "#B91C1C", "surface": "#FFFFFF", "background": "#F8FAFC", "text-main": "#1E293B", "text-sub": "#64748B", }, fontFamily: { sans: ["Inter", "sans-serif"] } } } };
+    </script>
+
+    <script>
+        if (sessionStorage.getItem('loginSession')) { 
+            document.documentElement.classList.add('is-logged-in'); 
         }
-        return o.estado_confirmacion === tabMttoActual;
-    });
+    </script>
 
-    if(filtrados.length === 0) {
-        const colSpan = tabMttoActual === 'Borrador' ? 6 : 5;
-        tbody.innerHTML = `<tr><td colspan="${colSpan}" style="padding: 40px; color: #6b7280;"><div style="display:flex; flex-direction:column; align-items:center;"><i data-lucide="inbox" style="width: 32px; height: 32px; margin-bottom: 10px; color:#d1d5db;"></i><span>No hay órdenes en esta sección</span></div></td></tr>`;
+    <style>
+        body { margin: 0; padding: 0; background-color: #f8fafc; }
+        
+        #login-screen { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #DC2626 0%, #7F1D1D 100%); background-attachment: fixed; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        #login-card { width: 100%; max-width: 420px; background: white; border-radius: 24px; box-sizing: border-box; padding: 32px 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        
+        .modulo-vista { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .modulo-vista.activa { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
+        
+        /* ESTILO DEL MENÚ ACTIVO TIPO PASTILLA CON CURVA */
+        .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 8px !important; }
+        .sidebar-link.activa i { color: #DC2626 !important; }
+        .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
+        .sidebar-section:last-child { border-bottom: none; }
+        .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
+
+        .form-input, .form-select, textarea.form-input { width: 100% !important; padding: 14px 16px !important; background-color: #F3F4F6 !important; border: 1px solid transparent !important; border-radius: 12px !important; font-size: 14px !important; color: #1F2937 !important; box-sizing: border-box !important; font-family: inherit !important; outline: none !important; transition: all 0.2s ease !important; }
+        .form-input:focus, .form-select:focus, textarea.form-input:focus { background-color: #FFFFFF !important; border: 1px solid #DC2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important; }
+        
+        .form-card, .data-table-container, .filters-bar, .fc-stat-card, .rpt-card { background: #FFFFFF; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); border: 1px solid #E5E7EB; margin-bottom: 24px; }
+        .form-card { padding: 30px; width: 100%; }
+        .data-table-container { overflow-x: auto; margin-bottom: 20px; padding: 0; border: 1px solid #E5E7EB; border-radius: 12px; overflow: hidden; }
+        .section-title { display: flex; align-items: center; gap: 12px; font-size: 18px !important; font-weight: 600 !important; color: #111827 !important; margin: 0 0 20px 0 !important; padding-bottom: 12px !important; border-bottom: 1px solid #f3f4f6 !important; text-transform: none !important; }
+        
+        .photo-controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px; }
+        @media (min-width: 640px) { .photo-controls { display: flex; grid-template-columns: none; } }
+        
+        .btn-photo, .btn-photo-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; width: 100%; box-sizing: border-box; }
+        .btn-photo { background: #DC2626; color: white; border: none; }
+        .btn-photo-secondary { background: white; color: #374151; border: 1px solid #d1d5db; }
+        @media (min-width: 640px) { .btn-photo, .btn-photo-secondary { width: auto; } }
+
+        .photo-grid-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 15px; }
+        .photo-slot { aspect-ratio: 1; border: 2px dashed #d1d5db; border-radius: 12px; background: #f9fafb; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .photo-slot img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; transition: transform 0.2s; }
+        .remove-photo { position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.6); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 22px; cursor: pointer; font-size: 16px; font-weight: bold; z-index: 10; }
+        
+        .modal-enlarger { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .modal-enlarger.show { display: flex !important; }
+        .modal-content-img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; animation: zoomIn 0.3s ease-out; cursor: zoom-out; }
+        
+        #camera-overlay { display: none; position: fixed !important; z-index: 999999 !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important; background-color: rgba(0,0,0,0.95) !important; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        #camera-overlay.show { display: flex !important; }
+        #camera-stream { width: 100%; max-width: 600px; aspect-ratio: 4/3; background: black; border-radius: 12px; overflow: hidden; position: relative; }
+        #camera-video { width: 100%; height: 100%; object-fit: cover; }
+        
+        @keyframes zoomIn { from {transform:scale(0.8); opacity: 0;} to {transform:scale(1); opacity: 1;} }
+
+        .signature-container { border: 2px dashed #d1d5db; border-radius: 8px; background: #fafafa; position: relative; margin-bottom: 10px; width: 100%; overflow: hidden; }
+        .signature-pad { width: 100%; height: 200px; cursor: crosshair; touch-action: none; display: block; } 
+
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 12px; background: #F8FAFC; padding: 16px; border-radius: 12px; border: 1px solid #E5E7EB; margin-top: 10px; }
+        @media (min-width: 768px) { .info-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .info-grid { grid-template-columns: repeat(3, 1fr); } }
+        .info-item label { display: block; font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; margin-bottom: 2px; }
+        .info-item span { display: block; font-size: 13px; color: #111827; font-weight: 500; }
+
+        /* REGLA CSS ANTI-PARPADEO ABSOLUTA */
+        html.is-logged-in #login-screen { display: none !important; }
+        html.is-logged-in #app-screen { display: block !important; }
+
+        /* ESTILOS DE PESTAÑAS (TABS) PARA MIS ÓRDENES */
+        .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px;}
+        .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn:hover { background: #e5e7eb; }
+        .tab-btn.active { background: white !important; color: #111827 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb !important; }
+        .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .tab-btn.active .tab-badge { background: #DC2626; }
+
+        /* BARRA FLOTANTE DE BORRADO */
+        .upload-bottom-bar { 
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); 
+            background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 0 1px #e5e7eb; 
+            padding: 16px 24px; display: flex; align-items: center; gap: 24px; z-index: 50; 
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 90%; max-width: 800px; 
+        }
+        .upload-bottom-bar.show { bottom: 24px; }
+        .up-info { flex-grow: 1; font-size: 14px; color: #6b7280; display: flex; align-items: center; gap: 12px; }
+        .up-info strong { color: #111827; font-weight: 800; font-size: 15px; }
+        .btn-limpiar { background: white; color: #6b7280; border: 1px solid #e5e7eb; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;}
+        .btn-limpiar:hover { background: #f3f4f6; color: #111827; }
+        .btn-adjuntar { background: #DC2626; color: white; border: none; height: 40px; padding: 0 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s;}
+        .btn-adjuntar:hover { background: #b91c1c; }
+
+        /* MODAL ALERTA CUSTOM */
+        #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
+        #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
+        #alert-msg { margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5; }
+        #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+        #alert-btn:hover { opacity: 0.9; }
+
+        @media (max-width: 900px) {
+            .upload-bottom-bar { flex-direction: column; gap: 12px; padding: 16px; bottom: -200px;}
+            .up-info { flex-direction: column; text-align: center; gap: 4px; }
+            .btn-adjuntar, .btn-limpiar { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body class="has-sidebar">
+
+    <div id="login-screen">
+        <div id="login-card">
+            <div class="flex flex-col items-center mb-4">
+                <img src="https://i.ibb.co/DHmVRcxh/Tim-Hortons.jpg" alt="Logo Tim Hortons" class="mb-5 object-contain" style="height: 7.2rem; border-radius: 10px;"> 
+                <h1 class="text-2xl font-semibold text-text-main tracking-tight" style="margin:0;">Bienvenido</h1>
+                <p class="text-[15px] text-text-sub mt-1" style="margin-top:5px;">Mesa de Servicio Operativo</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-5">
+                <div class="space-y-1.5" style="margin-bottom: 15px;">
+                    <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Usuario</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px; z-index: 10;">person</span>
+                        <input required autocomplete="username" autocapitalize="none" autocorrect="off" class="block w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 12px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; background:white !important;" id="username" type="text" placeholder="ID">
+                    </div>
+                </div>
+                
+                <div class="space-y-1.5" style="margin-bottom: 15px;">
+                    <label class="text-[13px] font-medium text-slate-700 ml-0.5" style="display:block; margin-bottom:5px;">Contraseña</label>
+                    <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-4 text-slate-400 text-xl" style="position: absolute; left: 10px; z-index: 10;">lock</span>
+                        <input required autocomplete="current-password" class="block w-full pl-12 pr-12 py-3 bg-white border border-slate-200 rounded-lg text-text-main placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-sm" style="width:100%; padding: 12px 40px 12px 40px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; background:white !important;" id="password" type="password" placeholder="••••••••">
+                        <button class="absolute right-4 flex items-center text-slate-400 hover:text-primary transition-colors" style="position:absolute; right: 10px; background:none; border:none; cursor:pointer; z-index: 10;" onclick="togglePassword()" type="button">
+                            <span class="material-symbols-outlined text-xl" id="toggleIcon">visibility_off</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="alertMessage" class="hidden py-2.5 px-3 bg-red-50 border border-red-200 text-red-600 text-[13px] font-medium rounded-lg text-center transition-all" style="display:none; padding:10px; background:#FEE2E2; color:#DC2626; border-radius:8px; text-align:center; border:1px solid #FECACA; margin-bottom: 15px;">
+                    Verifica tu usuario o contraseña
+                </div>
+                
+                <button id="submitBtn" class="w-full flex justify-center items-center py-3.5 px-4 rounded-lg text-sm font-semibold text-white bg-primary hover:bg-primary-dark shadow-sm transition-all" style="width:100%; padding:14px; background:#DC2626; color:white; border:none; border-radius:8px; font-weight:bold; cursor:pointer; margin-top:20px;" type="submit">Iniciar Sesión</button>
+            </form>
+        </div>
+        <div class="mt-8 text-center" style="margin-top: 2rem;">
+            <p class="text-[12px] font-medium uppercase tracking-widest text-white/80" style="color:rgba(255,255,255,0.9); font-size:12px; margin:0;">
+                © 2026 TIM HORTONS. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+
+    <div id="app-screen" style="display: none;">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button>
+                <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo">
+                <h1 class="system-title">Ordenes de Servicio</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-menu">
+                    <button class="user-circle-btn" onclick="document.getElementById('btnCerrarSesionTop').click()"><span class="user-circle-initial" id="user-initial-header">U</span></button>
+                    <button id="btnCerrarSesionTop" style="display:none;" onclick="cerrarSesionGlobal()"></button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
+                <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
+                <div class="sidebar-content">
+                    <nav class="sidebar-nav">
+                        <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')"><i data-lucide="home"></i> Inicio</a>
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Formas</div>
+                            <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a href="#" class="sidebar-link" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                        </div>
+                        <div class="sidebar-section" id="nav-seccion-admin">
+                            <div class="sidebar-section-title">Administración</div>
+                            <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a href="costos.html" class="sidebar-link"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a href="aprobacion.html" class="sidebar-link"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
+                        </div>
+                        <div class="sidebar-section" id="nav-seccion-reportes">
+                            <div class="sidebar-section-title">Reportes</div>
+                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                        </div>
+                    </nav>
+                </div>
+            </aside>
+            <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
+
+            <main class="main-content app-content p-4 sm:p-6" id="main-scroll-area">
+                
+                <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px;">
+                    <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
+                    <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">PROVEEDOR</h2>
+                </div>
+
+                <div id="vista-inicio" class="modulo-vista">
+                    <div style="text-align: center; padding-top: 30px; padding-bottom: 50px;">
+                        <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
+                        <p style="color: #666; margin-bottom: 40px;">Selecciona una opción del menú lateral para comenzar.</p>
+                        
+                        <div style="border-top: 1px solid #e5e7eb; padding-top: 32px; max-width: 400px; margin: 50px auto 0 auto;">
+                           <p style="color:#94a3b8; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-top:20px;">
+                               © 2026 TIM HORTONS - TODOS LOS DERECHOS RESERVADOS.
+                           </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="vista-mantenimiento" class="modulo-vista activa">
+                    <div class="reporte-container" style="max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 20px;">
+                        
+                        <header class="page-header-section" style="margin-bottom: 20px; padding-bottom: 10px;">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
+                            <p style="color: #6b7280; margin: 0;">Registrar y gestionar órdenes de servicio</p>
+                        </header>
+
+                        <!-- PESTAÑAS PRINCIPALES (Siempre Visibles) -->
+                        <div class="tabs-container">
+                            <button class="tab-btn active" onclick="cambiarTabMtto('Nueva Orden')" id="tab-Nueva Orden">
+                                <i data-lucide="plus-circle" style="width: 16px;"></i> Nueva Orden
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('Borrador')" id="tab-Borrador">
+                                Guardados <span class="tab-badge" id="badge-Borrador">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('En proceso')" id="tab-En proceso">
+                                Pendientes <span class="tab-badge" id="badge-En proceso">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('Costos Aprobados')" id="tab-Costos Aprobados">
+                                Aprobados <span class="tab-badge" id="badge-Costos Aprobados">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('Costos Rechazados')" id="tab-Costos Rechazados">
+                                Rechazados <span class="tab-badge" id="badge-Costos Rechazados">0</span>
+                            </button>
+                        </div>
+
+                        <!-- TABLA DE ÓRDENES (Oculta al inicio) -->
+                        <div id="dashboard-ordenes" style="display: none;">
+                            <div class="data-table-container">
+                                <table class="data-table" style="width: 100%; text-align: center; border-collapse: collapse;">
+                                    <thead style="background: #f8fafc; border-bottom: 1px solid #e5e7eb;">
+                                        <!-- Se llena con JS dependiendo de la pestaña -->
+                                    </thead>
+                                    <tbody id="tabla-mis-ordenes">
+                                        <tr><td colspan="6" style="padding: 30px; color: #6b7280;">Cargando...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- FORMULARIO PRINCIPAL (Visible al inicio) -->
+                        <form id="ordenMttoForm" style="display: block;">
+                            <div class="form-card" style="border-left: 4px solid #DC2626;">
+                                <h3 class="section-title" style="color: #DC2626; margin-bottom: 5px;"><i data-lucide="hash"></i> Folio de Orden</h3>
+                                <div class="form-group">
+                                    <input type="text" class="form-input" id="folio_mc" readonly style="font-size: 20px; font-weight: 800; color: #111827; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important;" value="Se asignará al guardar...">
+                                    <input type="hidden" id="doc_id_actual">
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="map-pin"></i> Ubicación</h3>
+                                <div class="form-group">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Sucursal Tim Hortons</label>
+                                    <input class="form-input" id="sucursal-input" list="sucursales-list" placeholder="Escribe para buscar sucursal..." autocomplete="off">
+                                    <datalist id="sucursales-list"></datalist>
+                                    
+                                    <div id="sucursal-details" class="info-grid" style="display:none;">
+                                        <div class="info-item"><label>Dirección</label><span id="suc-dir"></span></div>
+                                        <div class="info-item"><label>Colonia</label><span id="suc-col"></span></div>
+                                        <div class="info-item"><label>Ciudad</label><span id="suc-city"></span></div>
+                                        <div class="info-item"><label>C.P.</label><span id="suc-cp"></span></div>
+                                        <div class="info-item"><label>Horario</label><span id="suc-hor"></span></div>
+                                        <div class="info-item"><label>Teléfono</label><span id="suc-tel"></span></div>
+                                        <div class="info-item"><label>Correo</label><span id="suc-mail"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="ticket"></i> Tickets</h3>
+                                <div class="form-group">
+                                    <label class="form-label" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Número de Ticket GLPI / Interno (OPCIONAL)</label>
+                                    <input type="text" class="form-input" id="ticket_glpi" placeholder="Ej. 10293">
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="layers"></i> Área Afectada</h3>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Área</label>
+                                    <input class="form-input" id="area-input" list="areas-list" placeholder="Escribe para buscar área..." autocomplete="off">
+                                    <datalist id="areas-list"></datalist>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Sub Área</label>
+                                    <select class="form-select" id="subarea-select"><option value="">Primero escriba o seleccione un área válida</option></select>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="alert-triangle"></i> Descripción de la falla</h3>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <textarea class="form-input" id="desc_falla" rows="3" placeholder="Describe detalladamente la falla reportada..."></textarea>
+                                </div>
+                                
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Falla - Máx 3)</label>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('falla')"><i data-lucide="camera"></i> Toma Foto</button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('falla')"><i data-lucide="upload"></i> Subir Archivo</button>
+                                </div>
+                                <div id="photoGridFalla" class="photo-grid-slots">
+                                    <div class="photo-slot" id="slot-falla-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-falla-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-falla-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="wrench"></i> Descripción de la solución</h3>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <textarea class="form-input" id="desc_solucion" rows="3" placeholder="Describe el trabajo realizado..."></textarea>
+                                </div>
+                                
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Solución - Máx 3)</label>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('solucion')"><i data-lucide="camera"></i> Toma Foto</button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('solucion')"><i data-lucide="upload"></i> Subir Archivo</button>
+                                </div>
+                                <div id="photoGridSolucion" class="photo-grid-slots">
+                                    <div class="photo-slot" id="slot-solucion-0"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-solucion-1"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                    <div class="photo-slot" id="slot-solucion-2"><i data-lucide="image" class="slot-placeholder-icon"></i></div>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="user"></i> Técnico asignado</h3>
+                                
+                                <div class="info-grid" style="margin-bottom: 20px; background-color: #f0fdf4; border-color: #bbf7d0;">
+                                    <div class="info-item"><label>Proveedor Oficial</label><span id="prov-info-nombre" style="color:#166534; font-weight:bold;">-</span></div>
+                                    <div class="info-item"><label>RFC</label><span id="prov-info-rfc">-</span></div>
+                                    <div class="info-item"><label>Dirección</label><span id="prov-info-dir">-</span></div>
+                                    <div class="info-item"><label>Contacto</label><span id="prov-info-cont">-</span></div>
+                                    <div class="info-item"><label>Teléfono</label><span id="prov-info-tel">-</span></div>
+                                    <div class="info-item"><label>Correo</label><span id="prov-info-mail" style="word-break: break-all;">-</span></div>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Nombre del técnico en sitio</label>
+                                    <input type="text" class="form-input" id="nombre_tecnico" placeholder="Nombre completo">
+                                </div>
+                                <div class="form-group" style="margin-bottom: 15px;">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Celular del técnico</label>
+                                    <input type="tel" class="form-input" id="celular_tecnico" placeholder="10 dígitos (Sin espacios/letras)">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required" style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase;">Comentario de salida del técnico</label>
+                                    <textarea class="form-input" id="comentario_salida" rows="2" placeholder="Observaciones finales antes de retirarse..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="user-check"></i> Selfie del técnico en sitio</h3>
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Selfie - Máx 1)</label>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('selfie')"><i data-lucide="camera"></i> Toma Foto</button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('selfie')"><i data-lucide="upload"></i> Subir Archivo</button>
+                                </div>
+                                <div style="display: flex; justify-content: center; margin-top: 15px;">
+                                    <div class="photo-slot" id="slot-selfie-0" style="width: 150px; height: 150px;">
+                                        <i data-lucide="image" class="slot-placeholder-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="pen-tool"></i> Firma Táctil</h3>
+                                <div class="form-group">
+                                    <div class="signature-container"><canvas id="firma_tecnico" class="signature-pad"></canvas></div>
+                                    <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                                        <button type="button" onclick="limpiarFirma('firma_tecnico')" style="padding: 6px 12px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #d1d5db; background: white; color: #4b5563; cursor:pointer;"><i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar</button>
+                                    </div>
+                                    <input type="hidden" id="firma_tecnico_data">
+                                </div>
+                            </div>
+
+                            <div class="form-card">
+                                <h3 class="section-title"><i data-lucide="clipboard-list"></i> Soporte Físico (Orden de compra/extra)</h3>
+                                <label style="font-size: 11px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin-bottom: 10px; display: block;">Evidencia Fotográfica (Máx 1)</label>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn-photo" onclick="triggerCamera('soporte')"><i data-lucide="camera"></i> Toma Foto</button>
+                                    <button type="button" class="btn-photo-secondary" onclick="triggerFile('soporte')"><i data-lucide="upload"></i> Subir Archivo</button>
+                                </div>
+                                <div style="display: flex; justify-content: center; margin-top: 15px;">
+                                    <div class="photo-slot" id="slot-soporte-0" style="width: 150px; height: 150px;">
+                                        <i data-lucide="image" class="slot-placeholder-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="height: 12px; background-color: #DC2626; width: 100%; border-radius: 6px; margin-top: 35px; margin-bottom: 25px;"></div>
+
+                            <div class="submit-section" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px; align-items: stretch; max-width: 400px; margin-left: auto; margin-right: auto; padding-bottom: 40px;">
+                                
+                                <button type="button" id="btn-guardar-borrador" onclick="procesarOrden('Borrador')" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: #14A981; color: white; border: none; width: 100%; transition: opacity 0.2s;">
+                                    <i data-lucide="save"></i> Guardar Orden
+                                </button>
+
+                                <button type="button" id="btn-enviar-orden" onclick="procesarOrden('En proceso')" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; background: #DC2626; color: white; border: none; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3); width: 100%; transition: background 0.3s;">
+                                    <i data-lucide="send"></i> Enviar Orden
+                                </button>
+                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- OTRAS VISTAS (VACÍAS) -->
+                <div id="vista-ordenes-servicio" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1></header>
+                        <div class="empty-state"><i data-lucide="calendar-clock"></i><h3>Módulo en desarrollo</h3></div>
+                    </div>
+                </div>
+                <div id="vista-reportes" class="modulo-vista">
+                    <div style="max-width: 1000px; margin: 0 auto;">
+                        <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Reportes</h1></header>
+                        <div class="empty-state"><i data-lucide="bar-chart-3"></i><h3>Módulo de reportes</h3></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- BARRA FLOTANTE PARA BORRAR -->
+    <div class="upload-bottom-bar" id="delete-draft-bar">
+        <div class="up-info">
+            <span>SELECCIÓN ACTUAL</span>
+            <span style="display: flex; align-items: center; gap: 8px;">
+                <strong id="lbl-draft-count">0 folios</strong>
+            </span>
+        </div>
+        <button class="btn-limpiar" onclick="limpiarSeleccionBorradores()">
+            <i data-lucide="x-circle" style="width: 16px;"></i> Cancelar
+        </button>
+        <button class="btn-adjuntar" onclick="borrarBorradoresSeleccionados()">
+            <i data-lucide="trash-2" style="width: 16px;"></i> Borrar Orden
+        </button>
+    </div>
+
+    <input type="file" id="fileInputGlobal" accept="image/*" style="display:none" onchange="processFile(this)">
+    <canvas id="tempCanvas" style="display:none"></canvas>
+
+    <div id="camera-overlay">
+        <div id="camera-stream"><video id="camera-video" autoplay="true" playsinline></video></div>
+        <div class="camera-controls">
+            <button onclick="closeCamera()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:white; cursor:pointer; color:#374151; font-weight:bold;">Cerrar</button>
+            <button onclick="switchCamera()" style="padding:10px 20px; border-radius:8px; border:1px solid #d1d5db; background:#f3f4f6; cursor:pointer; color:#374151; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="refresh-cw"></i> Girar</button>
+            <button onclick="captureFoto()" style="padding:10px 20px; border-radius:8px; background:#DC2626; color:white; border:none; cursor:pointer; font-weight:bold;">Capturar</button>
+        </div>
+    </div>
+    
+    <div id="photoModal" class="modal-enlarger" onclick="closePhotoModal()">
+        <img class="modal-content-img" id="imgFull">
+    </div>
+
+    <!-- ALERTA CUSTOM -->
+    <div id="custom-alert">
+        <div class="modal-card-alert">
+            <div id="alert-icon-container"></div>
+            <h3 id="alert-title"></h3>
+            <p id="alert-msg"></p>
+            <button id="alert-btn" onclick="closeCustomAlert()">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- CONFIRM CUSTOM -->
+    <div id="custom-confirm" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:9999999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
+        <div style="background:white; border-radius:16px; padding:24px; width:100%; max-width:320px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+            <div style="margin-bottom:16px; color:#DC2626; display:flex; justify-content:center;"><i data-lucide="alert-circle" style="width:48px; height:48px;"></i></div>
+            <h3 id="confirm-title" style="margin:0 0 8px 0; font-size:18px; color:#111827; font-family:'Inter', sans-serif;">Confirmar</h3>
+            <p id="confirm-msg" style="margin:0 0 20px 0; font-size:14px; color:#4b5563; font-family:'Inter', sans-serif;">¿Estás seguro?</p>
+            <div style="display:flex; gap:12px;">
+                <button onclick="closeConfirm()" style="flex:1; padding:12px; border-radius:8px; background:white; border:1px solid #d1d5db; color:#374151; font-weight:600; cursor:pointer;">Cancelar</button>
+                <button id="confirm-btn-action" style="flex:1; padding:12px; border-radius:8px; background:#DC2626; border:none; color:white; font-weight:600; cursor:pointer;">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. CONFIGURACIÓN E INICIALIZACIÓN DE FIREBASE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
+            authDomain: "timhortons-mantenimiento.firebaseapp.com",
+            projectId: "timhortons-mantenimiento",
+            storageBucket: "timhortons-mantenimiento.firebasestorage.app",
+            messagingSenderId: "892024009722",
+            appId: "1:892024009722:web:fd43a68570f78cedcaea43"
+        };
+        
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
         lucide.createIcons();
-        return;
-    }
 
-    filtrados.forEach(o => {
-        let btnAccion = '';
-        if(o.estado_confirmacion === 'Borrador') {
-            btnAccion = `<button onclick="cargarBorrador('${o.id_doc}')" style="background:#14A981; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="edit-2" style="width:14px;"></i> Editar</button>`;
-        } else {
-            btnAccion = `<button onclick="verPDFOrden('${o.id_doc}')" style="background:#4b5563; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="search" style="width:14px;"></i> Ver PDF</button>`;
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxRgXvrvLkyZunkVRlFAb3_ry8jsmvp8ol-3-dRkd68Be-iW84u5xuLG2jwvvkjOjc/exec';
+        window.appData = null;
+
+        // ==========================================
+        // ALERTAS PERSONALIZADAS
+        // ==========================================
+        function showCustomAlert(title, message, isSuccess = true) {
+            const alertBox = document.getElementById('custom-alert');
+            const alertTitle = document.getElementById('alert-title');
+            const alertMsg = document.getElementById('alert-msg');
+            const alertIcon = document.getElementById('alert-icon-container');
+            const alertBtn = document.getElementById('alert-btn');
+
+            alertTitle.innerText = title;
+            alertMsg.innerText = message;
+
+            if(isSuccess) {
+                alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
+                alertBtn.style.background = '#16a34a';
+            } else {
+                alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
+                alertBtn.style.background = '#DC2626';
+            }
+            alertBox.style.display = 'flex';
+            lucide.createIcons();
+        }
+        function closeCustomAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+
+        // ==========================================
+        // LÓGICA DEL DASHBOARD DE ÓRDENES Y BADGES
+        // ==========================================
+        let misOrdenes = [];
+        let tabMttoActual = 'Nueva Orden';
+
+        function cargarMisOrdenes() {
+            if (!window.appData) return;
+            const proveedor = window.appData.nombreProveedor;
+
+            db.collection("tickets_mantenimiento")
+              .where("proveedor", "==", proveedor)
+              .get()
+              .then((querySnapshot) => {
+                  misOrdenes = [];
+                  querySnapshot.forEach((doc) => { misOrdenes.push({ id_doc: doc.id, ...doc.data() }); });
+                  
+                  // Ordenar por fecha descendente
+                  misOrdenes.sort((a, b) => {
+                      let fA = a.fecha_creacion || ""; let fB = b.fecha_creacion || "";
+                      return fB.localeCompare(fA);
+                  });
+                  
+                  actualizarBadgesMtto();
+                  if(tabMttoActual !== 'Nueva Orden') renderTablaMisOrdenes();
+              })
+              .catch(err => console.error("Error al cargar órdenes", err));
         }
 
-        let colorPill = '#f1f5f9', textPill = '#475569';
-        if(o.estado_confirmacion === 'Borrador') { colorPill = '#e0e7ff'; textPill = '#1d4ed8'; }
-        else if(['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion)) { colorPill = '#fef3c7'; textPill = '#b45309'; }
-        else if(o.estado_confirmacion === 'Costos Aprobados') { colorPill = '#dcfce7'; textPill = '#15803d'; }
-        else if(o.estado_confirmacion === 'Costos Rechazados') { colorPill = '#fee2e2'; textPill = '#b91c1c'; }
-
-        const tr = document.createElement('tr');
-        if (tabMttoActual === 'Borrador') {
-            // Columna extra con el checkbox para borradores
-            tr.innerHTML = `
-                <td><input type="checkbox" class="chk-draft" value="${o.id_doc}" onchange="actualizarBarraBorradores()" style="width:16px; height:16px; cursor:pointer; accent-color:#DC2626;"></td>
-                <td style="padding: 15px; font-weight: bold;">${o.id_ticket || 'Se asignará...'}</td>
-                <td style="font-size: 13px;">${o.sucursal || 'Sin asignar'}</td>
-                <td style="font-size: 13px;">${o.fecha_creacion || ''}</td>
-                <td><span style="background: ${colorPill}; color: ${textPill}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">${o.estado_confirmacion}</span></td>
-                <td>${btnAccion}</td>
-            `;
-        } else {
-            tr.innerHTML = `
-                <td style="padding: 15px; font-weight: bold;">${o.id_ticket || 'S/N'}</td>
-                <td style="font-size: 13px;">${o.sucursal || 'Sin asignar'}</td>
-                <td style="font-size: 13px;">${o.fecha_creacion || ''}</td>
-                <td><span style="background: ${colorPill}; color: ${textPill}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">${o.estado_confirmacion}</span></td>
-                <td>${btnAccion}</td>
-            `;
-        }
-        tbody.appendChild(tr);
-    });
-    lucide.createIcons();
-}
-
-// ==========================================
-// 2. REEMPLAZA EL BLOQUE DE BORRADO MÚLTIPLE
-// ==========================================
-function toggleAllDrafts(checked) {
-    document.querySelectorAll('.chk-draft').forEach(cb => cb.checked = checked);
-    actualizarBarraBorradores();
-}
-
-function actualizarBarraBorradores() {
-    const checkboxes = document.querySelectorAll('.chk-draft:checked');
-    const count = checkboxes.length;
-    document.getElementById('lbl-draft-count').innerText = `${count} folio${count !== 1 ? 's' : ''}`;
-    
-    // Sincronizar el checkbox general si seleccionan todos manual o desmarcan uno
-    const allDraftsCb = document.getElementById('chk-all-drafts');
-    const totalCheckboxes = document.querySelectorAll('.chk-draft').length;
-    if (allDraftsCb) {
-        allDraftsCb.checked = (count === totalCheckboxes && totalCheckboxes > 0);
-    }
-
-    const bar = document.getElementById('delete-draft-bar');
-    if (count > 0) { bar.classList.add('show'); } 
-    else { bar.classList.remove('show'); }
-}
-
-function limpiarSeleccionBorradores() {
-    document.querySelectorAll('.chk-draft').forEach(cb => cb.checked = false);
-    const allDraftsCb = document.getElementById('chk-all-drafts');
-    if (allDraftsCb) allDraftsCb.checked = false;
-    actualizarBarraBorradores();
-}
-
-function borrarBorradoresSeleccionados() {
-    const checkboxes = document.querySelectorAll('.chk-draft:checked');
-    if(checkboxes.length === 0) return;
-
-    showConfirm("Borrar Órdenes", `¿Estás seguro de eliminar ${checkboxes.length} orden(es) en borrador? Esta acción no se puede deshacer.`, async () => {
-        try {
-            const batch = db.batch();
-            checkboxes.forEach(cb => {
-                const docRef = db.collection('tickets_mantenimiento').doc(cb.value);
-                batch.delete(docRef);
+        function actualizarBadgesMtto() {
+            let b = 0, p = 0, a = 0, r = 0;
+            misOrdenes.forEach(o => {
+                if (o.estado_confirmacion === 'Borrador') b++;
+                else if (['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion)) p++;
+                else if (o.estado_confirmacion === 'Costos Aprobados') a++;
+                else if (o.estado_confirmacion === 'Costos Rechazados') r++;
             });
-            await batch.commit();
-            showCustomAlert("Eliminado", "Las órdenes han sido eliminadas correctamente.", true);
-            cargarMisOrdenes();
-            limpiarSeleccionBorradores();
-        } catch(e) {
-            console.error("Error al borrar", e);
-            showCustomAlert("Error", "Hubo un problema al borrar las órdenes.", false);
+
+            document.getElementById('badge-Borrador').innerText = b;
+            document.getElementById('badge-En proceso').innerText = p;
+            document.getElementById('badge-Costos Aprobados').innerText = a;
+            document.getElementById('badge-Costos Rechazados').innerText = r;
         }
-    });
-}
+
+        function cambiarTabMtto(estado, isEdit = false) {
+            tabMttoActual = estado;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            const btnActivo = document.getElementById(`tab-${estado}`);
+            if(btnActivo) btnActivo.classList.add('active');
+            
+            // Ocultar barra flotante al cambiar de pestaña
+            document.getElementById('delete-draft-bar').classList.remove('show');
+            limpiarSeleccionBorradores();
+
+            if (estado === 'Nueva Orden') {
+                document.getElementById('dashboard-ordenes').style.display = 'none';
+                document.getElementById('ordenMttoForm').style.display = 'block';
+                
+                if (!isEdit) {
+                    mostrarFormularioNuevaOrden(); 
+                }
+            } else {
+                document.getElementById('ordenMttoForm').style.display = 'none';
+                document.getElementById('dashboard-ordenes').style.display = 'block';
+                
+                // Restablecer el botón de Nueva Orden
+                document.getElementById('tab-Nueva Orden').innerHTML = `<i data-lucide="plus-circle" style="width: 16px;"></i> Nueva Orden`;
+                lucide.createIcons();
+
+                renderTablaMisOrdenes();
+            }
+        }
+
+        function renderTablaMisOrdenes() {
+            const tbody = document.getElementById('tabla-mis-ordenes');
+            const thead = document.querySelector('#dashboard-ordenes thead tr');
+            tbody.innerHTML = '';
+            
+            if (tabMttoActual === 'Borrador') {
+                thead.innerHTML = `
+                    <th style="padding: 15px; width: 40px;" title="Seleccionar todos">
+                        <input type="checkbox" id="chk-all-drafts" onchange="toggleAllDrafts(this.checked)" style="width:16px; height:16px; cursor:pointer; accent-color:#DC2626;">
+                    </th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Folio</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Sucursal</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Fecha</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Estado</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Acción</th>
+                `;
+            } else {
+                thead.innerHTML = `
+                    <th style="padding: 15px; text-transform: uppercase; font-size: 11px; color: #6b7280;">Folio</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Sucursal</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Fecha</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Estado</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Acción</th>
+                `;
+            }
+
+            let filtrados = misOrdenes.filter(o => {
+                if(tabMttoActual === 'En proceso') {
+                    return ['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion);
+                }
+                return o.estado_confirmacion === tabMttoActual;
+            });
+
+            if(filtrados.length === 0) {
+                const colSpan = tabMttoActual === 'Borrador' ? 6 : 5;
+                tbody.innerHTML = `<tr><td colspan="${colSpan}" style="padding: 40px; color: #6b7280;"><div style="display:flex; flex-direction:column; align-items:center;"><i data-lucide="inbox" style="width: 32px; height: 32px; margin-bottom: 10px; color:#d1d5db;"></i><span>No hay órdenes en esta sección</span></div></td></tr>`;
+                lucide.createIcons();
+                return;
+            }
+
+            filtrados.forEach(o => {
+                let btnAccion = '';
+                if(o.estado_confirmacion === 'Borrador') {
+                    btnAccion = `<button onclick="cargarBorrador('${o.id_doc}')" style="background:#14A981; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="edit-2" style="width:14px;"></i> Editar</button>`;
+                } else {
+                    btnAccion = `<button onclick="verPDFOrden('${o.id_doc}')" style="background:#4b5563; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="search" style="width:14px;"></i> Ver PDF</button>`;
+                }
+
+                let colorPill = '#f1f5f9', textPill = '#475569';
+                if(o.estado_confirmacion === 'Borrador') { colorPill = '#e0e7ff'; textPill = '#1d4ed8'; }
+                else if(['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion)) { colorPill = '#fef3c7'; textPill = '#b45309'; }
+                else if(o.estado_confirmacion === 'Costos Aprobados') { colorPill = '#dcfce7'; textPill = '#15803d'; }
+                else if(o.estado_confirmacion === 'Costos Rechazados') { colorPill = '#fee2e2'; textPill = '#b91c1c'; }
+
+                const tr = document.createElement('tr');
+                if (tabMttoActual === 'Borrador') {
+                    tr.innerHTML = `
+                        <td><input type="checkbox" class="chk-draft" value="${o.id_doc}" onchange="actualizarBarraBorradores()" style="width:16px; height:16px; cursor:pointer; accent-color:#DC2626;"></td>
+                        <td style="padding: 15px; font-weight: bold;">${o.id_ticket || 'Se asignará...'}</td>
+                        <td style="font-size: 13px;">${o.sucursal || 'Sin asignar'}</td>
+                        <td style="font-size: 13px;">${o.fecha_creacion || ''}</td>
+                        <td><span style="background: ${colorPill}; color: ${textPill}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">${o.estado_confirmacion}</span></td>
+                        <td>${btnAccion}</td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td style="padding: 15px; font-weight: bold;">${o.id_ticket || 'S/N'}</td>
+                        <td style="font-size: 13px;">${o.sucursal || 'Sin asignar'}</td>
+                        <td style="font-size: 13px;">${o.fecha_creacion || ''}</td>
+                        <td><span style="background: ${colorPill}; color: ${textPill}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">${o.estado_confirmacion}</span></td>
+                        <td>${btnAccion}</td>
+                    `;
+                }
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // LÓGICA DE BORRADO MULTIPLE (BORRADORES)
+        // ==========================================
+        function toggleAllDrafts(checked) {
+            document.querySelectorAll('.chk-draft').forEach(cb => cb.checked = checked);
+            actualizarBarraBorradores();
+        }
+
+        function actualizarBarraBorradores() {
+            const checkboxes = document.querySelectorAll('.chk-draft:checked');
+            const count = checkboxes.length;
+            document.getElementById('lbl-draft-count').innerText = `${count} folio${count !== 1 ? 's' : ''}`;
+            
+            const allDraftsCb = document.getElementById('chk-all-drafts');
+            const totalCheckboxes = document.querySelectorAll('.chk-draft').length;
+            if (allDraftsCb) {
+                allDraftsCb.checked = (count === totalCheckboxes && totalCheckboxes > 0);
+            }
+
+            const bar = document.getElementById('delete-draft-bar');
+            if (count > 0) { bar.classList.add('show'); } 
+            else { bar.classList.remove('show'); }
+        }
+
+        function limpiarSeleccionBorradores() {
+            document.querySelectorAll('.chk-draft').forEach(cb => cb.checked = false);
+            const allDraftsCb = document.getElementById('chk-all-drafts');
+            if (allDraftsCb) allDraftsCb.checked = false;
+            actualizarBarraBorradores();
+        }
+
+        function borrarBorradoresSeleccionados() {
+            const checkboxes = document.querySelectorAll('.chk-draft:checked');
+            if(checkboxes.length === 0) return;
+
+            showConfirm("Borrar Órdenes", `¿Estás seguro de eliminar ${checkboxes.length} orden(es) en borrador? Esta acción no se puede deshacer.`, async () => {
+                try {
+                    const batch = db.batch();
+                    checkboxes.forEach(cb => {
+                        const docRef = db.collection('tickets_mantenimiento').doc(cb.value);
+                        batch.delete(docRef);
+                    });
+                    await batch.commit();
+                    showCustomAlert("Eliminado", "Las órdenes han sido eliminadas correctamente.", true);
+                    cargarMisOrdenes();
+                    limpiarSeleccionBorradores();
+                } catch(e) {
+                    console.error("Error al borrar", e);
+                    showCustomAlert("Error", "Hubo un problema al borrar las órdenes.", false);
+                }
+            });
+        }
+
+        // ==========================================
+        // TRANSACCIÓN FOLIO ÚNICO GLOBAL
+        // ==========================================
+        async function obtenerFolioGlobal() {
+            const contadorRef = db.collection('metadata').doc('contadores');
+            
+            return await db.runTransaction(async (transaction) => {
+                const doc = await transaction.get(contadorRef);
+                let nuevoNumero = 1;
+                
+                if (doc.exists && doc.data().mc_folio) {
+                    nuevoNumero = doc.data().mc_folio + 1;
+                }
+                
+                transaction.set(contadorRef, { mc_folio: nuevoNumero }, { merge: true });
+                return `MC-${nuevoNumero.toString().padStart(4, '0')}`;
+            });
+        }
+
+        // ==========================================
+        // CARGAR FORMULARIOS
+        // ==========================================
+        let fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
+
+        function mostrarFormularioNuevaOrden() {
+            document.getElementById('ordenMttoForm').reset();
+            document.getElementById('doc_id_actual').value = '';
+            document.getElementById('folio_mc').value = 'Se asignará al guardar...';
+            document.getElementById('sucursal-details').style.display = 'none';
+            
+            fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
+            renderSlots('falla'); renderSlots('solucion'); renderSlots('soporte'); renderSlots('selfie');
+            limpiarFirma('firma_tecnico');
+        }
+
+        function cargarBorrador(id_doc) {
+            const o = misOrdenes.find(x => x.id_doc === id_doc);
+            if(!o) return;
+            
+            cambiarTabMtto('Nueva Orden', true); 
+            document.getElementById('tab-Nueva Orden').innerHTML = `<i data-lucide="edit-2" style="width: 16px;"></i> Editando Borrador`;
+            lucide.createIcons();
+
+            document.getElementById('doc_id_actual').value = o.id_doc;
+            document.getElementById('folio_mc').value = o.id_ticket || 'Se asignará al guardar...';
+            
+            document.getElementById('sucursal-input').value = o.sucursal || '';
+            document.getElementById('sucursal-input').dispatchEvent(new Event('input'));
+            
+            document.getElementById('ticket_glpi').value = o.ticket_glpi || '';
+            document.getElementById('area-input').value = o.area || '';
+            document.getElementById('area-input').dispatchEvent(new Event('input'));
+            
+            setTimeout(() => {
+                if(document.getElementById('subarea-select') && o.subarea) {
+                    document.getElementById('subarea-select').value = o.subarea;
+                }
+            }, 100);
+
+            document.getElementById('desc_falla').value = o.desc_falla || '';
+            document.getElementById('desc_solucion').value = o.desc_solucion || '';
+            document.getElementById('nombre_tecnico').value = o.tec_nombre || '';
+            document.getElementById('celular_tecnico').value = o.tec_celular || '';
+            document.getElementById('comentario_salida').value = o.comentario || '';
+
+            fotos.falla = o.urls_falla && o.urls_falla.length ? [...o.urls_falla] : [null, null, null];
+            fotos.solucion = o.urls_solucion && o.urls_solucion.length ? [...o.urls_solucion] : [null, null, null];
+            fotos.soporte = o.url_soporte ? [o.url_soporte] : [null];
+            fotos.selfie = o.url_selfie ? [o.url_selfie] : [null];
+
+            while(fotos.falla.length < 3) fotos.falla.push(null);
+            while(fotos.solucion.length < 3) fotos.solucion.push(null);
+
+            renderSlots('falla'); renderSlots('solucion'); renderSlots('soporte'); renderSlots('selfie');
+
+            if(o.url_firma) {
+                document.getElementById('firma_tecnico_data').value = o.url_firma;
+                const img = new Image();
+                img.onload = () => { if(ctxFirma) ctxFirma.drawImage(img, 0, 0); };
+                img.src = o.url_firma;
+            } else {
+                limpiarFirma('firma_tecnico');
+            }
+        }
+
+        // ==========================================
+        // PROCESAR ORDEN (GUARDAR BORRADOR O ENVIAR)
+        // ==========================================
+        async function procesarOrden(estadoFinal) {
+            const btnGuardar = document.getElementById('btn-guardar-borrador');
+            const btnEnviar = document.getElementById('btn-enviar-orden');
+            let folioActual = document.getElementById('folio_mc').value;
+
+            const canvasFirmaReal = document.getElementById('firma_tecnico');
+            const firmaVacia = document.createElement('canvas');
+            firmaVacia.width = canvasFirmaReal.width; firmaVacia.height = canvasFirmaReal.height;
+
+            if (estadoFinal === 'En proceso') {
+                const suc = document.getElementById('sucursal-input').value;
+                const area = document.getElementById('area-input').value;
+                const descF = document.getElementById('desc_falla').value;
+                const tecNom = document.getElementById('nombre_tecnico').value;
+                
+                if(!suc || !area || !descF || !tecNom) {
+                    showCustomAlert("Atención", "Para enviar, debes completar Sucursal, Área, Falla y Nombre del técnico.", false); 
+                    return;
+                }
+                if(canvasFirmaReal.toDataURL() === firmaVacia.toDataURL() && !document.getElementById('firma_tecnico_data').value) {
+                    showCustomAlert("Atención", "La firma del técnico es obligatoria para enviar la orden.", false); 
+                    return;
+                }
+            }
+
+            if (canvasFirmaReal.toDataURL() !== firmaVacia.toDataURL()) {
+                document.getElementById('firma_tecnico_data').value = canvasFirmaReal.toDataURL();
+            }
+
+            btnGuardar.disabled = true; btnEnviar.disabled = true;
+            btnGuardar.innerHTML = 'Procesando...'; btnEnviar.innerHTML = 'Procesando...';
+
+            try {
+                // SOLO GENERAR FOLIO SI ES NUEVO O NO TENÍA
+                if (folioActual === 'Se asignará al guardar...' || !folioActual) {
+                    folioActual = await obtenerFolioGlobal();
+                    document.getElementById('folio_mc').value = folioActual;
+                }
+
+                let urlsFalla = [], urlsSolucion = [];
+                let urlSoporte = null, urlSelfie = null, urlFirma = null;
+
+                const checkAndUpload = async (fileData, path) => {
+                    if (fileData && fileData.startsWith('data:image')) {
+                        const ref = storage.ref(path);
+                        await ref.put(dataURItoBlob(fileData));
+                        return await ref.getDownloadURL();
+                    }
+                    return fileData; 
+                };
+
+                for(let i=0; i<fotos.falla.length; i++) {
+                    if(fotos.falla[i]) {
+                        urlsFalla.push(await checkAndUpload(fotos.falla[i], `ordenes/${folioActual}/falla_${i}_${Date.now()}.jpg`));
+                    }
+                }
+                for(let i=0; i<fotos.solucion.length; i++) {
+                    if(fotos.solucion[i]) {
+                        urlsSolucion.push(await checkAndUpload(fotos.solucion[i], `ordenes/${folioActual}/solucion_${i}_${Date.now()}.jpg`));
+                    }
+                }
+
+                urlSoporte = await checkAndUpload(fotos.soporte[0], `ordenes/${folioActual}/soporte_${Date.now()}.jpg`);
+                urlSelfie = await checkAndUpload(fotos.selfie[0], `ordenes/${folioActual}/selfie_${Date.now()}.jpg`);
+                
+                let firmaActual = document.getElementById('firma_tecnico_data').value;
+                urlFirma = await checkAndUpload(firmaActual, `ordenes/${folioActual}/firma_${Date.now()}.png`);
+
+                const docId = document.getElementById('doc_id_actual').value || folioActual;
+                
+                const ordenData = {
+                    id_ticket: folioActual,
+                    ticket_glpi: document.getElementById('ticket_glpi').value || '',
+                    sucursal: document.getElementById('sucursal-input').value || '',
+                    suc_dir: document.getElementById('suc-dir').innerText || '',
+                    suc_col: document.getElementById('suc-col').innerText || '',
+                    suc_city: document.getElementById('suc-city').innerText || '',
+                    suc_cp: document.getElementById('suc-cp').innerText || '',
+                    suc_hor: document.getElementById('suc-hor').innerText || '',
+                    suc_tel: document.getElementById('suc-tel').innerText || '',
+                    suc_mail: document.getElementById('suc-mail').innerText || '',
+                    proveedor: window.appData.nombreProveedor,
+                    prov_nombre: document.getElementById('prov-info-nombre').innerText || '',
+                    prov_rfc: document.getElementById('prov-info-rfc').innerText || '',
+                    prov_dir: document.getElementById('prov-info-dir').innerText || '',
+                    prov_cont: document.getElementById('prov-info-cont').innerText || '',
+                    prov_tel: document.getElementById('prov-info-tel').innerText || '',
+                    prov_mail: document.getElementById('prov-info-mail').innerText || '',
+                    tipo: "Correctivo",
+                    area: document.getElementById('area-input').value || '',
+                    subarea: document.getElementById('subarea-select').value || '',
+                    desc_falla: document.getElementById('desc_falla').value || '',
+                    desc_solucion: document.getElementById('desc_solucion').value || '',
+                    tec_nombre: document.getElementById('nombre_tecnico').value || '',
+                    tec_celular: document.getElementById('celular_tecnico').value || '',
+                    comentario: document.getElementById('comentario_salida').value || '',
+                    fecha_creacion: new Date().toISOString().split('T')[0],
+                    fecha_hora_completa: new Date().toISOString(),
+                    estado_confirmacion: estadoFinal,
+                    urls_falla: urlsFalla,
+                    urls_solucion: urlsSolucion,
+                    url_soporte: urlSoporte,
+                    url_selfie: urlSelfie,
+                    url_firma: urlFirma
+                };
+
+                await db.collection("tickets_mantenimiento").doc(docId).set(ordenData, { merge: true });
+
+                showCustomAlert("Éxito", estadoFinal === 'Borrador' ? "Borrador guardado exitosamente." : "Orden enviada a Confirmación.", true);
+                
+                if (estadoFinal === 'En proceso') {
+                    sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
+                    setTimeout(() => { window.location.href = 'index2.html'; }, 1500);
+                } else {
+                    document.getElementById('tab-Nueva Orden').innerHTML = `<i data-lucide="plus-circle" style="width: 16px;"></i> Nueva Orden`;
+                    lucide.createIcons();
+                    cargarMisOrdenes();
+                    cambiarTabMtto('Borrador'); 
+                }
+
+            } catch (err) {
+                console.error(err);
+                showCustomAlert("Error", "Ocurrió un error al procesar.", false);
+            } finally {
+                btnGuardar.disabled = false; btnEnviar.disabled = false;
+                btnGuardar.innerHTML = '<i data-lucide="save"></i> Guardar Orden';
+                btnEnviar.innerHTML = '<i data-lucide="send"></i> Enviar Orden';
+                lucide.createIcons();
+            }
+        }
+
+        // ==========================================
+        // VER PDF (REDIRECCIÓN A INDEX2)
+        // ==========================================
+        function verPDFOrden(id_doc) {
+            const t = misOrdenes.find(x => x.id_doc === id_doc);
+            if(!t) return;
+
+            const datosParaPDF = {
+                sucursal: t.sucursal || '',
+                suc_dir: t.suc_dir || '',
+                suc_col: t.suc_col || '',
+                suc_city: t.suc_city || '',
+                suc_cp: t.suc_cp || '',
+                suc_hor: t.suc_hor || '',
+                suc_tel: t.suc_tel || '',
+                suc_mail: t.suc_mail || '',
+                ticket: t.id_ticket || 'S/N',
+                area: t.area || '',
+                subarea: t.subarea || '',
+                desc_falla: t.desc_falla || '',
+                fotos_falla: t.urls_falla || [null, null, null],
+                desc_solucion: t.desc_solucion || '',
+                fotos_solucion: t.urls_solucion || [null, null, null],
+                prov_nombre: t.prov_nombre || t.proveedor || '',
+                prov_rfc: t.prov_rfc || '',
+                prov_dir: t.prov_dir || '',
+                prov_cont: t.prov_cont || '',
+                prov_tel: t.prov_tel || '',
+                prov_mail: t.prov_mail || '',
+                tec_nombre: t.tec_nombre || '',
+                tec_celular: t.tec_celular || '',
+                comentario: t.comentario || '',
+                firma: t.url_firma || '',
+                foto_soporte: t.url_soporte || null,
+                foto_selfie: t.url_selfie || null,
+                fecha_hora: t.fecha_hora_completa 
+                    ? new Date(t.fecha_hora_completa).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' }) 
+                    : (t.fecha_creacion || '')
+            };
+
+            sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(datosParaPDF));
+            window.open('index2.html', '_blank');
+        }
+
+        // ==========================================
+        // LÓGICA DE LOGIN, MENÚ Y COMPONENTES
+        // ==========================================
+        function togglePassword() {
+            const p = document.getElementById('password');
+            const i = document.getElementById('toggleIcon');
+            if (p.type === 'password') { p.type = 'text'; i.textContent = 'visibility'; } 
+            else { p.type = 'password'; i.textContent = 'visibility_off'; }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+            
+            const savedSession = sessionStorage.getItem('loginSession');
+            const savedUser = sessionStorage.getItem('loginUser');
+            
+            if (savedSession && savedUser) {
+                window.appData = JSON.parse(savedSession);
+                
+                const inicial = savedUser.charAt(0).toUpperCase();
+                document.getElementById('user-initial-header').innerText = inicial;
+                document.getElementById('welcome-username-display').innerText = window.appData.nombreProveedor;
+
+                document.getElementById('prov-info-nombre').innerText = window.appData.nombreProveedor;
+                document.getElementById('prov-info-rfc').innerText = window.appData.proveedorInfo.rfc || 'N/A';
+                document.getElementById('prov-info-dir').innerText = window.appData.proveedorInfo.direccion || 'N/A';
+                document.getElementById('prov-info-cont').innerText = window.appData.proveedorInfo.contacto || 'N/A';
+                document.getElementById('prov-info-tel').innerText = window.appData.proveedorInfo.telefono || 'N/A';
+                document.getElementById('prov-info-mail').innerText = window.appData.proveedorInfo.correo || 'N/A'; 
+
+                const listaSuc = document.getElementById('sucursales-list');
+                listaSuc.innerHTML = '';
+                window.appData.sucursales.forEach(s => {
+                    let opt = document.createElement('option');
+                    opt.value = s.nombre;
+                    listaSuc.appendChild(opt);
+                });
+
+                const listaAreas = document.getElementById('areas-list');
+                listaAreas.innerHTML = '';
+                Object.keys(window.appData.areas).forEach(a => {
+                    let opt = document.createElement('option');
+                    opt.value = a;
+                    listaAreas.appendChild(opt);
+                });
+
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app-screen').style.display = 'block';
+                lucide.createIcons();
+
+                if(window.appData.privilegio == 2 || window.appData.privilegio == "2") {
+                    document.getElementById('nav-inicio').style.display = 'none';
+                    document.getElementById('nav-preventivo').style.display = 'none';
+                    document.getElementById('nav-seccion-admin').style.display = 'none';
+                    document.getElementById('nav-seccion-reportes').style.display = 'none';
+                }
+                
+                inicializarFirma();
+                cambiarVista(null, 'vista-mantenimiento');
+                mostrarFormularioNuevaOrden(); 
+                cargarMisOrdenes();
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const alertMsg = document.getElementById('alertMessage');
+            
+            const userRaw = document.getElementById('username').value;
+            const user = userRaw.trim(); 
+            const passRaw = document.getElementById('password').value;
+            const pass = passRaw.trim();
+
+            alertMsg.style.display = 'none';
+            btn.innerText = 'Verificando...';
+            btn.disabled = true;
+
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ username: user, password: pass }),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.valido) {
+                    sessionStorage.setItem('loginSession', JSON.stringify(data));
+                    sessionStorage.setItem('loginUser', user);
+                    window.appData = data;
+                    window.location.reload(); 
+                } else {
+                    alertMsg.innerText = data.error || "Verifica tu usuario o contraseña";
+                    alertMsg.style.display = 'block';
+                    btn.innerText = 'Iniciar Sesión';
+                    btn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alertMsg.innerText = "Error fatal de conexión con la base de datos.";
+                alertMsg.style.display = 'block';
+                btn.innerText = 'Iniciar Sesión';
+                btn.disabled = false;
+            });
+        });
+
+        document.getElementById('sucursal-input').addEventListener('input', function(e) {
+            const val = e.target.value;
+            const container = document.getElementById('sucursal-details');
+            if(!window.appData) return;
+            const suc = window.appData.sucursales.find(s => s.nombre === val);
+            if(suc) {
+                document.getElementById('suc-dir').innerText = suc.direccion;
+                document.getElementById('suc-col').innerText = suc.colonia;
+                document.getElementById('suc-city').innerText = suc.ciudad;
+                document.getElementById('suc-cp').innerText = suc.cp;
+                document.getElementById('suc-hor').innerText = suc.horario;
+                document.getElementById('suc-tel').innerText = suc.telefono;
+                document.getElementById('suc-mail').innerText = suc.correo;
+                container.style.display = 'grid';
+            } else { container.style.display = 'none'; }
+        });
+
+        document.getElementById('area-input').addEventListener('input', function(e) {
+            const val = e.target.value;
+            const subSelect = document.getElementById('subarea-select');
+            if(!window.appData) return;
+            if(val && window.appData.areas[val]) {
+                subSelect.innerHTML = '<option value="">Seleccione sub área...</option>';
+                window.appData.areas[val].forEach(sub => {
+                    let opt = document.createElement('option');
+                    opt.value = sub; opt.innerText = sub;
+                    subSelect.appendChild(opt);
+                });
+            } else {
+                if(subSelect.options.length !== 1 || subSelect.value !== "") {
+                    subSelect.innerHTML = '<option value="">Primero escriba o seleccione un área válida</option>';
+                }
+            }
+        });
+
+        document.getElementById('celular_tecnico').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            if (e.target.value.length > 10) { e.target.value = e.target.value.slice(0, 10); }
+        });
+
+        function cambiarVista(event, idVista) {
+            if(event) event.preventDefault();
+            document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('activa'));
+            document.getElementById(idVista).classList.add('activa');
+            if(event) event.currentTarget.classList.add('activa');
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
+        }
+        
+        const toggles = document.querySelectorAll('[data-sidebar-toggle]');
+        toggles.forEach(t => { t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')); });
+        document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
+
+        // ==========================================
+        // CÁMARA, FOTOS Y FIRMA
+        // ==========================================
+        let activeTarget = 'falla';
+        let currentFacingMode = 'environment';
+        
+        function triggerFile(target) { 
+            activeTarget = target;
+            if(fotos[target].filter(f => f !== null).length < fotos[target].length) document.getElementById('fileInputGlobal').click(); 
+            else window.alert("Límite de fotos alcanzado para esta sección."); 
+        }
+        
+        function processFile(input) { 
+            if (!input.files || input.files.length === 0) return; 
+            const reader = new FileReader(); 
+            reader.onload = function(e) { 
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width; 
+                    let h = img.height;
+                    const maxDim = 800; 
+                    if(w > maxDim || h > maxDim) {
+                        if(w > h) { h = (h/w)*maxDim; w = maxDim; }
+                        else { w = (w/h)*maxDim; h = maxDim; }
+                    }
+                    canvas.width = w; 
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    
+                    const fotoComprimida = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    const slotVacio = fotos[activeTarget].findIndex(f => f === null);
+                    if(slotVacio > -1) { 
+                        fotos[activeTarget][slotVacio] = fotoComprimida; 
+                        renderSlots(activeTarget); 
+                    }
+                    input.value = ''; 
+                };
+                img.src = e.target.result;
+            }; 
+            reader.readAsDataURL(input.files[0]); 
+        }
+
+        let currentStream;
+        async function triggerCamera(target) {
+            activeTarget = target;
+            if(fotos[target].filter(f => f !== null).length >= fotos[target].length) { window.alert("Límite de fotos alcanzado."); return; }
+            currentFacingMode = (target === 'selfie') ? 'user' : 'environment';
+            await startCamera();
+        }
+
+        async function startCamera() {
+            if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); }
+            try { 
+                currentStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode } }); 
+                document.getElementById('camera-video').srcObject = currentStream; 
+                document.getElementById('camera-overlay').classList.add('show'); 
+            } catch (err) { window.alert("Permiso denegado o cámara no disponible."); }
+        }
+
+        function switchCamera() {
+            currentFacingMode = currentFacingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
+        }
+        
+        function closeCamera() { 
+            if (currentStream) { currentStream.getTracks().forEach(t => t.stop()); } 
+            document.getElementById('camera-overlay').classList.remove('show'); 
+        }
+        
+        function captureFoto() { 
+            const canvasT = document.getElementById('tempCanvas'); const video = document.getElementById('camera-video');
+            canvasT.width = video.videoWidth; canvasT.height = video.videoHeight; 
+            const ctx = canvasT.getContext('2d');
+            if (currentFacingMode === 'user') { ctx.translate(canvasT.width, 0); ctx.scale(-1, 1); }
+            ctx.drawImage(video, 0, 0, canvasT.width, canvasT.height); 
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            const slotVacio = fotos[activeTarget].findIndex(f => f === null);
+            if(slotVacio > -1) { fotos[activeTarget][slotVacio] = canvasT.toDataURL('image/jpeg', 0.8); renderSlots(activeTarget); }
+            closeCamera(); 
+        }
+        
+        function removeFoto(target, index) { fotos[target][index] = null; renderSlots(target); }
+        
+        function enlargePhoto(src) {
+            const modal = document.getElementById('photoModal');
+            document.getElementById('imgFull').src = src;
+            modal.classList.add('show');
+        }
+        function closePhotoModal() { document.getElementById('photoModal').classList.remove('show'); }
+
+        function renderSlots(target) {
+            for (let i = 0; i < fotos[target].length; i++) {
+                const slot = document.getElementById(`slot-${target}-${i}`);
+                if(!slot) continue;
+                
+                if (fotos[target][i]) { 
+                    slot.innerHTML = `<img src="${fotos[target][i]}" onclick="enlargePhoto(this.src)" style="width:100%; height:100%; object-fit:cover; cursor:zoom-in; border-radius:12px;"><span class="remove-photo" onclick="removeFoto('${target}', ${i})">&times;</span>`; 
+                    slot.style.border = "1px solid #e5e7eb"; 
+                } else { 
+                    slot.innerHTML = `<i data-lucide="image" class="slot-placeholder-icon"></i>`; 
+                    slot.style.border = "2px dashed #d1d5db"; 
+                }
+            }
+            lucide.createIcons();
+        }
+
+        let canvasFirma, ctxFirma;
+        function inicializarFirma() {
+            canvasFirma = document.getElementById('firma_tecnico');
+            if(!canvasFirma) return;
+            ctxFirma = canvasFirma.getContext('2d'); canvasFirma.width = 600; canvasFirma.height = 200; ctxFirma.lineWidth = 3; ctxFirma.lineCap = 'round'; ctxFirma.strokeStyle = '#000000';
+            let isDrawing = false;
+            function getCoordinates(e) {
+                const rect = canvasFirma.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: (cx - rect.left) * (canvasFirma.width / rect.width), y: (cy - rect.top) * (canvasFirma.height / rect.height) };
+            }
+            canvasFirma.addEventListener('mousedown', (e) => { isDrawing = true; const p = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(p.x, p.y); });
+            canvasFirma.addEventListener('mousemove', (e) => { if (isDrawing) { const p = getCoordinates(e); ctxFirma.lineTo(p.x, p.y); ctxFirma.stroke(); } });
+            window.addEventListener('mouseup', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
+            canvasFirma.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const p = getCoordinates(e); ctxFirma.beginPath(); ctxFirma.moveTo(p.x, p.y); }, {passive: false});
+            canvasFirma.addEventListener('touchmove', (e) => { e.preventDefault(); if (isDrawing) { const p = getCoordinates(e); ctxFirma.lineTo(p.x, p.y); ctxFirma.stroke(); } }, {passive: false});
+            window.addEventListener('touchend', () => { if(isDrawing) { isDrawing = false; document.getElementById('firma_tecnico_data').value = canvasFirma.toDataURL(); } });
+        }
+        function limpiarFirma(id) { if(ctxFirma) ctxFirma.clearRect(0, 0, canvasFirma.width, canvasFirma.height); document.getElementById(id+'_data').value = ''; }
+
+        function dataURItoBlob(dataURI) {
+            if(!dataURI) return null;
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], {type: mimeString});
+        }
+
+        let confirmCallback = null;
+        function showConfirm(title, msg, callback) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-msg').innerText = msg;
+            confirmCallback = callback;
+            document.getElementById('custom-confirm').style.display = 'flex';
+            lucide.createIcons();
+        }
+        function closeConfirm() { document.getElementById('custom-confirm').style.display = 'none'; }
+        
+        document.getElementById('confirm-btn-action').addEventListener('click', function() {
+            closeConfirm();
+            if(confirmCallback) confirmCallback();
+        });
+
+        function cerrarSesionGlobal() {
+            showConfirm("Cerrar Sesión", "¿Seguro que quieres cerrar sesión?", function() {
+                sessionStorage.clear(); 
+                window.location.reload(); 
+            });
+        }
+
+    </script>
+</body>
+</html>
