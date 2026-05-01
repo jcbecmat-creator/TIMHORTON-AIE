@@ -135,11 +135,10 @@
         #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
         #alert-btn:hover { opacity: 0.9; }
 
-        /* === MODAL STYLES (VER CP) === */
+        /* ESTILOS DEL MODAL CP LECTURA */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-card { background: white; width: 100%; max-width: 600px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; }
 
-        /* ESTILOS DEL MODAL CP LECTURA */
         .eval-field-group { width: 100%; display: flex; flex-direction: column; }
         .eval-label { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; }
         .eval-input-wrapper { display: flex; flex-direction: column; width: 100%; }
@@ -265,7 +264,7 @@
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 20px;">
                         
-                        <!-- ENCABEZADO Y PESTAÑAS (LINEA GRIS POR DEBAJO) -->
+                        <!-- ENCABEZADO Y PESTAÑAS -->
                         <header class="page-header-section" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
                             <div style="margin-bottom: 15px;">
                                 <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
@@ -291,7 +290,7 @@
                             </div>
                         </header>
 
-                        <!-- TABLA DE ÓRDENES Y FILTROS (Oculta al inicio) -->
+                        <!-- TABLA DE ÓRDENES Y FILTROS -->
                         <div id="dashboard-ordenes" style="display: none;">
                             <form class="filters-bar" id="form-filtros-mtto">
                                 <div class="filter-group">
@@ -328,7 +327,7 @@
                             </div>
                         </div>
 
-                        <!-- FORMULARIO PRINCIPAL (Visible al inicio) -->
+                        <!-- FORMULARIO PRINCIPAL -->
                         <form id="ordenMttoForm" style="display: block;">
                             <div class="form-card" style="border-left: 4px solid #DC2626;">
                                 <h3 class="section-title" style="color: #DC2626; margin-bottom: 5px;"><i data-lucide="hash"></i> Folio de Orden</h3>
