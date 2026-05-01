@@ -98,9 +98,40 @@
         /* ESTILOS DE PESTAÑAS (TABS) PARA MIS ÓRDENES */
         .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px;}
         .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
-        .tab-btn.active { background: white; color: #111827; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        .tab-btn:hover { background: #e5e7eb; }
+        .tab-btn.active { background: white !important; color: #111827 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb !important; }
         .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
         .tab-btn.active .tab-badge { background: #DC2626; }
+
+        /* BARRA FLOTANTE DE BORRADO */
+        .upload-bottom-bar { 
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); 
+            background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 0 0 1px #e5e7eb; 
+            padding: 16px 24px; display: flex; align-items: center; gap: 24px; z-index: 50; 
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 90%; max-width: 800px; 
+        }
+        .upload-bottom-bar.show { bottom: 24px; }
+        .up-info { flex-grow: 1; font-size: 14px; color: #6b7280; display: flex; align-items: center; gap: 12px; }
+        .up-info strong { color: #111827; font-weight: 800; font-size: 15px; }
+        .btn-limpiar { background: white; color: #6b7280; border: 1px solid #e5e7eb; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;}
+        .btn-limpiar:hover { background: #f3f4f6; color: #111827; }
+        .btn-adjuntar { background: #DC2626; color: white; border: none; height: 40px; padding: 0 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s;}
+        .btn-adjuntar:hover { background: #b91c1c; }
+
+        /* MODAL ALERTA CUSTOM */
+        #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
+        #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
+        #alert-msg { margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5; }
+        #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+        #alert-btn:hover { opacity: 0.9; }
+
+        @media (max-width: 900px) {
+            .upload-bottom-bar { flex-direction: column; gap: 12px; padding: 16px; bottom: -200px;}
+            .up-info { flex-direction: column; text-align: center; gap: 4px; }
+            .btn-adjuntar, .btn-limpiar { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body class="has-sidebar">
@@ -212,32 +243,32 @@
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 20px;">
                         
-                        <header class="page-header-section" style="margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                            <div>
-                                <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
-                                <p style="color: #6b7280; margin: 0;">Registrar orden de servicio</p>
-                            </div>
-                            <button type="button" id="btn-toggle-vista" onclick="mostrarDashboardOrdenes()" style="background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;">
-                                <i data-lucide="list" style="width: 18px;"></i> Ver mis órdenes
-                            </button>
+                        <header class="page-header-section" style="margin-bottom: 20px; padding-bottom: 10px;">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
+                            <p style="color: #6b7280; margin: 0;">Registrar y gestionar órdenes de servicio</p>
                         </header>
 
-                        <div id="dashboard-ordenes" style="display: none;">
-                            <div class="tabs-container">
-                                <button class="tab-btn active" onclick="cambiarTabMtto('Borrador')" id="tab-Borrador">
-                                    Guardados <span class="tab-badge" id="badge-Borrador">0</span>
-                                </button>
-                                <button class="tab-btn" onclick="cambiarTabMtto('En proceso')" id="tab-En proceso">
-                                    Pendientes <span class="tab-badge" id="badge-En proceso">0</span>
-                                </button>
-                                <button class="tab-btn" onclick="cambiarTabMtto('Costos Aprobados')" id="tab-Costos Aprobados">
-                                    Aprobados <span class="tab-badge" id="badge-Costos Aprobados">0</span>
-                                </button>
-                                <button class="tab-btn" onclick="cambiarTabMtto('Costos Rechazados')" id="tab-Costos Rechazados">
-                                    Rechazados <span class="tab-badge" id="badge-Costos Rechazados">0</span>
-                                </button>
-                            </div>
+                        <!-- PESTAÑAS PRINCIPALES (Siempre Visibles) -->
+                        <div class="tabs-container">
+                            <button class="tab-btn active" onclick="cambiarTabMtto('Nueva Orden')" id="tab-Nueva Orden">
+                                <i data-lucide="plus-circle" style="width: 16px;"></i> Nueva Orden
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('Borrador')" id="tab-Borrador">
+                                Guardados <span class="tab-badge" id="badge-Borrador">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('En proceso')" id="tab-En proceso">
+                                Pendientes <span class="tab-badge" id="badge-En proceso">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('Costos Aprobados')" id="tab-Costos Aprobados">
+                                Aprobados <span class="tab-badge" id="badge-Costos Aprobados">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTabMtto('Costos Rechazados')" id="tab-Costos Rechazados">
+                                Rechazados <span class="tab-badge" id="badge-Costos Rechazados">0</span>
+                            </button>
+                        </div>
 
+                        <!-- TABLA DE ÓRDENES (Oculta al inicio) -->
+                        <div id="dashboard-ordenes" style="display: none;">
                             <div class="data-table-container">
                                 <table class="data-table" style="width: 100%; text-align: center; border-collapse: collapse;">
                                     <thead style="background: #f8fafc; border-bottom: 1px solid #e5e7eb;">
@@ -250,18 +281,18 @@
                                         </tr>
                                     </thead>
                                     <tbody id="tabla-mis-ordenes">
-                                        <tr><td colspan="5" style="padding: 30px; color: #6b7280;">Cargando...</td></tr>
+                                        <tr><td colspan="6" style="padding: 30px; color: #6b7280;">Cargando...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
+                        <!-- FORMULARIO PRINCIPAL (Visible al inicio) -->
                         <form id="ordenMttoForm" style="display: block;">
-                            
                             <div class="form-card" style="border-left: 4px solid #DC2626;">
                                 <h3 class="section-title" style="color: #DC2626; margin-bottom: 5px;"><i data-lucide="hash"></i> Folio de Orden</h3>
                                 <div class="form-group">
-                                    <input type="text" class="form-input" id="folio_mc" readonly style="font-size: 20px; font-weight: 800; color: #111827; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important;" value="Generando...">
+                                    <input type="text" class="form-input" id="folio_mc" readonly style="font-size: 20px; font-weight: 800; color: #111827; background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important;" value="Se asignará al guardar...">
                                     <input type="hidden" id="doc_id_actual">
                                 </div>
                             </div>
@@ -424,6 +455,7 @@
                     </div>
                 </div>
 
+                <!-- OTRAS VISTAS (VACÍAS) -->
                 <div id="vista-ordenes-servicio" class="modulo-vista">
                     <div style="max-width: 1000px; margin: 0 auto;">
                         <header class="page-header-section"><h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimientos Preventivos</h1></header>
@@ -438,6 +470,22 @@
                 </div>
             </main>
         </div>
+    </div>
+
+    <!-- BARRA FLOTANTE PARA BORRAR -->
+    <div class="upload-bottom-bar" id="delete-draft-bar">
+        <div class="up-info">
+            <span>SELECCIÓN ACTUAL</span>
+            <span style="display: flex; align-items: center; gap: 8px;">
+                <strong id="lbl-draft-count">0 folios</strong>
+            </span>
+        </div>
+        <button class="btn-limpiar" onclick="limpiarSeleccionBorradores()">
+            <i data-lucide="x-circle" style="width: 16px;"></i> Cancelar
+        </button>
+        <button class="btn-adjuntar" onclick="borrarBorradoresSeleccionados()">
+            <i data-lucide="trash-2" style="width: 16px;"></i> Borrar Orden
+        </button>
     </div>
 
     <input type="file" id="fileInputGlobal" accept="image/*" style="display:none" onchange="processFile(this)">
@@ -456,6 +504,17 @@
         <img class="modal-content-img" id="imgFull">
     </div>
 
+    <!-- ALERTA CUSTOM -->
+    <div id="custom-alert">
+        <div class="modal-card-alert">
+            <div id="alert-icon-container"></div>
+            <h3 id="alert-title"></h3>
+            <p id="alert-msg"></p>
+            <button id="alert-btn" onclick="closeCustomAlert()">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- CONFIRM CUSTOM -->
     <div id="custom-confirm" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:9999999; align-items:center; justify-content:center; padding:20px; box-sizing:border-box;">
         <div style="background:white; border-radius:16px; padding:24px; width:100%; max-width:320px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
             <div style="margin-bottom:16px; color:#DC2626; display:flex; justify-content:center;"><i data-lucide="alert-circle" style="width:48px; height:48px;"></i></div>
@@ -493,10 +552,36 @@
         window.appData = null;
 
         // ==========================================
+        // ALERTAS PERSONALIZADAS
+        // ==========================================
+        function showCustomAlert(title, message, isSuccess = true) {
+            const alertBox = document.getElementById('custom-alert');
+            const alertTitle = document.getElementById('alert-title');
+            const alertMsg = document.getElementById('alert-msg');
+            const alertIcon = document.getElementById('alert-icon-container');
+            const alertBtn = document.getElementById('alert-btn');
+
+            alertTitle.innerText = title;
+            alertMsg.innerText = message;
+
+            if(isSuccess) {
+                alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
+                alertBtn.style.background = '#16a34a';
+            } else {
+                alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
+                alertBtn.style.background = '#DC2626';
+            }
+            alertBox.style.display = 'flex';
+            lucide.createIcons();
+        }
+        function closeCustomAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+
+        // ==========================================
         // LÓGICA DEL DASHBOARD DE ÓRDENES Y BADGES
         // ==========================================
         let misOrdenes = [];
-        let tabMttoActual = 'Borrador';
+        let tabMttoActual = 'Nueva Orden';
 
         function cargarMisOrdenes() {
             if (!window.appData) return;
@@ -516,7 +601,7 @@
                   });
                   
                   actualizarBadgesMtto();
-                  renderTablaMisOrdenes();
+                  if(tabMttoActual !== 'Nueva Orden') renderTablaMisOrdenes();
               })
               .catch(err => console.error("Error al cargar órdenes", err));
         }
@@ -536,19 +621,59 @@
             document.getElementById('badge-Costos Rechazados').innerText = r;
         }
 
-        function cambiarTabMtto(estado) {
+        function cambiarTabMtto(estado, isEdit = false) {
             tabMttoActual = estado;
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             const btnActivo = document.getElementById(`tab-${estado}`);
             if(btnActivo) btnActivo.classList.add('active');
             
-            renderTablaMisOrdenes();
+            // Ocultar barra flotante al cambiar de pestaña
+            document.getElementById('delete-draft-bar').classList.remove('show');
+            limpiarSeleccionBorradores();
+
+            if (estado === 'Nueva Orden') {
+                document.getElementById('dashboard-ordenes').style.display = 'none';
+                document.getElementById('ordenMttoForm').style.display = 'block';
+                
+                if (!isEdit) {
+                    mostrarFormularioNuevaOrden(); 
+                }
+            } else {
+                document.getElementById('ordenMttoForm').style.display = 'none';
+                document.getElementById('dashboard-ordenes').style.display = 'block';
+                
+                // Restablecer el botón de Nueva Orden
+                document.getElementById('tab-Nueva Orden').innerHTML = `<i data-lucide="plus-circle" style="width: 16px;"></i> Nueva Orden`;
+                lucide.createIcons();
+
+                renderTablaMisOrdenes();
+            }
         }
 
         function renderTablaMisOrdenes() {
             const tbody = document.getElementById('tabla-mis-ordenes');
+            const thead = document.querySelector('#dashboard-ordenes thead tr');
             tbody.innerHTML = '';
             
+            if (tabMttoActual === 'Borrador') {
+                thead.innerHTML = `
+                    <th style="padding: 15px; width: 40px;"></th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Folio</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Sucursal</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Fecha</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Estado</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Acción</th>
+                `;
+            } else {
+                thead.innerHTML = `
+                    <th style="padding: 15px; text-transform: uppercase; font-size: 11px; color: #6b7280;">Folio</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Sucursal</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Fecha</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Estado</th>
+                    <th style="text-transform: uppercase; font-size: 11px; color: #6b7280;">Acción</th>
+                `;
+            }
+
             let filtrados = misOrdenes.filter(o => {
                 if(tabMttoActual === 'En proceso') {
                     return ['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion);
@@ -557,7 +682,8 @@
             });
 
             if(filtrados.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="padding: 40px; color: #6b7280;"><div style="display:flex; flex-direction:column; align-items:center;"><i data-lucide="inbox" style="width: 32px; height: 32px; margin-bottom: 10px; color:#d1d5db;"></i><span>No hay órdenes en esta sección</span></div></td></tr>`;
+                const colSpan = tabMttoActual === 'Borrador' ? 6 : 5;
+                tbody.innerHTML = `<tr><td colspan="${colSpan}" style="padding: 40px; color: #6b7280;"><div style="display:flex; flex-direction:column; align-items:center;"><i data-lucide="inbox" style="width: 32px; height: 32px; margin-bottom: 10px; color:#d1d5db;"></i><span>No hay órdenes en esta sección</span></div></td></tr>`;
                 lucide.createIcons();
                 return;
             }
@@ -577,67 +703,67 @@
                 else if(o.estado_confirmacion === 'Costos Rechazados') { colorPill = '#fee2e2'; textPill = '#b91c1c'; }
 
                 const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="padding: 15px; font-weight: bold;">${o.id_ticket || 'S/N'}</td>
-                    <td style="font-size: 13px;">${o.sucursal || 'Sin asignar'}</td>
-                    <td style="font-size: 13px;">${o.fecha_creacion || ''}</td>
-                    <td><span style="background: ${colorPill}; color: ${textPill}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">${o.estado_confirmacion}</span></td>
-                    <td>${btnAccion}</td>
-                `;
+                if (tabMttoActual === 'Borrador') {
+                    tr.innerHTML = `
+                        <td><input type="checkbox" class="chk-draft" value="${o.id_doc}" onchange="actualizarBarraBorradores()" style="width:16px; height:16px; cursor:pointer; accent-color:#DC2626;"></td>
+                        <td style="padding: 15px; font-weight: bold;">${o.id_ticket || 'Se asignará...'}</td>
+                        <td style="font-size: 13px;">${o.sucursal || 'Sin asignar'}</td>
+                        <td style="font-size: 13px;">${o.fecha_creacion || ''}</td>
+                        <td><span style="background: ${colorPill}; color: ${textPill}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">${o.estado_confirmacion}</span></td>
+                        <td>${btnAccion}</td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td style="padding: 15px; font-weight: bold;">${o.id_ticket || 'S/N'}</td>
+                        <td style="font-size: 13px;">${o.sucursal || 'Sin asignar'}</td>
+                        <td style="font-size: 13px;">${o.fecha_creacion || ''}</td>
+                        <td><span style="background: ${colorPill}; color: ${textPill}; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700;">${o.estado_confirmacion}</span></td>
+                        <td>${btnAccion}</td>
+                    `;
+                }
                 tbody.appendChild(tr);
             });
             lucide.createIcons();
         }
 
         // ==========================================
-        // ALTERNADOR: FORMULARIO VS MIS ÓRDENES
+        // LÓGICA DE BORRADO MULTIPLE (BORRADORES)
         // ==========================================
-        function mostrarDashboardOrdenes() {
-            document.getElementById('ordenMttoForm').style.display = 'none';
-            document.getElementById('dashboard-ordenes').style.display = 'block';
+        function actualizarBarraBorradores() {
+            const checkboxes = document.querySelectorAll('.chk-draft:checked');
+            const count = checkboxes.length;
+            document.getElementById('lbl-draft-count').innerText = `${count} folio${count !== 1 ? 's' : ''}`;
             
-            const btnToggle = document.getElementById('btn-toggle-vista');
-            btnToggle.innerHTML = '<i data-lucide="plus-circle" style="width: 18px;"></i> Nueva Orden';
-            btnToggle.style.background = '#DC2626';
-            btnToggle.style.color = 'white';
-            btnToggle.style.border = 'none';
-            btnToggle.setAttribute('onclick', 'mostrarFormularioOrden(true)');
-            
-            lucide.createIcons();
-            cargarMisOrdenes();
+            const bar = document.getElementById('delete-draft-bar');
+            if (count > 0) { bar.classList.add('show'); } 
+            else { bar.classList.remove('show'); }
         }
 
-        async function mostrarFormularioOrden(esNueva) {
-            document.getElementById('dashboard-ordenes').style.display = 'none';
-            document.getElementById('ordenMttoForm').style.display = 'block';
-            document.querySelector('.app-content').scrollTo({top: 0, behavior: 'smooth'});
+        function limpiarSeleccionBorradores() {
+            document.querySelectorAll('.chk-draft').forEach(cb => cb.checked = false);
+            actualizarBarraBorradores();
+        }
 
-            const btnToggle = document.getElementById('btn-toggle-vista');
-            btnToggle.innerHTML = '<i data-lucide="list" style="width: 18px;"></i> Ver mis órdenes';
-            btnToggle.style.background = '#f8fafc';
-            btnToggle.style.color = '#374151';
-            btnToggle.style.border = '1px solid #cbd5e1';
-            btnToggle.setAttribute('onclick', 'mostrarDashboardOrdenes()');
-            lucide.createIcons();
+        function borrarBorradoresSeleccionados() {
+            const checkboxes = document.querySelectorAll('.chk-draft:checked');
+            if(checkboxes.length === 0) return;
 
-            if(esNueva) {
-                document.getElementById('ordenMttoForm').reset();
-                document.getElementById('doc_id_actual').value = '';
-                document.getElementById('folio_mc').value = 'Generando...';
-                document.getElementById('sucursal-details').style.display = 'none';
-                
-                fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
-                renderSlots('falla'); renderSlots('solucion'); renderSlots('soporte'); renderSlots('selfie');
-                limpiarFirma('firma_tecnico');
-
+            showConfirm("Borrar Órdenes", `¿Estás seguro de eliminar ${checkboxes.length} orden(es) en borrador? Esta acción no se puede deshacer.`, async () => {
                 try {
-                    const nuevoFolio = await obtenerFolioGlobal();
-                    document.getElementById('folio_mc').value = nuevoFolio;
-                } catch(err) {
-                    console.error("Error al generar folio:", err);
-                    document.getElementById('folio_mc').value = "Error de red";
+                    const batch = db.batch();
+                    checkboxes.forEach(cb => {
+                        const docRef = db.collection('tickets_mantenimiento').doc(cb.value);
+                        batch.delete(docRef);
+                    });
+                    await batch.commit();
+                    showCustomAlert("Eliminado", "Las órdenes han sido eliminadas correctamente.", true);
+                    cargarMisOrdenes();
+                    limpiarSeleccionBorradores();
+                } catch(e) {
+                    console.error("Error al borrar", e);
+                    showCustomAlert("Error", "Hubo un problema al borrar las órdenes.", false);
                 }
-            }
+            });
         }
 
         // ==========================================
@@ -660,16 +786,31 @@
         }
 
         // ==========================================
-        // CARGAR BORRADOR PARA EDICIÓN
+        // CARGAR FORMULARIOS
         // ==========================================
+        let fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
+
+        function mostrarFormularioNuevaOrden() {
+            document.getElementById('ordenMttoForm').reset();
+            document.getElementById('doc_id_actual').value = '';
+            document.getElementById('folio_mc').value = 'Se asignará al guardar...';
+            document.getElementById('sucursal-details').style.display = 'none';
+            
+            fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
+            renderSlots('falla'); renderSlots('solucion'); renderSlots('soporte'); renderSlots('selfie');
+            limpiarFirma('firma_tecnico');
+        }
+
         function cargarBorrador(id_doc) {
             const o = misOrdenes.find(x => x.id_doc === id_doc);
             if(!o) return;
             
-            mostrarFormularioOrden(false);
-            
+            cambiarTabMtto('Nueva Orden', true); // Cambiamos a la pestaña de Formulario, en modo Edit
+            document.getElementById('tab-Nueva Orden').innerHTML = `<i data-lucide="edit-2" style="width: 16px;"></i> Editando Borrador`;
+            lucide.createIcons();
+
             document.getElementById('doc_id_actual').value = o.id_doc;
-            document.getElementById('folio_mc').value = o.id_ticket || id_doc;
+            document.getElementById('folio_mc').value = o.id_ticket || 'Se asignará al guardar...';
             
             document.getElementById('sucursal-input').value = o.sucursal || '';
             document.getElementById('sucursal-input').dispatchEvent(new Event('input'));
@@ -690,7 +831,6 @@
             document.getElementById('celular_tecnico').value = o.tec_celular || '';
             document.getElementById('comentario_salida').value = o.comentario || '';
 
-            // Cargar Fotos
             fotos.falla = o.urls_falla && o.urls_falla.length ? [...o.urls_falla] : [null, null, null];
             fotos.solucion = o.urls_solucion && o.urls_solucion.length ? [...o.urls_solucion] : [null, null, null];
             fotos.soporte = o.url_soporte ? [o.url_soporte] : [null];
@@ -717,11 +857,7 @@
         async function procesarOrden(estadoFinal) {
             const btnGuardar = document.getElementById('btn-guardar-borrador');
             const btnEnviar = document.getElementById('btn-enviar-orden');
-            const folioActual = document.getElementById('folio_mc').value;
-
-            if (folioActual === 'Generando...' || folioActual === 'Error de red') {
-                alert("Espera a que se asigne un folio válido."); return;
-            }
+            let folioActual = document.getElementById('folio_mc').value;
 
             const canvasFirmaReal = document.getElementById('firma_tecnico');
             const firmaVacia = document.createElement('canvas');
@@ -734,10 +870,12 @@
                 const tecNom = document.getElementById('nombre_tecnico').value;
                 
                 if(!suc || !area || !descF || !tecNom) {
-                    alert("Para enviar, debes completar Sucursal, Área, Falla y Nombre del técnico."); return;
+                    showCustomAlert("Atención", "Para enviar, debes completar Sucursal, Área, Falla y Nombre del técnico.", false); 
+                    return;
                 }
                 if(canvasFirmaReal.toDataURL() === firmaVacia.toDataURL() && !document.getElementById('firma_tecnico_data').value) {
-                    alert("La firma del técnico es obligatoria para enviar la orden."); return;
+                    showCustomAlert("Atención", "La firma del técnico es obligatoria para enviar la orden.", false); 
+                    return;
                 }
             }
 
@@ -749,6 +887,12 @@
             btnGuardar.innerHTML = 'Procesando...'; btnEnviar.innerHTML = 'Procesando...';
 
             try {
+                // SOLO GENERAR FOLIO SI ES NUEVO O NO TENÍA
+                if (folioActual === 'Se asignará al guardar...' || !folioActual) {
+                    folioActual = await obtenerFolioGlobal();
+                    document.getElementById('folio_mc').value = folioActual;
+                }
+
                 let urlsFalla = [], urlsSolucion = [];
                 let urlSoporte = null, urlSelfie = null, urlFirma = null;
 
@@ -818,19 +962,21 @@
 
                 await db.collection("tickets_mantenimiento").doc(docId).set(ordenData, { merge: true });
 
-                alert(estadoFinal === 'Borrador' ? "Borrador guardado exitosamente." : "Orden enviada a Confirmación.");
+                showCustomAlert("Éxito", estadoFinal === 'Borrador' ? "Borrador guardado exitosamente." : "Orden enviada a Confirmación.", true);
                 
                 if (estadoFinal === 'En proceso') {
-                    // Si se envió, generamos PDF
                     sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
-                    window.location.href = 'index2.html';
+                    setTimeout(() => { window.location.href = 'index2.html'; }, 1500);
                 } else {
-                    mostrarDashboardOrdenes();
+                    document.getElementById('tab-Nueva Orden').innerHTML = `<i data-lucide="plus-circle" style="width: 16px;"></i> Nueva Orden`;
+                    lucide.createIcons();
+                    cargarMisOrdenes();
+                    cambiarTabMtto('Borrador'); // Si guardó borrador lo mandamos ahí
                 }
 
             } catch (err) {
                 console.error(err);
-                alert("Ocurrió un error al procesar.");
+                showCustomAlert("Error", "Ocurrió un error al procesar.", false);
             } finally {
                 btnGuardar.disabled = false; btnEnviar.disabled = false;
                 btnGuardar.innerHTML = '<i data-lucide="save"></i> Guardar Orden';
@@ -942,8 +1088,8 @@
                 
                 inicializarFirma();
                 cambiarVista(null, 'vista-mantenimiento');
-                mostrarFormularioOrden(true); // Arranca siempre generando una orden nueva
-                cargarMisOrdenes();
+                cargarMisOrdenes(); // Llenar el dashboard de fondo y poner badges listos
+                cambiarTabMtto('Nueva Orden'); // Arranca mostrando el form
             }
         });
 
