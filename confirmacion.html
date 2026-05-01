@@ -255,7 +255,6 @@
 
                 <div class="confirmacion-wrap">
                     
-                    <!-- ENCABEZADO Y TABS ALINEADOS COMO EN COSTOS.HTML -->
                     <header class="page-header-section">
                         <div class="page-header-row">
                             <div class="page-header-content">
@@ -578,7 +577,6 @@
     // 4. CARGA DE DATOS Y PESTAÑAS (TABS)
     // ==========================================
     function cargarTodosLosTickets() {
-        // Traemos todos los tickets que ya salieron de "Borrador"
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "!=", "Borrador")
           .get()
@@ -590,7 +588,6 @@
                   ticketsGlobales.push(data); 
               });
               
-              // Ordenar por fecha de creación descendente
               ticketsGlobales.sort((a, b) => {
                   let fA = a.fecha_creacion || "";
                   let fB = b.fecha_creacion || "";
@@ -653,7 +650,7 @@
             if (fInicio && fDoc < fInicio) return false;
             if (fFin && fDoc > fFin) return false;
 
-            // Filtro de texto (Folio o sucursal)
+            // Filtro de texto
             if (fBuscar) {
                 const folio = (t.id_ticket || "").toLowerCase();
                 const suc = (t.sucursal || "").toLowerCase();
@@ -806,7 +803,7 @@
         const btnRemovePhoto = document.getElementById('btn-remove-selfie');
         if (btnRemovePhoto) btnRemovePhoto.style.display = isReadOnly ? 'none' : '';
 
-        // Bloquear canvas
+        // Bloquear canvas y cambiar botón cerrar
         if (isReadOnly) {
             if(canvasFirmaModal) canvasFirmaModal.style.pointerEvents = 'none';
             document.getElementById('btn-cancelar-eval').innerHTML = '<i data-lucide="x-circle" style="color: currentColor; width: 18px; height: 18px;"></i> Cerrar';
@@ -818,7 +815,6 @@
         document.getElementById('modalEvaluacion').classList.add('active');
         lucide.createIcons();
         
-        // Timeout para que el canvas se ajuste a la pantalla visible
         setTimeout(() => { redimensionarCanvasFirma(); }, 100);
     }
 
@@ -980,6 +976,7 @@
     // 10. ENVÍO DE DATOS A FIREBASE (STORAGE Y FIRESTORE)
     // ==========================================
     function dataURItoBlob(dataURI) {
+        if(!dataURI) return null;
         const byteString = atob(dataURI.split(',')[1]);
         const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
         const ab = new ArrayBuffer(byteString.length);
@@ -1038,13 +1035,14 @@
                 return fileData || null; 
             };
 
-            // Usamos la carpeta "ordenes/" que ya tiene permisos en Firebase
+            // Usamos la carpeta "ordenes/"
             const selfieUrl = await checkAndUpload(selfieBase64, `ordenes/${folio}/eval_selfie_${Date.now()}.jpg`);
             const firmaUrl = await checkAndUpload(firmaBase64, `ordenes/${folio}/eval_firma_${Date.now()}.png`);
 
             // Obtener ID real del documento
             const docObj = window.ticketsPendientes[folio];
-            const docRealId = (docObj && docObj.doc_id) ? docObj.doc_id : folio;
+            if (!docObj) throw new Error("No se encontró el ticket localmente.");
+            const docRealId = docObj.doc_id || folio;
             
             // Actualizar en Firestore
             await db.collection("tickets_mantenimiento").doc(docRealId).update({
@@ -1065,7 +1063,8 @@
 
         } catch (error) {
             console.error("Error confirmando la orden:", error);
-            showCustomAlert("Error", "Ocurrió un error al guardar. Revisa la consola.", false);
+            // Mostramos el mensaje exacto para saber por qué falló
+            showCustomAlert("Error al guardar", error.message || "Revisa tu conexión a internet.", false);
         } finally {
             btnEnviar.disabled = false;
             btnEnviar.innerHTML = '<i data-lucide="check-circle" style="color: white; width: 18px; height: 18px;"></i> Confirmar Orden';
