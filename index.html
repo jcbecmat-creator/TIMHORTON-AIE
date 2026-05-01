@@ -103,6 +103,16 @@
         .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
         .tab-btn.active .tab-badge { background: #DC2626; }
 
+        /* BARRA DE FILTROS */
+        .filters-bar { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+        .filter-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 140px; }
+        .filter-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; }
+        .filter-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn-filter-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+        .btn-filter-secondary:hover { background: #e2e8f0; }
+        .btn-filter-green { height: 42px; background: #16a34a; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
+        .btn-filter-green:hover { background: #15803d; }
+
         /* BARRA FLOTANTE DE BORRADO */
         .upload-bottom-bar { 
             position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); 
@@ -131,6 +141,8 @@
             .upload-bottom-bar { flex-direction: column; gap: 12px; padding: 16px; bottom: -200px;}
             .up-info { flex-direction: column; text-align: center; gap: 4px; }
             .btn-adjuntar, .btn-limpiar { width: 100%; justify-content: center; }
+            .filter-actions { width: 100%; justify-content: space-between; }
+            .filter-actions button { flex: 1; }
         }
     </style>
 </head>
@@ -267,8 +279,33 @@
                             </button>
                         </div>
 
-                        <!-- TABLA DE ÓRDENES (Oculta al inicio) -->
+                        <!-- TABLA DE ÓRDENES Y FILTROS (Oculta al inicio) -->
                         <div id="dashboard-ordenes" style="display: none;">
+                            
+                            <!-- BARRA DE FILTROS AÑADIDA -->
+                            <form class="filters-bar" id="form-filtros-mtto">
+                                <div class="filter-group">
+                                    <label class="filter-label">Fecha inicio</label>
+                                    <input type="date" class="form-input" id="filtro-inicio-mtto" style="height: 42px; background: #f9fafb;">
+                                </div>
+                                <div class="filter-group">
+                                    <label class="filter-label">Fecha fin</label>
+                                    <input type="date" class="form-input" id="filtro-fin-mtto" style="height: 42px; background: #f9fafb;">
+                                </div>
+                                <div class="filter-group" style="flex: 2; min-width: 200px;">
+                                    <label class="filter-label">Buscar</label>
+                                    <input type="text" class="form-input" id="filtro-buscar-mtto" placeholder="Folio o sucursal..." style="height: 42px; background: #f9fafb;">
+                                </div>
+                                <div class="filter-actions">
+                                    <button type="button" class="btn-filter-secondary" onclick="renderTablaMisOrdenes()">
+                                        <i data-lucide="search" style="width: 16px;"></i> Buscar
+                                    </button>
+                                    <button type="button" class="btn-filter-green" onclick="exportarMisOrdenesCSV()">
+                                        <i data-lucide="download" style="width: 16px;"></i> Exportar
+                                    </button>
+                                </div>
+                            </form>
+
                             <div class="data-table-container">
                                 <table class="data-table" style="width: 100%; text-align: center; border-collapse: collapse;">
                                     <thead style="background: #f8fafc; border-bottom: 1px solid #e5e7eb;">
@@ -674,16 +711,37 @@
                 `;
             }
 
+            // LEER FILTROS
+            const fInicio = document.getElementById('filtro-inicio-mtto').value;
+            const fFin = document.getElementById('filtro-fin-mtto').value;
+            const fBuscar = document.getElementById('filtro-buscar-mtto').value.toLowerCase();
+
             let filtrados = misOrdenes.filter(o => {
+                // Filtro por Estado (Pestaña actual)
                 if(tabMttoActual === 'En proceso') {
-                    return ['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion);
+                    if(!['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion)) return false;
+                } else {
+                    if(o.estado_confirmacion !== tabMttoActual) return false;
                 }
-                return o.estado_confirmacion === tabMttoActual;
+
+                // Filtro por Fechas
+                const fDoc = o.fecha_creacion || "";
+                if(fInicio && fDoc < fInicio) return false;
+                if(fFin && fDoc > fFin) return false;
+
+                // Filtro por Texto (Folio o sucursal)
+                if(fBuscar) {
+                    const folio = (o.id_ticket || "").toLowerCase();
+                    const suc = (o.sucursal || "").toLowerCase();
+                    if(!folio.includes(fBuscar) && !suc.includes(fBuscar)) return false;
+                }
+
+                return true;
             });
 
             if(filtrados.length === 0) {
                 const colSpan = tabMttoActual === 'Borrador' ? 6 : 5;
-                tbody.innerHTML = `<tr><td colspan="${colSpan}" style="padding: 40px; color: #6b7280;"><div style="display:flex; flex-direction:column; align-items:center;"><i data-lucide="inbox" style="width: 32px; height: 32px; margin-bottom: 10px; color:#d1d5db;"></i><span>No hay órdenes en esta sección</span></div></td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="${colSpan}" style="padding: 40px; color: #6b7280;"><div style="display:flex; flex-direction:column; align-items:center;"><i data-lucide="inbox" style="width: 32px; height: 32px; margin-bottom: 10px; color:#d1d5db;"></i><span>No hay órdenes que coincidan con la búsqueda</span></div></td></tr>`;
                 lucide.createIcons();
                 return;
             }
@@ -691,9 +749,9 @@
             filtrados.forEach(o => {
                 let btnAccion = '';
                 if(o.estado_confirmacion === 'Borrador') {
-                    btnAccion = `<button onclick="cargarBorrador('${o.id_doc}')" style="background:#14A981; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="edit-2" style="width:14px;"></i> Editar</button>`;
+                    btnAccion = `<button type="button" onclick="cargarBorrador('${o.id_doc}')" style="background:#14A981; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="edit-2" style="width:14px;"></i> Editar</button>`;
                 } else {
-                    btnAccion = `<button onclick="verPDFOrden('${o.id_doc}')" style="background:#4b5563; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="search" style="width:14px;"></i> Ver PDF</button>`;
+                    btnAccion = `<button type="button" onclick="verPDFOrden('${o.id_doc}')" style="background:#4b5563; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="search" style="width:14px;"></i> Ver PDF</button>`;
                 }
 
                 let colorPill = '#f1f5f9', textPill = '#475569';
@@ -724,6 +782,67 @@
                 tbody.appendChild(tr);
             });
             lucide.createIcons();
+        }
+
+        // ==========================================
+        // LÓGICA DE EXPORTACIÓN CSV
+        // ==========================================
+        function exportarMisOrdenesCSV() {
+            if(misOrdenes.length === 0) {
+                showCustomAlert("Sin datos", "No hay registros para exportar.", false);
+                return;
+            }
+
+            // Aplicar los mismos filtros visuales que hay en la tabla
+            const fInicio = document.getElementById('filtro-inicio-mtto').value;
+            const fFin = document.getElementById('filtro-fin-mtto').value;
+            const fBuscar = document.getElementById('filtro-buscar-mtto').value.toLowerCase();
+
+            let exportarData = misOrdenes.filter(o => {
+                if(tabMttoActual === 'En proceso') {
+                    if(!['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion)) return false;
+                } else {
+                    if(o.estado_confirmacion !== tabMttoActual) return false;
+                }
+
+                const fDoc = o.fecha_creacion || "";
+                if(fInicio && fDoc < fInicio) return false;
+                if(fFin && fDoc > fFin) return false;
+                
+                if(fBuscar) {
+                    const folio = (o.id_ticket || "").toLowerCase();
+                    const suc = (o.sucursal || "").toLowerCase();
+                    if(!folio.includes(fBuscar) && !suc.includes(fBuscar)) return false;
+                }
+                return true;
+            });
+
+            if(exportarData.length === 0) {
+                showCustomAlert("Atención", "Los filtros actuales no devuelven ningún registro para exportar.", false);
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Folio,Sucursal,Estado,Fecha de Creacion,Area,Tecnico Asignado\n";
+
+            exportarData.forEach(row => {
+                const folio = row.id_ticket || "S/N";
+                const suc = `"${row.sucursal || ""}"`; 
+                const estado = row.estado_confirmacion || "";
+                const fecha = row.fecha_creacion || "";
+                const area = `"${row.area || ""}"`;
+                const tec = `"${row.tec_nombre || ""}"`;
+                
+                csvContent += `${folio},${suc},${estado},${fecha},${area},${tec}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Ordenes_${tabMttoActual}_${new Date().toLocaleDateString('es-MX')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // ==========================================
