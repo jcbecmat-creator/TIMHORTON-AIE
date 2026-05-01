@@ -45,11 +45,12 @@
         /* === CONFIRMACIÓN OPERATIVA STYLES === */
         .confirmacion-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-16); }
         .page-header-section { margin-bottom: var(--space-6); padding-bottom: var(--space-4); border-bottom: 1px solid var(--gray-200); }
+        .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-6); flex-wrap: wrap; }
         .page-header-content h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-2) 0; }
         .page-header-content p { font-size: var(--text-sm); color: var(--gray-500); margin: 0; }
         
         /* === ESTILOS DE PESTAÑAS (TABS) === */
-        .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px;}
+        .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; }
         .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
         .tab-btn:hover { background: #e5e7eb; }
         .tab-btn.active { background: white !important; color: #111827 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb !important; }
@@ -77,6 +78,7 @@
         .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; box-sizing: border-box; }
         .status-en-proceso { background: #FEF3C7; color: #92400E; }
         .status-confirmado { background: #D1FAE5; color: #065F46; } 
+        .status-rechazado { background: #fee2e2; color: #b91c1c; }
 
         /* === MODAL STYLES === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
@@ -133,7 +135,7 @@
 
         .eval-input-control:focus { outline: none; background-color: #ffffff !important; border-color: #d1d5db !important; box-shadow: 0 0 0 3px rgba(209, 213, 219, 0.5) !important; }
         .eval-input-control::placeholder { color: #9ca3af !important; }
-        .eval-input-control[readonly] { background-color: #e5e7eb !important; color: #4b5563 !important; cursor: not-allowed !important; border-color: #e5e7eb !important; box-shadow: none !important; }
+        .eval-input-control[readonly], select.eval-input-control:disabled { background-color: #e5e7eb !important; color: #4b5563 !important; cursor: not-allowed !important; border-color: #e5e7eb !important; box-shadow: none !important; opacity: 1; }
         
         select.eval-input-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 15px center; background-size: 16px; }
 
@@ -162,6 +164,15 @@
         #camera-video { width: 100%; height: 100%; object-fit: cover; }
         .camera-controls { display: flex; gap: 10px; margin-top: 20px; }
 
+        /* MODAL ALERTA CUSTOM */
+        #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
+        #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
+        #alert-msg { margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5; }
+        #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
+        #alert-btn:hover { opacity: 0.9; }
+
         @media (max-width: 768px) {
             .confirmacion-wrap { padding: var(--space-4) var(--space-4) var(--space-16); }
             .co-filters-grid { flex-direction: column; }
@@ -170,6 +181,7 @@
             .co-table { min-width: 750px; }
             .photo-container-group { flex-direction: column; align-items: center; }
             .btn-photo-group { width: 100%; }
+            .page-header-row { flex-direction: column; }
         }
     </style>
 </head>
@@ -239,22 +251,27 @@
                 </div>
 
                 <div class="confirmacion-wrap">
+                    
+                    <!-- ENCABEZADO Y TABS ALINEADOS COMO EN COSTOS.HTML -->
                     <header class="page-header-section">
-                        <div class="page-header-content">
-                            <h1>Confirmación Operativa</h1>
-                            <p>Revisa y aprueba las órdenes de servicio generadas por los técnicos</p>
+                        <div class="page-header-row">
+                            <div class="page-header-content">
+                                <h1>Confirmación Operativa</h1>
+                                <p>Revisa y aprueba las órdenes de servicio generadas por los técnicos</p>
+                            </div>
+                            <div class="tabs-container">
+                                <button class="tab-btn active" onclick="cambiarTab('En proceso')" id="tab-En proceso">
+                                    En proceso <span class="tab-badge" id="badge-en-proceso">0</span>
+                                </button>
+                                <button class="tab-btn" onclick="cambiarTab('Confirmados')" id="tab-Confirmados">
+                                    Confirmados <span class="tab-badge" id="badge-confirmados">0</span>
+                                </button>
+                                <button class="tab-btn" onclick="cambiarTab('Rechazados')" id="tab-Rechazados">
+                                    Rechazados <span class="tab-badge" id="badge-rechazados">0</span>
+                                </button>
+                            </div>
                         </div>
                     </header>
-
-                    <!-- PESTAÑAS (TABS) AÑADIDAS AQUÍ -->
-                    <div class="tabs-container">
-                        <button class="tab-btn active" onclick="cambiarTab('En proceso')" id="tab-En proceso">
-                            Pendientes <span class="tab-badge" id="badge-pendientes">0</span>
-                        </button>
-                        <button class="tab-btn" onclick="cambiarTab('Confirmado')" id="tab-Confirmado">
-                            Confirmados <span class="tab-badge" id="badge-confirmados">0</span>
-                        </button>
-                    </div>
 
                     <form method="GET" class="co-filters">
                         <div class="co-filters-grid">
@@ -303,13 +320,13 @@
         </div>
     </div>
 
-    <!-- MODAL DE EVALUACIÓN -->
+    <!-- MODAL DE EVALUACIÓN (SIRVE PARA CAPTURAR Y PARA MODO LECTURA) -->
     <div id="modalEvaluacion" class="modal-overlay">
         <div class="modal-card" id="modal-card-eval">
             <div class="modal-header">
                 <div>
                     <h2>Confirmación Operativa</h2>
-                    <p>Aprueba la orden de servicio</p>
+                    <p>Revisa la orden de servicio</p>
                 </div>
                 <div class="modal-header-actions">
                     <button class="modal-header-btn" title="Maximizar" onclick="toggleMaximizarModal()">
@@ -382,10 +399,10 @@
                     <label class="eval-label"><i data-lucide="user-check"></i>Selfie del Empleado</label>
                     
                     <div class="btn-photo-group">
-                        <button type="button" class="btn-photo" onclick="abrirCamaraEvaluacion()">
+                        <button type="button" class="btn-photo" id="btn-photo-take" onclick="abrirCamaraEvaluacion()">
                             <i data-lucide="camera" style="width: 16px; height: 16px;"></i> Toma Foto
                         </button>
-                        <button type="button" class="btn-photo btn-photo-upload" onclick="document.getElementById('eval-photo-input').click()">
+                        <button type="button" class="btn-photo btn-photo-upload" id="btn-photo-upload" onclick="document.getElementById('eval-photo-input').click()">
                             <i data-lucide="upload" style="width: 16px; height: 16px;"></i> Subir Archivo
                         </button>
                         <input type="file" id="eval-photo-input" accept="image/*" style="display: none;" onchange="handleFileUpload(this)">
@@ -393,7 +410,7 @@
 
                     <div class="photo-container-centered">
                         <div class="photo-slot" id="eval-selfie-slot" onclick="toggleZoom(this)">
-                            <button class="btn-remove-photo" onclick="quitarFoto(event)"><i data-lucide="x"></i></button>
+                            <button class="btn-remove-photo" id="btn-remove-selfie" onclick="quitarFoto(event)"><i data-lucide="x"></i></button>
                             
                             <div class="photo-placeholder" id="eval-selfie-placeholder">
                                 <i data-lucide="image" style="width: 24px; height: 24px;"></i>
@@ -412,7 +429,7 @@
                         <canvas id="eval-firma-canvas" class="firma-canvas"></canvas>
                     </div>
                     <div style="text-align: right; margin-top: 8px;">
-                        <button type="button" onclick="limpiarFirmaModal()" style="padding: 6px 12px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #d1d5db; background: white; color: #4b5563; cursor:pointer;">
+                        <button type="button" id="btn-clear-firma" onclick="limpiarFirmaModal()" style="padding: 6px 12px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; border: 1px solid #d1d5db; background: white; color: #4b5563; cursor:pointer;">
                             <i data-lucide="eraser" style="width: 14px; height: 14px;"></i> Limpiar
                         </button>
                     </div>
@@ -443,6 +460,16 @@
         </div>
     </div>
 
+    <!-- ALERTA CUSTOM -->
+    <div id="custom-alert">
+        <div class="modal-card-alert">
+            <div id="alert-icon-container"></div>
+            <h3 id="alert-title"></h3>
+            <p id="alert-msg"></p>
+            <button id="alert-btn" onclick="closeCustomAlert()">Aceptar</button>
+        </div>
+    </div>
+
 <script>
     // ==========================================
     // 1. CONFIGURACIÓN DE FIREBASE
@@ -466,7 +493,33 @@
     let tabActual = 'En proceso'; // Pestaña por defecto
 
     // ==========================================
-    // 2. INICIALIZACIÓN DE LA PÁGINA
+    // 2. ALERTAS PERSONALIZADAS
+    // ==========================================
+    function showCustomAlert(title, message, isSuccess = true) {
+        const alertBox = document.getElementById('custom-alert');
+        const alertTitle = document.getElementById('alert-title');
+        const alertMsg = document.getElementById('alert-msg');
+        const alertIcon = document.getElementById('alert-icon-container');
+        const alertBtn = document.getElementById('alert-btn');
+
+        alertTitle.innerText = title;
+        alertMsg.innerText = message;
+
+        if(isSuccess) {
+            alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
+            alertBtn.style.background = '#16a34a';
+        } else {
+            alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
+            alertBtn.style.background = '#DC2626';
+        }
+        alertBox.style.display = 'flex';
+        lucide.createIcons();
+    }
+    function closeCustomAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+
+    // ==========================================
+    // 3. INICIALIZACIÓN DE LA PÁGINA
     // ==========================================
     document.addEventListener('DOMContentLoaded', function () {
         const savedSession = sessionStorage.getItem('loginSession');
@@ -519,7 +572,7 @@
     });
 
     // ==========================================
-    // 3. CARGA DE DATOS Y PESTAÑAS (TABS)
+    // 4. CARGA DE DATOS Y PESTAÑAS (TABS)
     // ==========================================
     function cargarTodosLosTickets() {
         // Traemos todos los tickets que ya salieron de "Borrador"
@@ -529,13 +582,12 @@
           .then((querySnapshot) => {
               ticketsGlobales = [];
               querySnapshot.forEach((doc) => { 
-                  // Guardar el id del documento también
                   let data = doc.data();
                   data.doc_id = doc.id;
                   ticketsGlobales.push(data); 
               });
               
-              // Ordenar por fecha de creación (los más nuevos primero)
+              // Ordenar por fecha de creación descendente
               ticketsGlobales.sort((a, b) => {
                   let fA = a.fecha_creacion || "";
                   let fB = b.fecha_creacion || "";
@@ -555,23 +607,25 @@
     }
 
     function actualizarBadges() {
-        const pend = ticketsGlobales.filter(t => t.estado_confirmacion === 'En proceso').length;
-        // Consideramos Confirmados o cualquier etapa posterior
-        const conf = ticketsGlobales.filter(t => t.estado_confirmacion !== 'En proceso' && t.estado_confirmacion !== 'Borrador').length;
+        const enProceso = ticketsGlobales.filter(t => t.estado_confirmacion === 'En proceso').length;
+        const confirmados = ticketsGlobales.filter(t => ['Confirmado', 'Pendiente de Aprobación', 'Costos Aprobados', 'Facturado', 'Pagado'].includes(t.estado_confirmacion)).length;
+        const rechazados = ticketsGlobales.filter(t => ['Rechazado', 'Costos Rechazados'].includes(t.estado_confirmacion)).length;
         
-        document.getElementById('badge-pendientes').innerText = pend;
-        document.getElementById('badge-confirmados').innerText = conf;
+        document.getElementById('badge-en-proceso').innerText = enProceso;
+        if(document.getElementById('badge-confirmados')) document.getElementById('badge-confirmados').innerText = confirmados;
+        if(document.getElementById('badge-rechazados')) document.getElementById('badge-rechazados').innerText = rechazados;
     }
 
     function cambiarTab(tab) {
         tabActual = tab;
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById('tab-' + tab).classList.add('active');
+        const btnActivo = document.getElementById('tab-' + tab);
+        if(btnActivo) btnActivo.classList.add('active');
         renderTablaConfirmacion();
     }
 
     // ==========================================
-    // 4. DIBUJAR LA TABLA CON FILTROS
+    // 5. DIBUJAR LA TABLA CON FILTROS
     // ==========================================
     function renderTablaConfirmacion() {
         const tbody = document.getElementById('tabla-confirmacion-body');
@@ -585,9 +639,10 @@
             // Filtro de Pestaña
             if (tabActual === 'En proceso') {
                 if (t.estado_confirmacion !== 'En proceso') return false;
-            } else {
-                // "Confirmados" abarca cualquier etapa después de 'En proceso'
-                if (t.estado_confirmacion === 'En proceso' || t.estado_confirmacion === 'Borrador') return false;
+            } else if (tabActual === 'Confirmados') {
+                if (!['Confirmado', 'Pendiente de Aprobación', 'Costos Aprobados', 'Facturado', 'Pagado'].includes(t.estado_confirmacion)) return false;
+            } else if (tabActual === 'Rechazados') {
+                if (!['Rechazado', 'Costos Rechazados'].includes(t.estado_confirmacion)) return false;
             }
 
             // Filtros de fecha
@@ -621,14 +676,18 @@
 
             if (tabActual === 'En proceso') {
                 estadoHtml = `<span class="status-badge status-en-proceso">En proceso</span>`;
-                accionHtml = `<button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}')">
+                accionHtml = `<button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}', false)">
                                 <i data-lucide="search" style="width: 14px; height: 14px;"></i> Revisar
                               </button>`;
-            } else {
-                estadoHtml = `<span class="status-badge status-confirmado">Confirmado</span>`;
-                // Si ya está confirmado, el botón solo ve el PDF, ya no evalúa.
-                accionHtml = `<button class="btn-action-gray" onclick="verPDFDirecto('${folio}')">
-                                <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> Ver PDF
+            } else if (tabActual === 'Confirmados') {
+                estadoHtml = `<span class="status-badge status-confirmado">${t.estado_confirmacion}</span>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}', true)">
+                                <i data-lucide="eye" style="width: 14px; height: 14px;"></i> ver CP
+                              </button>`;
+            } else if (tabActual === 'Rechazados') {
+                estadoHtml = `<span class="status-badge status-rechazado">${t.estado_confirmacion}</span>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}', true)">
+                                <i data-lucide="eye" style="width: 14px; height: 14px;"></i> ver CP
                               </button>`;
             }
 
@@ -648,7 +707,7 @@
     }
 
     // ==========================================
-    // 5. FUNCIONES PARA VER EL PDF
+    // 6. FUNCIONES PARA VER EL PDF
     // ==========================================
     function prepararDatosParaPDF(ticketData) {
         return {
@@ -688,37 +747,73 @@
     function verPDF() {
         const folio = document.getElementById('eval-folio').value;
         const ticketData = window.ticketsPendientes[folio];
-        if(!ticketData) { alert("No se encontraron los datos del ticket."); return; }
-        
-        sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(prepararDatosParaPDF(ticketData)));
-        window.open('index2.html', '_blank');
-    }
-
-    function verPDFDirecto(folio) {
-        const ticketData = window.ticketsPendientes[folio];
-        if(!ticketData) { alert("No se encontraron los datos del ticket."); return; }
+        if(!ticketData) { showCustomAlert("Error", "No se encontraron los datos del ticket.", false); return; }
         
         sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(prepararDatosParaPDF(ticketData)));
         window.open('index2.html', '_blank');
     }
     
     // ==========================================
-    // 6. LÓGICA DEL MODAL DE EVALUACIÓN
+    // 7. LÓGICA DEL MODAL DE EVALUACIÓN (EDIT Y LECTURA)
     // ==========================================
-    function abrirModalEvaluacion(folio) {
+    function abrirModalEvaluacion(folio, isReadOnly = false) {
+        const ticket = window.ticketsPendientes[folio];
         document.getElementById('eval-folio').value = folio;
         
         // Limpiar campos previos
-        document.getElementById('eval-nombre').value = '';
-        document.getElementById('eval-cargo').value = '';
-        document.getElementById('eval-numero').value = '';
-        document.getElementById('eval-nivel').value = '';
-        document.getElementById('eval-comentario').value = '';
+        document.getElementById('eval-nombre').value = ticket.evaluacion_nombre || '';
+        document.getElementById('eval-cargo').value = ticket.evaluacion_cargo || '';
+        document.getElementById('eval-numero').value = ticket.evaluacion_numero || '';
+        document.getElementById('eval-nivel').value = ticket.evaluacion_nivel || '';
+        document.getElementById('eval-comentario').value = ticket.evaluacion_comentario || '';
         
         quitarFoto(); 
         limpiarFirmaModal();
 
+        // Cargar fotos guardadas si existen
+        if (ticket.evaluacion_selfie_url) {
+            mostrarFotoPreview(ticket.evaluacion_selfie_url);
+        }
+        if (ticket.evaluacion_firma_url) {
+            document.getElementById('eval-firma-data').value = ticket.evaluacion_firma_url;
+            const img = new Image();
+            img.onload = () => { if(ctxFirmaModal) ctxFirmaModal.drawImage(img, 0, 0, canvasFirmaModal.width, canvasFirmaModal.height); };
+            img.src = ticket.evaluacion_firma_url;
+        }
+
+        // MODO LECTURA VS MODO EDICIÓN
+        const inputs = ['eval-nombre', 'eval-cargo', 'eval-numero', 'eval-nivel', 'eval-comentario'];
+        inputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (isReadOnly) {
+                el.setAttribute('readonly', 'readonly');
+                if(el.tagName === 'SELECT') el.setAttribute('disabled', 'disabled');
+            } else {
+                el.removeAttribute('readonly');
+                if(el.tagName === 'SELECT') el.removeAttribute('disabled');
+            }
+        });
+
+        // Ocultar botones de interacción si es ReadOnly
+        document.getElementById('btn-photo-take').style.display = isReadOnly ? 'none' : 'inline-flex';
+        document.getElementById('btn-photo-upload').style.display = isReadOnly ? 'none' : 'inline-flex';
+        document.getElementById('btn-clear-firma').style.display = isReadOnly ? 'none' : 'inline-flex';
+        document.getElementById('btn-enviar-eval').style.display = isReadOnly ? 'none' : 'inline-flex';
+        
+        const btnRemovePhoto = document.getElementById('btn-remove-selfie');
+        if (btnRemovePhoto) btnRemovePhoto.style.display = isReadOnly ? 'none' : '';
+
+        // Bloquear canvas
+        if (isReadOnly) {
+            if(canvasFirmaModal) canvasFirmaModal.style.pointerEvents = 'none';
+            document.getElementById('btn-cancelar-eval').innerHTML = '<i data-lucide="x-circle" style="color: currentColor; width: 18px; height: 18px;"></i> Cerrar';
+        } else {
+            if(canvasFirmaModal) canvasFirmaModal.style.pointerEvents = 'auto';
+            document.getElementById('btn-cancelar-eval').innerHTML = '<i data-lucide="x-circle" style="color: currentColor; width: 18px; height: 18px;"></i> Cancelar';
+        }
+
         document.getElementById('modalEvaluacion').classList.add('active');
+        lucide.createIcons();
         
         // Timeout para que el canvas se ajuste a la pantalla visible
         setTimeout(() => { redimensionarCanvasFirma(); }, 100);
@@ -742,7 +837,7 @@
     }
 
     // ==========================================
-    // 7. CÁMARA Y ARCHIVOS (SELFIE)
+    // 8. CÁMARA Y ARCHIVOS (SELFIE)
     // ==========================================
     let currentStreamModal;
     let currentFacingModeModal = 'user'; 
@@ -821,7 +916,7 @@
     }
 
     // ==========================================
-    // 8. FIRMA TÁCTIL
+    // 9. FIRMA TÁCTIL
     // ==========================================
     let canvasFirmaModal, ctxFirmaModal;
     function inicializarFirmaModal() {
@@ -879,7 +974,7 @@
     }
 
     // ==========================================
-    // 9. ENVÍO DE DATOS A FIREBASE (STORAGE Y FIRESTORE)
+    // 10. ENVÍO DE DATOS A FIREBASE (STORAGE Y FIRESTORE)
     // ==========================================
     function dataURItoBlob(dataURI) {
         const byteString = atob(dataURI.split(',')[1]);
@@ -903,11 +998,11 @@
         const firmaBase64 = document.getElementById('eval-firma-data').value;
 
         if (!nombre || !nivel) {
-            alert("Por favor, completa al menos el Nombre del Empleado y el Nivel de Servicio.");
+            showCustomAlert("Atención", "Por favor, completa al menos el Nombre del Empleado y el Nivel de Servicio.", false);
             return;
         }
         if (!firmaBase64) {
-            alert("La firma de autorización es obligatoria.");
+            showCustomAlert("Atención", "La firma de autorización es obligatoria.", false);
             return;
         }
 
@@ -921,19 +1016,25 @@
             let selfieUrl = null;
             let firmaUrl = null;
 
-            // 1. Subir Selfie (si existe)
-            if (selfieBase64) {
+            // 1. Subir Selfie (si existe y si no era una URL de Firebase previa)
+            if (selfieBase64 && selfieBase64.startsWith('data:image')) {
                 const selfieBlob = dataURItoBlob(selfieBase64);
                 const selfieRef = storage.ref(`evaluaciones/${folio}/selfie_${Date.now()}.jpg`);
                 await selfieRef.put(selfieBlob);
                 selfieUrl = await selfieRef.getDownloadURL();
+            } else {
+                selfieUrl = selfieBase64; // Si ya estaba guardada, mantiene la URL
             }
 
-            // 2. Subir Firma
-            const firmaBlob = dataURItoBlob(firmaBase64);
-            const firmaRef = storage.ref(`evaluaciones/${folio}/firma_${Date.now()}.png`);
-            await firmaRef.put(firmaBlob);
-            firmaUrl = await firmaRef.getDownloadURL();
+            // 2. Subir Firma (si es base64)
+            if (firmaBase64 && firmaBase64.startsWith('data:image')) {
+                const firmaBlob = dataURItoBlob(firmaBase64);
+                const firmaRef = storage.ref(`evaluaciones/${folio}/firma_${Date.now()}.png`);
+                await firmaRef.put(firmaBlob);
+                firmaUrl = await firmaRef.getDownloadURL();
+            } else {
+                firmaUrl = firmaBase64;
+            }
 
             // 3. Actualizar Firestore
             const docRealId = window.ticketsPendientes[folio].doc_id || folio;
@@ -950,13 +1051,13 @@
                 fecha_evaluacion: new Date().toISOString()
             });
 
-            alert("¡Orden Confirmada exitosamente!");
+            showCustomAlert("¡Éxito!", "Orden Confirmada exitosamente.", true);
             cerrarModal();
             cargarTodosLosTickets(); // Recargar la tabla y badges
 
         } catch (error) {
             console.error("Error confirmando la orden:", error);
-            alert("Ocurrió un error al guardar. Revisa la consola.");
+            showCustomAlert("Error", "Ocurrió un error al guardar. Revisa tu conexión.", false);
         } finally {
             btnEnviar.disabled = false;
             btnEnviar.innerHTML = '<i data-lucide="check-circle" style="color: white; width: 18px; height: 18px;"></i> Confirmar Orden';
