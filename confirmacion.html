@@ -255,6 +255,7 @@
 
                 <div class="confirmacion-wrap">
                     
+                    <!-- ENCABEZADO Y TABS -->
                     <header class="page-header-section">
                         <div class="page-header-row">
                             <div class="page-header-content">
@@ -492,7 +493,7 @@
     const storage = firebase.storage();
 
     let ticketsGlobales = []; 
-    let tabActual = 'En proceso'; // Pestaña por defecto
+    let tabActual = 'En proceso'; 
 
     // ==========================================
     // 2. ALERTAS PERSONALIZADAS
@@ -606,10 +607,24 @@
           });
     }
 
+    // === LÓGICA DE BADGES ACTUALIZADA ===
     function actualizarBadges() {
         const enProceso = ticketsGlobales.filter(t => t.estado_confirmacion === 'En proceso').length;
-        const confirmados = ticketsGlobales.filter(t => ['Confirmado', 'Pendiente de Aprobación', 'Costos Aprobados', 'Facturado', 'Pagado'].includes(t.estado_confirmacion)).length;
-        const rechazados = ticketsGlobales.filter(t => ['Rechazado', 'Costos Rechazados'].includes(t.estado_confirmacion)).length;
+        
+        // "Confirmados" son los que tienen el nivel "Aceptado" (o no tienen, por seguridad si se confirmó antes)
+        // pero que su estado ya pasó de "En proceso"
+        const confirmados = ticketsGlobales.filter(t => 
+            t.estado_confirmacion !== 'En proceso' && 
+            t.estado_confirmacion !== 'Borrador' && 
+            (t.evaluacion_nivel === 'Aceptado' || !t.evaluacion_nivel)
+        ).length;
+        
+        // "Rechazados" son estrictamente los evaluados como "No Aceptado"
+        const rechazados = ticketsGlobales.filter(t => 
+            t.estado_confirmacion !== 'En proceso' && 
+            t.estado_confirmacion !== 'Borrador' && 
+            t.evaluacion_nivel === 'No Aceptado'
+        ).length;
         
         document.getElementById('badge-en-proceso').innerText = enProceso;
         if(document.getElementById('badge-confirmados')) document.getElementById('badge-confirmados').innerText = confirmados;
@@ -635,22 +650,22 @@
         const fFin = document.getElementById('filtro-fecha-fin').value;
         const fBuscar = document.getElementById('filtro-buscar').value.toLowerCase();
 
+        // === LÓGICA DE FILTRADO ACTUALIZADA ===
         let ticketsFiltrados = ticketsGlobales.filter(t => {
-            // Filtro de Pestaña
             if (tabActual === 'En proceso') {
                 if (t.estado_confirmacion !== 'En proceso') return false;
             } else if (tabActual === 'Confirmados') {
-                if (!['Confirmado', 'Pendiente de Aprobación', 'Costos Aprobados', 'Facturado', 'Pagado'].includes(t.estado_confirmacion)) return false;
+                if (t.estado_confirmacion === 'En proceso' || t.estado_confirmacion === 'Borrador') return false;
+                if (t.evaluacion_nivel === 'No Aceptado') return false; 
             } else if (tabActual === 'Rechazados') {
-                if (!['Rechazado', 'Costos Rechazados'].includes(t.estado_confirmacion)) return false;
+                if (t.estado_confirmacion === 'En proceso' || t.estado_confirmacion === 'Borrador') return false;
+                if (t.evaluacion_nivel !== 'No Aceptado') return false;
             }
 
-            // Filtros de fecha
             const fDoc = t.fecha_creacion || ""; 
             if (fInicio && fDoc < fInicio) return false;
             if (fFin && fDoc > fFin) return false;
 
-            // Filtro de texto
             if (fBuscar) {
                 const folio = (t.id_ticket || "").toLowerCase();
                 const suc = (t.sucursal || "").toLowerCase();
@@ -680,12 +695,12 @@
                                 <i data-lucide="search" style="width: 14px; height: 14px;"></i> Revisar
                               </button>`;
             } else if (tabActual === 'Confirmados') {
-                estadoHtml = `<span class="status-badge status-confirmado">${t.estado_confirmacion}</span>`;
+                estadoHtml = `<span class="status-badge status-confirmado">Aprobado</span>`;
                 accionHtml = `<button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}', true)">
                                 <i data-lucide="eye" style="width: 14px; height: 14px;"></i> ver CP
                               </button>`;
             } else if (tabActual === 'Rechazados') {
-                estadoHtml = `<span class="status-badge status-rechazado">${t.estado_confirmacion}</span>`;
+                estadoHtml = `<span class="status-badge status-rechazado">No Aprobado</span>`;
                 accionHtml = `<button class="btn-action-red" onclick="abrirModalEvaluacion('${folio}', true)">
                                 <i data-lucide="eye" style="width: 14px; height: 14px;"></i> ver CP
                               </button>`;
@@ -803,7 +818,7 @@
         const btnRemovePhoto = document.getElementById('btn-remove-selfie');
         if (btnRemovePhoto) btnRemovePhoto.style.display = isReadOnly ? 'none' : '';
 
-        // Bloquear canvas y cambiar botón cerrar
+        // Bloquear canvas
         if (isReadOnly) {
             if(canvasFirmaModal) canvasFirmaModal.style.pointerEvents = 'none';
             document.getElementById('btn-cancelar-eval').innerHTML = '<i data-lucide="x-circle" style="color: currentColor; width: 18px; height: 18px;"></i> Cerrar';
@@ -976,7 +991,6 @@
     // 10. ENVÍO DE DATOS A FIREBASE (STORAGE Y FIRESTORE)
     // ==========================================
     function dataURItoBlob(dataURI) {
-        if(!dataURI) return null;
         const byteString = atob(dataURI.split(',')[1]);
         const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
         const ab = new ArrayBuffer(byteString.length);
@@ -1063,7 +1077,6 @@
 
         } catch (error) {
             console.error("Error confirmando la orden:", error);
-            // Mostramos el mensaje exacto para saber por qué falló
             showCustomAlert("Error al guardar", error.message || "Revisa tu conexión a internet.", false);
         } finally {
             btnEnviar.disabled = false;
