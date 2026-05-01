@@ -95,9 +95,12 @@
         html.is-logged-in #login-screen { display: none !important; }
         html.is-logged-in #app-screen { display: block !important; }
 
-        /* ESTILOS NUEVOS DASHBOARD MANTENIMIENTO */
-        .tab-btn { transition: all 0.2s; }
-        .tab-btn:hover { background: #e5e7eb !important; }
+        /* ESTILOS DE PESTAÑAS (TABS) PARA MIS ÓRDENES */
+        .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px;}
+        .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
+        .tab-btn.active { background: white; color: #111827; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .tab-btn.active .tab-badge { background: #DC2626; }
     </style>
 </head>
 <body class="has-sidebar">
@@ -212,19 +215,27 @@
                         <header class="page-header-section" style="margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
                             <div>
                                 <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
-                                <p style="color: #6b7280; margin: 0;">Gestiona tus órdenes de servicio</p>
+                                <p style="color: #6b7280; margin: 0;">Registrar orden de servicio</p>
                             </div>
-                            <button type="button" onclick="mostrarFormularioOrden(true)" style="background: #DC2626; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
-                                <i data-lucide="plus-circle" style="width: 18px;"></i> Nueva Orden
+                            <button type="button" id="btn-toggle-vista" onclick="mostrarDashboardOrdenes()" style="background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                                <i data-lucide="list" style="width: 18px;"></i> Ver mis órdenes
                             </button>
                         </header>
 
-                        <div id="dashboard-ordenes">
-                            <div class="tabs-container" style="display: flex; gap: 15px; margin-bottom: 20px; overflow-x: auto;">
-                                <button class="tab-btn active" onclick="cambiarTabMtto('Borrador')" id="tab-Borrador" style="background: white; border: 1px solid #e5e7eb; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; color: #111827;">Guardados</button>
-                                <button class="tab-btn" onclick="cambiarTabMtto('En proceso')" id="tab-En proceso" style="background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; color: #4b5563;">Pendientes</button>
-                                <button class="tab-btn" onclick="cambiarTabMtto('Costos Aprobados')" id="tab-Costos Aprobados" style="background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; color: #4b5563;">Aprobados</button>
-                                <button class="tab-btn" onclick="cambiarTabMtto('Costos Rechazados')" id="tab-Costos Rechazados" style="background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 600; color: #4b5563;">Rechazados</button>
+                        <div id="dashboard-ordenes" style="display: none;">
+                            <div class="tabs-container">
+                                <button class="tab-btn active" onclick="cambiarTabMtto('Borrador')" id="tab-Borrador">
+                                    Guardados <span class="tab-badge" id="badge-Borrador">0</span>
+                                </button>
+                                <button class="tab-btn" onclick="cambiarTabMtto('En proceso')" id="tab-En proceso">
+                                    Pendientes <span class="tab-badge" id="badge-En proceso">0</span>
+                                </button>
+                                <button class="tab-btn" onclick="cambiarTabMtto('Costos Aprobados')" id="tab-Costos Aprobados">
+                                    Aprobados <span class="tab-badge" id="badge-Costos Aprobados">0</span>
+                                </button>
+                                <button class="tab-btn" onclick="cambiarTabMtto('Costos Rechazados')" id="tab-Costos Rechazados">
+                                    Rechazados <span class="tab-badge" id="badge-Costos Rechazados">0</span>
+                                </button>
                             </div>
 
                             <div class="data-table-container">
@@ -245,11 +256,8 @@
                             </div>
                         </div>
 
-                        <form id="ordenMttoForm" style="display: none;">
-                            <button type="button" onclick="mostrarFormularioOrden(false)" style="margin-bottom: 20px; background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; color: #374151;">
-                                <i data-lucide="arrow-left" style="width: 16px;"></i> Volver a mis órdenes
-                            </button>
-
+                        <form id="ordenMttoForm" style="display: block;">
+                            
                             <div class="form-card" style="border-left: 4px solid #DC2626;">
                                 <h3 class="section-title" style="color: #DC2626; margin-bottom: 5px;"><i data-lucide="hash"></i> Folio de Orden</h3>
                                 <div class="form-group">
@@ -485,7 +493,7 @@
         window.appData = null;
 
         // ==========================================
-        // LÓGICA DEL DASHBOARD DE ÓRDENES (NUEVO)
+        // LÓGICA DEL DASHBOARD DE ÓRDENES Y BADGES
         // ==========================================
         let misOrdenes = [];
         let tabMttoActual = 'Borrador';
@@ -501,27 +509,39 @@
                   misOrdenes = [];
                   querySnapshot.forEach((doc) => { misOrdenes.push({ id_doc: doc.id, ...doc.data() }); });
                   
-                  // Ordenar por fecha_creacion descendente
+                  // Ordenar por fecha descendente
                   misOrdenes.sort((a, b) => {
-                      let fA = a.fecha_creacion || "";
-                      let fB = b.fecha_creacion || "";
+                      let fA = a.fecha_creacion || ""; let fB = b.fecha_creacion || "";
                       return fB.localeCompare(fA);
                   });
                   
+                  actualizarBadgesMtto();
                   renderTablaMisOrdenes();
               })
               .catch(err => console.error("Error al cargar órdenes", err));
         }
 
+        function actualizarBadgesMtto() {
+            let b = 0, p = 0, a = 0, r = 0;
+            misOrdenes.forEach(o => {
+                if (o.estado_confirmacion === 'Borrador') b++;
+                else if (['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion)) p++;
+                else if (o.estado_confirmacion === 'Costos Aprobados') a++;
+                else if (o.estado_confirmacion === 'Costos Rechazados') r++;
+            });
+
+            document.getElementById('badge-Borrador').innerText = b;
+            document.getElementById('badge-En proceso').innerText = p;
+            document.getElementById('badge-Costos Aprobados').innerText = a;
+            document.getElementById('badge-Costos Rechazados').innerText = r;
+        }
+
         function cambiarTabMtto(estado) {
             tabMttoActual = estado;
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.style.background = '#f3f4f6'; btn.style.color = '#4b5563'; btn.style.border = 'none';
-            });
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             const btnActivo = document.getElementById(`tab-${estado}`);
-            if(btnActivo) {
-                btnActivo.style.background = 'white'; btnActivo.style.color = '#111827'; btnActivo.style.border = '1px solid #e5e7eb';
-            }
+            if(btnActivo) btnActivo.classList.add('active');
+            
             renderTablaMisOrdenes();
         }
 
@@ -529,10 +549,9 @@
             const tbody = document.getElementById('tabla-mis-ordenes');
             tbody.innerHTML = '';
             
-            // Para "En proceso" vamos a agrupar los confirmados también
             let filtrados = misOrdenes.filter(o => {
                 if(tabMttoActual === 'En proceso') {
-                    return o.estado_confirmacion === 'En proceso' || o.estado_confirmacion === 'Confirmado' || o.estado_confirmacion === 'Pendiente de Aprobación';
+                    return ['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion);
                 }
                 return o.estado_confirmacion === tabMttoActual;
             });
@@ -551,13 +570,11 @@
                     btnAccion = `<button onclick="verPDFOrden('${o.id_doc}')" style="background:#4b5563; color:white; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; display:inline-flex; align-items:center; gap:5px;"><i data-lucide="search" style="width:14px;"></i> Ver PDF</button>`;
                 }
 
-                let colorPill = '#f1f5f9';
-                let textPill = '#475569';
+                let colorPill = '#f1f5f9', textPill = '#475569';
                 if(o.estado_confirmacion === 'Borrador') { colorPill = '#e0e7ff'; textPill = '#1d4ed8'; }
-                else if(o.estado_confirmacion === 'En proceso') { colorPill = '#fef3c7'; textPill = '#b45309'; }
+                else if(['En proceso', 'Confirmado', 'Pendiente de Aprobación'].includes(o.estado_confirmacion)) { colorPill = '#fef3c7'; textPill = '#b45309'; }
                 else if(o.estado_confirmacion === 'Costos Aprobados') { colorPill = '#dcfce7'; textPill = '#15803d'; }
                 else if(o.estado_confirmacion === 'Costos Rechazados') { colorPill = '#fee2e2'; textPill = '#b91c1c'; }
-                else { colorPill = '#f3f4f6'; textPill = '#374151'; } // Confirmado / Pendiente de aprobación
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -570,6 +587,57 @@
                 tbody.appendChild(tr);
             });
             lucide.createIcons();
+        }
+
+        // ==========================================
+        // ALTERNADOR: FORMULARIO VS MIS ÓRDENES
+        // ==========================================
+        function mostrarDashboardOrdenes() {
+            document.getElementById('ordenMttoForm').style.display = 'none';
+            document.getElementById('dashboard-ordenes').style.display = 'block';
+            
+            const btnToggle = document.getElementById('btn-toggle-vista');
+            btnToggle.innerHTML = '<i data-lucide="plus-circle" style="width: 18px;"></i> Nueva Orden';
+            btnToggle.style.background = '#DC2626';
+            btnToggle.style.color = 'white';
+            btnToggle.style.border = 'none';
+            btnToggle.setAttribute('onclick', 'mostrarFormularioOrden(true)');
+            
+            lucide.createIcons();
+            cargarMisOrdenes();
+        }
+
+        async function mostrarFormularioOrden(esNueva) {
+            document.getElementById('dashboard-ordenes').style.display = 'none';
+            document.getElementById('ordenMttoForm').style.display = 'block';
+            document.querySelector('.app-content').scrollTo({top: 0, behavior: 'smooth'});
+
+            const btnToggle = document.getElementById('btn-toggle-vista');
+            btnToggle.innerHTML = '<i data-lucide="list" style="width: 18px;"></i> Ver mis órdenes';
+            btnToggle.style.background = '#f8fafc';
+            btnToggle.style.color = '#374151';
+            btnToggle.style.border = '1px solid #cbd5e1';
+            btnToggle.setAttribute('onclick', 'mostrarDashboardOrdenes()');
+            lucide.createIcons();
+
+            if(esNueva) {
+                document.getElementById('ordenMttoForm').reset();
+                document.getElementById('doc_id_actual').value = '';
+                document.getElementById('folio_mc').value = 'Generando...';
+                document.getElementById('sucursal-details').style.display = 'none';
+                
+                fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
+                renderSlots('falla'); renderSlots('solucion'); renderSlots('soporte'); renderSlots('selfie');
+                limpiarFirma('firma_tecnico');
+
+                try {
+                    const nuevoFolio = await obtenerFolioGlobal();
+                    document.getElementById('folio_mc').value = nuevoFolio;
+                } catch(err) {
+                    console.error("Error al generar folio:", err);
+                    document.getElementById('folio_mc').value = "Error de red";
+                }
+            }
         }
 
         // ==========================================
@@ -592,35 +660,8 @@
         }
 
         // ==========================================
-        // MOSTRAR Y CARGAR FORMULARIO
+        // CARGAR BORRADOR PARA EDICIÓN
         // ==========================================
-        let fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
-        
-        async function mostrarFormularioOrden(esNueva) {
-            document.getElementById('dashboard-ordenes').style.display = 'none';
-            document.getElementById('ordenMttoForm').style.display = 'block';
-            document.querySelector('.app-content').scrollTo({top: 0, behavior: 'smooth'});
-
-            if(esNueva) {
-                document.getElementById('ordenMttoForm').reset();
-                document.getElementById('doc_id_actual').value = '';
-                document.getElementById('folio_mc').value = 'Generando...';
-                document.getElementById('sucursal-details').style.display = 'none';
-                
-                fotos = { falla: [null, null, null], solucion: [null, null, null], soporte: [null], selfie: [null] };
-                renderSlots('falla'); renderSlots('solucion'); renderSlots('soporte'); renderSlots('selfie');
-                limpiarFirma('firma_tecnico');
-
-                try {
-                    const nuevoFolio = await obtenerFolioGlobal();
-                    document.getElementById('folio_mc').value = nuevoFolio;
-                } catch(err) {
-                    console.error("Error al generar folio:", err);
-                    document.getElementById('folio_mc').value = "Error de red";
-                }
-            }
-        }
-
         function cargarBorrador(id_doc) {
             const o = misOrdenes.find(x => x.id_doc === id_doc);
             if(!o) return;
@@ -671,7 +712,7 @@
         }
 
         // ==========================================
-        // PROCESAR (GUARDAR BORRADOR O ENVIAR)
+        // PROCESAR ORDEN (GUARDAR BORRADOR O ENVIAR)
         // ==========================================
         async function procesarOrden(estadoFinal) {
             const btnGuardar = document.getElementById('btn-guardar-borrador');
@@ -711,14 +752,13 @@
                 let urlsFalla = [], urlsSolucion = [];
                 let urlSoporte = null, urlSelfie = null, urlFirma = null;
 
-                // Subir fotos a Storage si son base64 (empiezan con data:image)
                 const checkAndUpload = async (fileData, path) => {
                     if (fileData && fileData.startsWith('data:image')) {
                         const ref = storage.ref(path);
                         await ref.put(dataURItoBlob(fileData));
                         return await ref.getDownloadURL();
                     }
-                    return fileData; // si ya era una url http de firebase, la deja igual
+                    return fileData; // Si ya es url de firebase la retorna igual
                 };
 
                 for(let i=0; i<fotos.falla.length; i++) {
@@ -780,10 +820,13 @@
 
                 alert(estadoFinal === 'Borrador' ? "Borrador guardado exitosamente." : "Orden enviada a Confirmación.");
                 
-                document.getElementById('ordenMttoForm').style.display = 'none';
-                document.getElementById('dashboard-ordenes').style.display = 'block';
-                document.querySelector('.app-content').scrollTo({top: 0, behavior: 'smooth'});
-                cargarMisOrdenes();
+                if (estadoFinal === 'En proceso') {
+                    // Si se envió, generamos PDF
+                    sessionStorage.setItem('DatosOrdenPDF', JSON.stringify(ordenData));
+                    window.location.href = 'index2.html';
+                } else {
+                    mostrarDashboardOrdenes();
+                }
 
             } catch (err) {
                 console.error(err);
@@ -899,7 +942,8 @@
                 
                 inicializarFirma();
                 cambiarVista(null, 'vista-mantenimiento');
-                cargarMisOrdenes(); // Llenar el dashboard al entrar
+                mostrarFormularioOrden(true); // Arranca siempre generando una orden nueva
+                cargarMisOrdenes();
             }
         });
 
@@ -928,7 +972,7 @@
                     sessionStorage.setItem('loginSession', JSON.stringify(data));
                     sessionStorage.setItem('loginUser', user);
                     window.appData = data;
-                    window.location.reload(); // Recargar para activar listeners
+                    window.location.reload(); 
                 } else {
                     alertMsg.innerText = data.error || "Verifica tu usuario o contraseña";
                     alertMsg.style.display = 'block';
