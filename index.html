@@ -135,14 +135,15 @@
         #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
         #alert-btn:hover { opacity: 0.9; }
 
-        /* ESTILOS DEL MODAL CP LECTURA */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-card { background: white; width: 100%; max-width: 600px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; }
-
+        /* === ESTILOS BLINDADOS DEL MODAL CP LECTURA === */
+        #modalLecturaCP { display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0,0,0,0.7) !important; z-index: 9999999 !important; justify-content: center !important; align-items: center !important; padding: 20px; box-sizing: border-box; }
+        #modalLecturaCP.show-modal { display: flex !important; }
+        
+        .modal-card-cp { background: white; width: 100%; max-width: 600px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; }
         .eval-field-group { width: 100%; display: flex; flex-direction: column; }
         .eval-label { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; justify-content: flex-start; }
         .eval-input-wrapper { display: flex; flex-direction: column; width: 100%; }
-        .eval-input-control { width: 100%; padding: 0 1rem; line-height: 40px; font-size: 14px; color: #111827; background-color: #f3f4f6; border-radius: 0.5rem; border: 1px solid #d1d5db; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); box-sizing: border-box; height: 42px; display: block; }
+        .eval-input-control { width: 100%; padding: 0 1rem; line-height: 40px; font-size: 14px; color: #111827; background-color: #f3f4f6; border-radius: 0.5rem; border: 1px solid #d1d5db; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); box-sizing: border-box; height: 42px; display: block; }
         textarea.eval-input-control { height: auto; min-height: 80px; padding: 0.75rem 1rem; line-height: 1.5; resize: none; }
         .eval-input-control[readonly] { background-color: #e5e7eb; color: #4b5563; cursor: not-allowed; border-color: #e5e7eb; box-shadow: none; }
 
@@ -264,7 +265,7 @@
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 20px;">
                         
-                        <!-- ENCABEZADO Y PESTAÑAS -->
+                        <!-- ENCABEZADO Y PESTAÑAS (LINEA GRIS POR DEBAJO) -->
                         <header class="page-header-section" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
                             <div style="margin-bottom: 15px;">
                                 <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
@@ -512,9 +513,9 @@
         </div>
     </div>
 
-    <!-- MODAL LECTURA CP (Confirmación Operativa) -->
-    <div id="modalLecturaCP" class="modal-overlay">
-        <div class="modal-card" style="max-width: 600px;">
+    <!-- MODAL LECTURA CP (Confirmación Operativa) AHORA SÍ CONECTADO Y FORZADO A ESTAR AL FRENTE -->
+    <div id="modalLecturaCP">
+        <div class="modal-card-cp">
             <div class="modal-header" style="padding: 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: flex-start; background: #fff;">
                 <div>
                     <h2 style="margin: 0; font-size: 18px; color: #111827; font-weight: 800;">Confirmación Operativa</h2>
@@ -1273,12 +1274,15 @@
                 firmaImg.style.display = 'none';
             }
 
-            document.getElementById('modalLecturaCP').style.display = 'flex';
+            // ABRIR EL MODAL FORZANDO LA CLASE Y ESTILOS
+            const modalCP = document.getElementById('modalLecturaCP');
+            modalCP.classList.add('show-modal');
             lucide.createIcons();
         }
 
         function cerrarModalCP() {
-            document.getElementById('modalLecturaCP').style.display = 'none';
+            const modalCP = document.getElementById('modalLecturaCP');
+            modalCP.classList.remove('show-modal');
         }
 
         // ==========================================
