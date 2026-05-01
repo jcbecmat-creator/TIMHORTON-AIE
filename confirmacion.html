@@ -71,7 +71,8 @@
         .co-table th { padding: 16px 20px; text-align: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #E5E7EB; white-space: nowrap; }
         .co-table td { padding: 16px 20px; text-align: center; font-size: 14px; color: #111827; border-bottom: 1px solid #f3f4f6; }
         
-        .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
+        .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: background 0.2s; }
+        .btn-action-red:hover { background: #b91c1c; }
         .btn-action-gray { height: 32px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: background 0.2s; }
         .btn-action-gray:hover { background: #e5e7eb; }
 
@@ -98,9 +99,11 @@
         
         /* Botones del footer */
         .modal-footer { padding: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px; background: #f9fafb; border-radius: 0 0 16px 16px; position: sticky; bottom: 0; z-index: 100; }
-        .modal-footer button { height: 44px; padding: 0 24px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; gap: 8px; }
+        .modal-footer button { height: 44px; padding: 0 24px; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; gap: 8px; transition: all 0.2s; }
         .btn-cancelar { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; }
+        .btn-cancelar:hover { background: #e2e8f0; }
         .btn-enviar { background: #DC2626; color: white; border: none; }
+        .btn-enviar:hover { background: #b91c1c; }
         .btn-enviar:disabled { background: #fca5a5; cursor: not-allowed; } 
 
         /* === PREGUNTAS Y RESPUESTAS === */
@@ -994,9 +997,20 @@
         const cargo = document.getElementById('eval-cargo').value.trim();
         const nivel = document.getElementById('eval-nivel').value;
         const comentario = document.getElementById('eval-comentario').value.trim();
+
+        // 1. FORZAR EXTRACCIÓN DE LA FIRMA
+        const canvasFirmaReal = document.getElementById('eval-firma-canvas');
+        const firmaVacia = document.createElement('canvas');
+        firmaVacia.width = canvasFirmaReal.width; firmaVacia.height = canvasFirmaReal.height;
+
+        if (canvasFirmaReal.toDataURL() !== firmaVacia.toDataURL()) {
+            document.getElementById('eval-firma-data').value = canvasFirmaReal.toDataURL();
+        }
+
         const selfieBase64 = document.getElementById('eval-selfie-data').value;
         const firmaBase64 = document.getElementById('eval-firma-data').value;
 
+        // Validaciones
         if (!nombre || !nivel) {
             showCustomAlert("Atención", "Por favor, completa al menos el Nombre del Empleado y el Nivel de Servicio.", false);
             return;
@@ -1006,6 +1020,7 @@
             return;
         }
 
+        // Bloquear botones mientras carga
         const btnEnviar = document.getElementById('btn-enviar-eval');
         const btnCancelar = document.getElementById('btn-cancelar-eval');
         btnEnviar.disabled = true;
@@ -1013,32 +1028,25 @@
         btnCancelar.disabled = true;
 
         try {
-            let selfieUrl = null;
-            let firmaUrl = null;
+            // Función auxiliar optimizada para subir archivos
+            const checkAndUpload = async (fileData, path) => {
+                if (fileData && fileData.startsWith('data:image')) {
+                    const ref = storage.ref(path);
+                    await ref.put(dataURItoBlob(fileData));
+                    return await ref.getDownloadURL();
+                }
+                return fileData || null; 
+            };
 
-            // 1. Subir Selfie (si existe y si no era una URL de Firebase previa)
-            if (selfieBase64 && selfieBase64.startsWith('data:image')) {
-                const selfieBlob = dataURItoBlob(selfieBase64);
-                const selfieRef = storage.ref(`evaluaciones/${folio}/selfie_${Date.now()}.jpg`);
-                await selfieRef.put(selfieBlob);
-                selfieUrl = await selfieRef.getDownloadURL();
-            } else {
-                selfieUrl = selfieBase64; // Si ya estaba guardada, mantiene la URL
-            }
+            // Usamos la carpeta "ordenes/" que ya tiene permisos en Firebase
+            const selfieUrl = await checkAndUpload(selfieBase64, `ordenes/${folio}/eval_selfie_${Date.now()}.jpg`);
+            const firmaUrl = await checkAndUpload(firmaBase64, `ordenes/${folio}/eval_firma_${Date.now()}.png`);
 
-            // 2. Subir Firma (si es base64)
-            if (firmaBase64 && firmaBase64.startsWith('data:image')) {
-                const firmaBlob = dataURItoBlob(firmaBase64);
-                const firmaRef = storage.ref(`evaluaciones/${folio}/firma_${Date.now()}.png`);
-                await firmaRef.put(firmaBlob);
-                firmaUrl = await firmaRef.getDownloadURL();
-            } else {
-                firmaUrl = firmaBase64;
-            }
-
-            // 3. Actualizar Firestore
-            const docRealId = window.ticketsPendientes[folio].doc_id || folio;
+            // Obtener ID real del documento
+            const docObj = window.ticketsPendientes[folio];
+            const docRealId = (docObj && docObj.doc_id) ? docObj.doc_id : folio;
             
+            // Actualizar en Firestore
             await db.collection("tickets_mantenimiento").doc(docRealId).update({
                 evaluacion_nombre: nombre,
                 evaluacion_numero: numero,
@@ -1057,7 +1065,7 @@
 
         } catch (error) {
             console.error("Error confirmando la orden:", error);
-            showCustomAlert("Error", "Ocurrió un error al guardar. Revisa tu conexión.", false);
+            showCustomAlert("Error", "Ocurrió un error al guardar. Revisa la consola.", false);
         } finally {
             btnEnviar.disabled = false;
             btnEnviar.innerHTML = '<i data-lucide="check-circle" style="color: white; width: 18px; height: 18px;"></i> Confirmar Orden';
