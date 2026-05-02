@@ -558,7 +558,7 @@
                     estadoHtml = `<span class="status-badge" style="background:#D1FAE5; color:#065F46;"><i class="status-dot green"></i> Capturado</span>`;
                 }
                 
-                accionHtml = `<button class="btn-action-gray" onclick="abrirModal('${folio}', 'lectura')"><i data-lucide="eye" style="width:14px;"></i> Ver Costos</button>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', 'lectura')"><i data-lucide="eye" style="width:14px;"></i> Ver Costos</button>`;
             
             } else if (tabActual === 'rechazados') {
                 // LÓGICA RECHAZADOS: Muestra la suma de lo APROBADO, y cantidad de conceptos X de Y
