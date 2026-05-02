@@ -42,15 +42,11 @@
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* === COSTOS STYLES === */
+        /* === COSTOS STYLES (ORIGINAL) === */
         .costos-wrap { max-width: 1280px; margin: 0 auto; padding: 24px 24px 64px; }
-        .page-header-section { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #e5e7eb; }
-        .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
-        .page-header-content h1 { font-size: 24px; font-weight: 600; color: #111827; letter-spacing: -0.025em; margin: 0 0 8px 0; }
-        .page-header-content p { font-size: 14px; color: #6b7280; margin: 0; }
         
         /* === ESTILOS DE PESTAÑAS (TABS) === */
-        .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; margin-bottom: 0;}
+        .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; margin-bottom: 20px;}
         .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; white-space: nowrap; }
         .tab-btn:hover { background: #e5e7eb; }
         .tab-btn.active { background: white !important; color: #111827 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb !important; }
@@ -83,7 +79,7 @@
         .status-enviado { background: #DBEAFE; color: #1E40AF; } 
         .status-rechazado { background: #fee2e2; color: #b91c1c; }
 
-        /* === MODAL COSTOS === */
+        /* === MODAL COSTOS (ORIGINAL) === */
         .modal-overlay { display: none; position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(0,0,0,0.7) !important; z-index: 9999999 !important; justify-content: center !important; align-items: center !important; padding: 20px; box-sizing: border-box; }
         .modal-overlay.active { display: flex !important; }
         .modal-card { background: white; width: 100%; max-width: 1100px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; }
@@ -96,7 +92,7 @@
         .modal-body { padding: 20px 24px; overflow-y: auto; background: #ffffff; }
         
         .costos-table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        .costos-table th { font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; text-align: left; padding: 0 10px 10px 10px; border-bottom: 2px solid #f3f4f6; }
+        .costos-table th { font-size: 11px; font-weight: 700; color: #6b7280; text-align: left; padding: 0 10px 10px 10px; border-bottom: 2px solid #f3f4f6; }
         .costos-row td { padding: 10px; }
         .c-input { width: 100%; height: 38px; border: 1px solid #d1d5db; border-radius: 6px; padding: 0 12px; font-size: 13px; box-sizing: border-box; background: #f9fafb; color: #111827; transition: all 0.2s;}
         .c-input:focus { border-color: #DC2626; outline: none; background: white; box-shadow: 0 0 0 3px rgba(220,38,38,0.1); }
@@ -116,15 +112,6 @@
         .btn-cancelar:hover { background: #f3f4f6; }
         .btn-enviar { background: #7f1d1d; color: white; border: none; }
         .btn-enviar:hover { background: #991b1b; }
-
-        /* MODAL ALERTA CUSTOM */
-        #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-        #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
-        #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
-        #alert-msg { margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5; }
-        #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
-        #alert-btn:hover { opacity: 0.9; }
 
     </style>
 </head>
@@ -190,26 +177,23 @@
                 
                 <div class="costos-wrap">
                     
-                    <!-- ENCABEZADO IDÉNTICO A CONFIRMACIÓN OPERATIVA -->
-                    <header class="page-header-section">
-                        <div class="page-header-row">
-                            <div class="page-header-content">
-                                <h1>Costos de Reparación</h1>
-                                <p>Gestiona los costos de conceptos empleados en órdenes aprobadas</p>
-                            </div>
-                            <div class="tabs-container">
-                                <button class="tab-btn active" onclick="cambiarTab('Pendientes')" id="tab-Pendientes">
-                                    Pendientes <span class="tab-badge" id="badge-pendientes">0</span>
-                                </button>
-                                <button class="tab-btn" onclick="cambiarTab('Enviados')" id="tab-Enviados">
-                                    Enviados <span class="tab-badge" id="badge-enviados">0</span>
-                                </button>
-                                <button class="tab-btn" onclick="cambiarTab('Rechazados')" id="tab-Rechazados">
-                                    Rechazados <span class="tab-badge" id="badge-rechazados">0</span>
-                                </button>
-                            </div>
-                        </div>
+                    <!-- LÍNEA GRIS DEBAJO DEL TEXTO (AGREGADO padding-bottom y border-bottom) -->
+                    <header class="page-header-section" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
+                        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1>
+                        <p style="color: #6b7280; margin: 0;">Gestiona los costos de conceptos empleados en órdenes aprobadas</p>
                     </header>
+
+                    <div class="tabs-container">
+                        <button class="tab-btn active" onclick="cambiarTab('Pendientes')" id="tab-Pendientes">
+                            Pendientes <span class="tab-badge" id="badge-pendientes">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="cambiarTab('Enviados')" id="tab-Enviados">
+                            Enviados <span class="tab-badge" id="badge-enviados">0</span>
+                        </button>
+                        <button class="tab-btn" onclick="cambiarTab('Rechazados')" id="tab-Rechazados">
+                            Rechazados <span class="tab-badge" id="badge-rechazados">0</span>
+                        </button>
+                    </div>
 
                     <form class="co-filters">
                         <div class="co-filters-grid">
@@ -261,13 +245,13 @@
         </div>
     </div>
 
-    <!-- MODAL DE CAPTURA DE COSTOS -->
+    <!-- MODAL DE CAPTURA DE COSTOS (ORIGINAL) -->
     <div id="modalCostos" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
                 <div class="modal-header-info">
-                    <h2>Costos de Reparación</h2>
-                    <p>Carga los conceptos empleados para esta orden</p>
+                    <h2 style="margin: 0; font-size: 20px; color: #111827; font-weight: 800;">Costos de Reparación</h2>
+                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #6b7280;">Carga los conceptos empleados para esta orden</p>
                 </div>
                 
                 <div class="modal-header-totals">
@@ -316,13 +300,13 @@
         </div>
     </div>
 
-    <!-- ALERTA CUSTOM (REEMPLAZA ALERTS NATIVOS) -->
-    <div id="custom-alert">
-        <div class="modal-card-alert">
-            <div id="alert-icon-container"></div>
-            <h3 id="alert-title"></h3>
-            <p id="alert-msg"></p>
-            <button id="alert-btn" onclick="closeCustomAlert()">Aceptar</button>
+    <!-- ALERTA CUSTOM (DISEÑO PERSONALIZADO) -->
+    <div id="custom-alert" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+        <div style="background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+            <div id="alert-icon-container" style="margin-bottom: 16px; display: flex; justify-content: center;"></div>
+            <h3 id="alert-title" style="margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700;"></h3>
+            <p id="alert-msg" style="margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5;"></p>
+            <button onclick="document.getElementById('custom-alert').style.display='none'" style="width: 100%; padding: 12px; border-radius: 8px; border: none; background: #DC2626; color: white; font-weight: 600; font-size: 14px; cursor: pointer;">Aceptar</button>
         </div>
     </div>
 
@@ -348,29 +332,25 @@
     let tabActual = 'Pendientes'; 
 
     // ==========================================
-    // 2. ALERTAS PERSONALIZADAS
+    // 2. FUNCIÓN DE ALERTA PERSONALIZADA
     // ==========================================
     function showCustomAlert(title, message, isSuccess = true) {
         const alertBox = document.getElementById('custom-alert');
         const alertTitle = document.getElementById('alert-title');
         const alertMsg = document.getElementById('alert-msg');
         const alertIcon = document.getElementById('alert-icon-container');
-        const alertBtn = document.getElementById('alert-btn');
 
         alertTitle.innerText = title;
         alertMsg.innerText = message;
 
         if(isSuccess) {
             alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
-            alertBtn.style.background = '#16a34a';
         } else {
             alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
-            alertBtn.style.background = '#DC2626';
         }
         alertBox.style.display = 'flex';
         lucide.createIcons();
     }
-    function closeCustomAlert() { document.getElementById('custom-alert').style.display = 'none'; }
 
     // ==========================================
     // 3. INICIALIZACIÓN
@@ -428,7 +408,6 @@
     // 4. CARGA DE DATOS Y PESTAÑAS
     // ==========================================
     function cargarTodosLosTickets() {
-        // En "Costos de Reparación", nos interesan los Confirmados en adelante
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "in", ["Confirmado", "Pendiente de Aprobación", "Costos Rechazados", "Costos Aprobados", "Facturado", "Pagado"])
           .get()
@@ -535,7 +514,6 @@
                               </button>`;
             } else if (tabActual === 'Rechazados') {
                 estadoHtml = `<span class="status-badge status-rechazado">Costos Rechazados</span>`;
-                // Si fueron rechazados, puede corregirlos
                 accionHtml = `<button class="btn-action-red" onclick="abrirModalCostos('${folio}', false)">
                                 <i data-lucide="edit-2"></i> Corregir
                               </button>`;
@@ -586,11 +564,9 @@
         const tbody = document.getElementById('costos-rows');
         tbody.innerHTML = '';
         
-        // Cargar conceptos existentes si los hay
         if (ticket.costos && ticket.costos.conceptos && ticket.costos.conceptos.length > 0) {
             ticket.costos.conceptos.forEach(c => agregarFilaCosto(c, isReadOnly));
         } else {
-            // Fila inicial vacía
             if(!isReadOnly) agregarFilaCosto(null, false);
         }
 
@@ -712,7 +688,6 @@
             const precio = parseFloat(tr.querySelector('.in-precio').value);
             const obs = tr.querySelector('.in-obs').value.trim();
             
-            // Si la fila tiene algún dato parcial pero le falta concepto, cant o precio, o es la única y está vacía
             if(concepto !== '' || cantidad > 0 || precio > 0) {
                 if(concepto === '' || isNaN(cantidad) || cantidad <= 0 || isNaN(precio) || precio <= 0) {
                     valid = false;
@@ -724,7 +699,7 @@
             }
         });
 
-        // REEMPLAZO DEL ALERT NATIVO POR LA ALERTA PERSONALIZADA
+        // REEMPLAZO DEL ALERT NATIVO POR LA ALERTA PERSONALIZADA (showCustomAlert)
         if(conceptos.length === 0 || !valid) {
             showCustomAlert("Atención", "Debes llenar al menos una fila con concepto, cantidad y precio válido.", false);
             return;
@@ -751,9 +726,10 @@
             
             await db.collection("tickets_mantenimiento").doc(docRealId).update({
                 costos: dataCostos,
-                estado_confirmacion: "Pendiente de Aprobación" // Pasa a la siguiente etapa de los contadores
+                estado_confirmacion: "Pendiente de Aprobación" 
             });
 
+            // REEMPLAZO DEL ALERT NATIVO DE ÉXITO
             showCustomAlert("¡Éxito!", "Los costos se han guardado y enviado a aprobación.", true);
             cerrarModalCostos();
             cargarTodosLosTickets(); 
