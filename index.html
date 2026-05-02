@@ -1375,7 +1375,7 @@
                     sessionStorage.setItem('loginSession', JSON.stringify(data));
                     sessionStorage.setItem('loginUser', user);
                     window.appData = data;
-                    window.location.reload(); 
+                    window.location.href = 'inicio.html'; // <--- ¡LISTO! AHORA SALTA AL DASHBOARD
                 } else {
                     alertMsg.innerText = data.error || "Verifica tu usuario o contraseña";
                     alertMsg.style.display = 'block';
