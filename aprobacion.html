@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aprobación de Costos | Tim Hortons</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -17,10 +17,10 @@
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
     <script>
         if (!sessionStorage.getItem('loginSession')) {
-            window.location.href = 'index.html';
+            window.location.replace('index.html');
         } else {
             document.documentElement.classList.add('is-logged-in');
         }
@@ -31,164 +31,112 @@
     </script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
+        body { margin: 0; padding: 0; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         html.is-logged-in #app-screen { display: block !important; }
-        
-        /* ESTILO DEL MENÚ ACTIVO TIPO PASTILLA CON CURVA */
+
+        /* === ESTILOS DEL MENÚ PRINCIPAL === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        /* Estilos de la página Aprobación */
+        /* === APROBACIÓN STYLES === */
         .aprobacion-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-16); }
-        .page-header-section { margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--gray-200); }
-        .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-6); }
-        .page-header-content h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-2) 0; }
-        .page-header-content p { font-size: var(--text-sm); color: var(--gray-500); margin: 0; }
-
-        .tabs-segmented { display: inline-flex; background: var(--gray-100); border-radius: var(--radius-lg); padding: var(--space-1); gap: var(--space-1); }
-        .tab-segment { padding: var(--space-3) var(--space-5); border-radius: var(--radius-md); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--gray-600); transition: all var(--duration-fast); display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer; }
-        .tab-segment.active { background: white; color: var(--gray-900); box-shadow: var(--shadow-sm); }
-        .tab-segment-count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--radius-full); font-size: 11px; font-weight: var(--weight-bold); background: var(--gray-200); color: var(--gray-600); }
-        .tab-segment.active .tab-segment-count { background: #DC2626; color: white; }
-
-        .filters-bar { background: white; border-radius: var(--radius-xl); padding: var(--space-5) var(--space-6); margin-bottom: var(--space-6); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-end; }
-        .filter-group { display: flex; flex-direction: column; gap: var(--space-2); min-width: 140px; flex: 1; }
-        .filter-label { font-size: 11px; font-weight: var(--weight-semibold); text-transform: uppercase; color: var(--gray-500); }
-        .input { padding: var(--space-3) var(--space-4); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--gray-900); width: 100%; box-sizing: border-box; }
-        .filter-actions { display: flex; gap: var(--space-2); }
+        
+        .tabs-container { display: flex; gap: 15px; align-items: center; }
+        .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .tab-btn.active { background: white; color: #111827; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; }
+        .tab-badge { background: #d1d5db; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .tab-btn.active .tab-badge { background: #DC2626; }
+        
+        /* === FILTROS === */
+        .co-filters { background: white; border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
+        .co-filters-grid { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+        .co-filter-group { flex: 1; min-width: 160px; }
+        .co-filter-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; margin-bottom: 8px; display: block; }
+        .co-filter-input { height: 42px; width: 100%; padding: 0 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #111827; box-sizing: border-box; }
         
         .btn-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
         .btn-exportar { height: 42px; background: #16a34a; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
 
-        .data-table-container { background: white; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table thead { background: var(--gray-50); }
-        .data-table th { font-size: 11px; font-weight: var(--weight-semibold); text-transform: uppercase; color: var(--gray-500); padding: var(--space-4) var(--space-5); text-align: center; border-bottom: 1px solid var(--gray-200); white-space: nowrap;}
-        .data-table td { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--gray-100); font-size: var(--text-sm); color: var(--gray-700); vertical-align: middle; text-align: center; }
-        .co-table-empty { text-align: center; padding: 40px 20px !important; color: #6b7280; font-size: 14px; }
-
-        .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-action-disabled { height: 32px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        /* === TABLA === */
+        .co-table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
+        .co-table { width: 100%; border-collapse: collapse; }
+        .co-table th { padding: 16px 20px; text-align: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #E5E7EB; white-space: nowrap; }
+        .co-table td { padding: 16px 20px; text-align: center; font-size: 14px; color: #111827; border-bottom: 1px solid #f3f4f6; }
         
-        /* CORRECCIÓN DE BADGES PARA EVITAR MAYÚSCULAS */
-        .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; }
+        .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
+        .btn-action-gray { height: 32px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: background 0.2s; }
+        .btn-action-gray:hover { background: #e5e7eb; }
+
+        .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; box-sizing: border-box; }
         
         .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
         .status-dot.yellow { background-color: #f59e0b; }
-        .status-dot.green { background-color: #10b981; }
-        .status-dot.red { background-color: #ef4444; }
+        .status-dot.green { background-color: #15803d; }
+        .status-dot.red { background-color: #b91c1c; }
 
-        /* === MODAL STYLES === */
+        /* ========================================================= */
+        /* === MODAL DE APROBACIÓN DE CONCEPTOS === */
+        /* ========================================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-overlay.active { display: flex; }
-        .modal-card { background: white; width: 100%; max-width: 1200px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; position: relative; }
+        
+        .modal-card { background: white; width: 100%; max-width: 1350px; border-radius: 16px; display: flex; flex-direction: column; max-height: 90vh; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); overflow: hidden; position: relative; }
         
         .modal-header-custom { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 10; }
+        
         .header-left-group { display: flex; align-items: center; gap: 24px; }
         .header-titles { display: flex; flex-direction: column; }
         .header-titles h2 { font-size: 24px; font-weight: 800; margin: 0; color: #111827; }
         .header-titles p { font-size: 14px; color: #6b7280; margin: 4px 0 0 0; }
+        
         .header-folio-group { display: flex; align-items: center; gap: 12px; border-left: 2px solid #e5e7eb; padding-left: 24px; }
+        
         .btn-ver-pdf { height: 36px; background: #DC2626; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; transition: background 0.2s; }
         .btn-ver-pdf:hover { background: #b91c1c; }
         
-        .text-totales-style { font-size: 20px; font-weight: 800; color: #111827; }
-        .header-totals-wrapper { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; padding-right: 40px; }
-        .header-totals-row { display: flex; align-items: center; gap: 24px; font-size: 20px; font-weight: 800; color: #111827; }
-        .header-totals-row.red-row { color: #DC2626; }
+        .header-totals-group { display: flex; align-items: center; gap: 32px; padding-right: 40px; }
+        .total-block { display: flex; flex-direction: column; align-items: flex-end; }
+        .total-label { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; }
+        .total-value { font-size: 18px; font-weight: 800; color: #111827; }
+        .total-value.aprobado { color: #16a34a; }
         
         .modal-close { background: none; border: none; font-size: 26px; cursor: pointer; color: #6b7280; position: absolute; top: 15px; right: 20px; }
         .modal-close:hover { color: #111827; }
         
         .modal-body { padding: 24px; overflow-y: auto; background: #fff; }
         
-        /* Tabla Modal */
         .captura-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
         .captura-table th { font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; padding-bottom: 12px; text-align: left; border-bottom: 2px solid #e5e7eb; }
-        .captura-table td { padding: 8px 4px; vertical-align: top; }
+        .captura-table td { padding: 12px 8px; vertical-align: top; border-bottom: 1px solid #f3f4f6; }
         
-        /* Cajas Grises de Solo Lectura Redondeadas y Grises */
-        .cap-input { 
-            width: 100% !important; 
-            padding: 0 1rem !important; 
-            line-height: 42px !important; 
-            font-size: 14px !important; 
-            color: #111827 !important; 
-            background-color: #f3f4f6 !important; 
-            border-radius: 0.5rem !important; 
-            border: 1px solid #d1d5db !important; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important; 
-            box-sizing: border-box !important; 
-            font-family: inherit !important; 
-            height: 42px !important; 
-            display: block !important;
-            transition: all 0.2s ease !important; 
-        }
-        .cap-input.money { text-align: right; }
-        .cap-input[readonly] { background-color: #e5e7eb !important; color: #374151 !important; font-weight: 600; cursor: not-allowed !important; border-color: #d1d5db !important; box-shadow: none !important; }
+        /* Cajas de lectura */
+        .data-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; font-size: 13px; color: #334155; line-height: 1.4; display: block; }
+        .data-box.money { text-align: right; font-weight: 600; }
         
-        /* Controles de Aprobación por fila */
-        .row-evaluacion { background: #f8fafc; }
-        .row-evaluacion td { padding: 12px 4px; border-bottom: 2px solid #e5e7eb; border-radius: 0 0 8px 8px; }
+        /* Controles de Aprobación */
+        .eval-btn-group { display: flex; gap: 5px; }
+        .eval-btn { padding: 8px; border: 1px solid #d1d5db; background: white; border-radius: 6px; cursor: pointer; color: #6b7280; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+        .eval-btn:hover { background: #f3f4f6; }
+        .eval-btn.active.yes { background: #dcfce7; border-color: #22c55e; color: #16a34a; }
+        .eval-btn.active.no { background: #fee2e2; border-color: #ef4444; color: #dc2626; }
         
-        /* ESTRUCTURA MATEMÁTICA PARA ALINEACIÓN */
-        .eval-controls-container {
-            display: grid;
-            grid-template-columns: 80% 20%; 
-            align-items: center;
-        }
-        .eval-left-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-right: 4px; 
-        }
-        
-        .btn-aprobar { background: #16a34a; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; flex-shrink: 0; }
-        .btn-aprobar:hover { background: #15803d; }
-        .btn-aprobar.active { background: #15803d; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.3); }
-        .btn-aprobar.inactive { opacity: 0.5; }
+        /* Input para motivo de rechazo (oculto por defecto) */
+        .rechazo-input { width: 100%; margin-top: 8px; padding: 8px 12px; border: 1px solid #ef4444; border-radius: 6px; font-size: 12px; display: none; background: #fff5f5; color: #7f1d1d; }
+        .rechazo-input::placeholder { color: #fca5a5; }
 
-        .btn-rechazar { background: #DC2626; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; flex-shrink: 0; }
-        .btn-rechazar:hover { background: #b91c1c; }
-        .btn-rechazar.active { background: #b91c1c; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.3); }
-        .btn-rechazar.inactive { opacity: 0.5; }
-
-        .motivo-input { 
-            flex-grow: 1; 
-            height: 36px !important; 
-            padding: 0 12px !important; 
-            border-radius: 8px !important; 
-            border: 1px solid #d1d5db !important; 
-            font-size: 13px !important; 
-            color: #111827 !important; 
-            background-color: #f3f4f6 !important; 
-            box-sizing: border-box !important; 
-            transition: all 0.2s ease !important;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        .motivo-input:focus { outline: none; background: white !important; border-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important; }
-        .motivo-input[readonly] { background-color: #e5e7eb !important; color: #6b7280 !important; font-weight: 600; cursor: not-allowed !important; border-color: #d1d5db !important; box-shadow: none !important; }
+        .modal-footer { padding: 20px 24px; background: #f9fafb; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px;}
         
-        .eval-timestamp { font-size: 13px; font-weight: 600; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; }
+        .btn-cancelar { background: #ffffff; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+        .btn-confirmar { background: #DC2626; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 0 24px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+        .btn-confirmar:hover { background: #b91c1c; }
+        .btn-cancelar:hover { background: #f8fafc; }
 
-        /* Footer del modal */
-        .modal-footer { padding: 20px 24px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
-        
-        .footer-counters-group { display: flex; gap: 24px; align-items: center; }
-
-        .botones-accion-group { display: flex; gap: 12px; }
-        .btn-cancelar-modal { background: #f8fafc; color: #334155; border: 1px solid #cbd5e1; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
-        .btn-cancelar-modal:hover { background: #e2e8f0; }
-        .btn-enviar-modal { background: #16a34a; color: white; border: none; height: 44px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 220px; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
-        .btn-enviar-modal:hover { background: #15803d; }
-        .btn-enviar-modal:disabled { background: #86efac; cursor: not-allowed; }
-
-        /* === ESTILOS DEL MODAL DE ALERTA PERSONALIZADO === */
-        #custom-alert .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        /* MODAL ALERTA CUSTOM */
+        #custom-alert { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
         #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
         #alert-msg { margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5; }
@@ -196,16 +144,16 @@
         #alert-btn:hover { opacity: 0.9; }
 
         @media (max-width: 900px) {
+            .aprobacion-wrap { padding: var(--space-4) var(--space-4) var(--space-16); }
+            .co-filters-grid { flex-direction: column; }
+            .co-filter-group { width: 100%; }
+            .co-table-container { overflow-x: auto; }
+            .modal-header-custom { flex-direction: column; align-items: flex-start; gap: 15px; }
             .header-left-group { flex-direction: column; align-items: flex-start; gap: 10px; }
             .header-folio-group { border-left: none; padding-left: 0; }
-            .header-totals-wrapper { align-items: flex-start; padding-right: 0; gap: 12px; }
-            .header-totals-row { flex-direction: column; align-items: flex-start; gap: 4px; }
-            .modal-footer { flex-direction: column; align-items: flex-start; gap: 20px; }
-            .botones-accion-group { width: 100%; flex-direction: column; }
-            .btn-cancelar-modal, .btn-enviar-modal { width: 100%; }
-            .eval-controls-container { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
-            .eval-left-wrap { flex-direction: column; align-items: stretch; padding-right: 0; }
-            .eval-timestamp { justify-content: flex-start; text-align: left; }
+            .header-totals-group { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; gap: 15px; width: 100%; border-top: 1px solid #e5e7eb; padding-top: 15px; }
+            .modal-footer { flex-direction: column; }
+            .btn-cancelar, .btn-confirmar { width: 100%; }
         }
     </style>
 </head>
@@ -214,28 +162,25 @@
     <div id="app-screen" style="display: block;">
         <header class="main-header">
             <div class="header-left">
-                <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
-                    <span class="hamburger"></span>
-                </button>
-                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
+                <button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button>
+                <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo">
                 <h1 class="system-title">Ordenes de Servicio</h1>
             </div>
             <div class="header-right">
                 <div class="user-menu" data-user-menu>
-                    <button class="user-circle-btn" type="button" aria-label="Abrir menú de usuario" data-user-trigger>
+                    <button class="user-circle-btn" type="button" data-user-trigger>
                         <span class="user-circle-initial" id="user-initial-header">U</span>
                     </button>
                     <div class="user-dropdown" data-user-dropdown>
                         <div class="user-card">
                             <div class="user-circle-avatar user-circle-initial">U</div>
                             <div class="user-meta">
-                                <div class="user-name">Cargando...</div>
+                                <div class="user-name" id="dropdown-username">Cargando...</div>
                             </div>
                         </div>
                         <div class="user-actions">
                             <a href="index.html" class="dropdown-link destructive" onclick="sessionStorage.clear();">
-                                <i data-lucide="log-out"></i>
-                                Cerrar sesión
+                                <i data-lucide="log-out"></i> Cerrar sesión
                             </a>
                         </div>
                     </div>
@@ -245,50 +190,32 @@
 
         <div class="main-layout">
             <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
-                <button class="sidebar-close" type="button" aria-label="Cerrar navegación" data-sidebar-close>
-                    <span class="close-icon">X</span>
-                </button>
+                <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a class="sidebar-link" href="index.html">
-                            <i data-lucide="home"></i> Inicio
-                        </a>
+                        <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
-                            <a class="sidebar-link" href="index.html">
-                                <i data-lucide="wrench"></i> Mantenimiento correctivo
-                            </a>
-                            <a class="sidebar-link" href="index.html">
-                                <i data-lucide="calendar-check"></i> Mantenimientos Preventivos
-                            </a>
+                            <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a href="index.html" class="sidebar-link" id="nav-preventivo"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
-                            <a class="sidebar-link" href="confirmacion.html">
-                                <i data-lucide="check-circle-2"></i> Confirmación operativa
-                            </a>
-                            <a class="sidebar-link" href="costos.html">
-                                <i data-lucide="calculator"></i> Costos de reparación
-                            </a>
-                            <a class="sidebar-link activa" href="aprobacion.html">
-                                <i data-lucide="badge-check"></i> Aprobación de costos
-                            </a>
-                            <a class="sidebar-link" href="facturacion.html">
-                                <i data-lucide="file-text"></i> Facturación
-                            </a>
+                            <a href="confirmacion.html" class="sidebar-link"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a href="costos.html" class="sidebar-link"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a href="aprobacion.html" class="sidebar-link activa"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a href="facturacion.html" class="sidebar-link"><i data-lucide="file-text"></i> Facturación</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-reportes">
                             <div class="sidebar-section-title">Reportes</div>
-                            <a class="sidebar-link" href="index.html">
-                                <i data-lucide="bar-chart-3"></i> Reportes
-                            </a>
+                            <a href="index.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Reportes</a>
                         </div>
                     </nav>
                 </div>
             </aside>
             <div class="sidebar-backdrop" id="sidebar-backdrop" data-sidebar-backdrop></div>
 
-            <main class="main-content app-content">
+            <main class="main-content app-content" id="main-scroll-area">
                 
                 <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
                     <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">Bienvenido</h1>
@@ -296,62 +223,66 @@
                 </div>
 
                 <div class="aprobacion-wrap">
-                    <header class="page-header-row">
+                    
+                    <!-- ENCABEZADO REORGANIZADO PARA ALINEAR BOTONES Y PONER LÍNEA GRIS -->
+                    <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 24px;">
                         <div class="page-header-content">
-                            <h1>Aprobación de Costos</h1>
-                            <p>Revisa y aprueba los costos de reparación enviados por proveedores</p>
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1>
+                            <p style="color: #6b7280; margin: 0;">Evalúa y autoriza los conceptos cargados por los proveedores</p>
                         </div>
-                        <div class="tabs-segmented">
-                            <a class="tab-segment active" onclick="cambiarTab('pendientes')" id="tab-pendientes">
-                                Pendientes <span class="tab-segment-count" id="badge-pendientes">0</span>
-                            </a>
-                            <a class="tab-segment" onclick="cambiarTab('aprobados')" id="tab-aprobados">
-                                Aprobados <span class="tab-segment-count" id="badge-aprobados">0</span>
-                            </a>
-                            <a class="tab-segment" onclick="cambiarTab('rechazados')" id="tab-rechazados">
-                                Rechazados <span class="tab-segment-count" id="badge-rechazados">0</span>
-                            </a>
+                        <div class="tabs-container" style="margin-bottom: 0; padding-bottom: 0;">
+                            <button class="tab-btn active" onclick="cambiarTab('pendientes')" id="tab-pendientes">
+                                Pendientes <span class="tab-badge" id="badge-pendientes">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTab('aprobados')" id="tab-aprobados">
+                                Aprobados <span class="tab-badge" id="badge-aprobados">0</span>
+                            </button>
+                            <button class="tab-btn" onclick="cambiarTab('rechazados')" id="tab-rechazados">
+                                Rechazados <span class="tab-badge" id="badge-rechazados">0</span>
+                            </button>
                         </div>
                     </header>
 
-                    <form class="filters-bar">
-                        <div class="filter-group">
-                            <label class="filter-label">Fecha inicio</label>
-                            <input type="date" class="input" id="filtro-inicio">
-                        </div>
-                        <div class="filter-group">
-                            <label class="filter-label">Fecha fin</label>
-                            <input type="date" class="input" id="filtro-fin">
-                        </div>
-                        <div class="filter-group flex-grow">
-                            <label class="filter-label">Buscar</label>
-                            <input type="text" class="input" id="filtro-buscar" placeholder="Folio o sucursal...">
-                        </div>
-                        <div class="filter-actions">
-                            <button class="btn-secondary" type="button" onclick="renderTablaActual()">
-                                <i data-lucide="search" style="width: 16px;"></i> Buscar
-                            </button>
-                            <button class="btn-exportar" type="button">
-                                <i data-lucide="download" style="width: 16px;"></i> Exportar
-                            </button>
+                    <form class="co-filters">
+                        <div class="co-filters-grid">
+                            <div class="co-filter-group">
+                                <label class="co-filter-label">Fecha inicio</label>
+                                <input type="date" class="co-filter-input" id="filtro-inicio">
+                            </div>
+                            <div class="co-filter-group">
+                                <label class="co-filter-label">Fecha fin</label>
+                                <input type="date" class="co-filter-input" id="filtro-fin">
+                            </div>
+                            <div class="co-filter-group" style="flex: 2;">
+                                <label class="co-filter-label">Buscar Folio / Sucursal</label>
+                                <input type="text" class="co-filter-input" id="filtro-buscar" placeholder="Folio o sucursal...">
+                            </div>
+                            <div class="flex gap-2 flex-shrink-0">
+                                <button class="btn-secondary" type="button" onclick="renderTablaActual()">
+                                    <i data-lucide="search" style="width: 18px; height: 18px;"></i> Buscar
+                                </button>
+                                <button class="btn-exportar" type="button" onclick="exportarCSV()">
+                                    <i data-lucide="download" style="width: 18px; height: 18px;"></i> Exportar
+                                </button>
+                            </div>
                         </div>
                     </form>
 
-                    <div class="data-table-container">
-                        <table class="data-table">
+                    <div class="co-table-container">
+                        <table class="co-table">
                             <thead>
                                 <tr>
                                     <th>Folio</th>
                                     <th>Sucursal</th>
-                                    <th>Enviado por</th>
-                                    <th>Fecha envío</th>
-                                    <th style="text-align: right;">Total</th>
+                                    <th>Proveedor</th>
+                                    <th>Fecha Envío Costos</th>
                                     <th>Estado</th>
+                                    <th style="text-align: right;">Total Enviado</th>
                                     <th style="text-align: center;">Acción</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla-aprobacion-body">
-                                <tr><td colspan="7" class="co-table-empty">Cargando...</td></tr>
+                                <tr><td colspan="7" style="text-align: center; padding: 20px;">Cargando...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -360,83 +291,88 @@
         </div>
     </div>
 
+    <!-- MODAL DE APROBACIÓN DE CONCEPTOS -->
     <div id="modalAprobacion" class="modal-overlay">
         <div class="modal-card">
+            
             <button class="modal-close" onclick="cerrarModal()">&times;</button>
             
             <div class="modal-header-custom">
                 <div class="header-left-group">
                     <div class="header-titles">
                         <h2>Aprobación de Costos</h2>
-                        <p>Evalúa los conceptos cargados para esta orden</p>
+                        <p>Evalúa cada concepto enviado por el proveedor</p>
                     </div>
                     <div class="header-folio-group">
                         <span style="font-size: 16px; color: #111827; font-weight: 700;">Folio: <strong id="modal-folio-lbl" style="color: #DC2626;"></strong></span>
                         <button type="button" class="btn-ver-pdf" onclick="verPDFDesdeModal()"><i data-lucide="file-text" style="width:16px;"></i> Ver PDF</button>
                     </div>
                 </div>
-                <div class="header-totals-wrapper">
-                    <div class="header-totals-row">
-                        <div>Importe: <span id="modal-importe-top">$0.00</span></div>
-                        <div>IVA: <span id="modal-iva-top">$0.00</span></div>
-                        <div>Total: <span id="modal-suma-total">$0.00</span></div>
+                
+                <div class="header-totals-group">
+                    <div class="total-block">
+                        <span class="total-label">Subtotal</span>
+                        <span id="lbl-subtotal" class="total-value aprobado">$0.00</span>
                     </div>
-                    <div class="header-totals-row red-row">
-                        <div>Importe: <span id="modal-importe-aprobado">$0.00</span></div>
-                        <div>IVA: <span id="modal-iva-aprobado">$0.00</span></div>
-                        <div>Total: <span id="modal-total-aprobado">$0.00</span></div>
+                    <div class="total-block">
+                        <span class="total-label">IVA (16%)</span>
+                        <span id="lbl-iva" class="total-value aprobado">$0.00</span>
+                    </div>
+                    <div class="total-block">
+                        <span class="total-label" style="color: #111827;">Total Aprobado</span>
+                        <span id="lbl-total-aprobado" class="total-value aprobado" style="font-size: 22px;">$0.00</span>
                     </div>
                 </div>
             </div>
 
             <div class="modal-body">
                 <input type="hidden" id="modal-folio-hidden">
+                <input type="hidden" id="modal-modo-actual"> 
+                
                 <table class="captura-table">
                     <thead>
                         <tr>
-                            <th style="width: 15%;">TIPO</th>
-                            <th style="width: 22%;">CONCEPTO</th>
-                            <th style="width: 10%;">UNIDAD</th>
-                            <th style="width: 9%;">Cantidad</th>
-                            <th style="width: 12%;">P. Unitario</th>
-                            <th style="width: 12%;">Importe</th>
-                            <th style="width: 20%;">Observación</th>
+                            <th style="width: 10%;">TIPO</th>
+                            <th style="width: 25%;">CONCEPTO / OBSERVACIÓN</th>
+                            <th style="width: 8%;">UNIDAD</th>
+                            <th style="width: 8%;">CANT.</th>
+                            <th style="width: 12%;">P. UNITARIO</th>
+                            <th style="width: 12%;">IMPORTE</th>
+                            <th style="width: 10%; text-align:center;">ESTADO</th>
+                            <th style="width: 15%; text-align:center;" id="th-accion-eval">EVALUAR</th>
                         </tr>
                     </thead>
                     <tbody id="conceptos-body">
-                        </tbody>
+                        <!-- Filas dinámicas aquí -->
+                    </tbody>
                 </table>
             </div>
 
-            <div class="modal-footer">
-                <div class="footer-counters-group text-totales-style">
-                    <div># Conceptos: <span id="modal-count-total">0</span></div>
-                    <div>Aprobados: <span id="modal-count-aprobados">0</span></div>
-                    <div>Rechazados: <span id="modal-count-rechazados">0</span></div>
-                </div>
-
-                <div class="botones-accion-group">
-                    <button type="button" class="btn-cancelar-modal" onclick="cerrarModal()">
-                        <i data-lucide="x-circle" style="width:18px;"></i> Cancelar
-                    </button>
-                    <button type="button" class="btn-enviar-modal" id="btn-guardar-evaluacion" onclick="enviarEvaluacion()">
-                        <i data-lucide="send" style="width:18px;"></i> Enviar Evaluación
-                    </button>
-                </div>
+            <div class="modal-footer" id="modal-footer-actions">
+                <button type="button" class="btn-cancelar" onclick="cerrarModal()">
+                    Cancelar
+                </button>
+                <button type="button" class="btn-confirmar" onclick="guardarAprobacion()" id="btn-guardar-aprobacion">
+                    <i data-lucide="check-circle" style="width:18px;"></i> Procesar Evaluación
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="custom-alert" class="modal-overlay" style="z-index: 10000;">
-        <div class="modal-card-alert" style="background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
-            <div id="alert-icon-container" style="margin-bottom: 16px; display: flex; justify-content: center;"></div>
-            <h3 id="alert-title" style="margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700;"></h3>
-            <p id="alert-msg" style="margin: 0 0 24px 0; font-size: 14px; color: #4b5563; line-height: 1.5;"></p>
-            <button id="alert-btn" onclick="closeCustomAlert()" style="width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s;">Aceptar</button>
+    <!-- ALERTA CUSTOM -->
+    <div id="custom-alert">
+        <div class="modal-card-alert">
+            <div id="alert-icon-container"></div>
+            <h3 id="alert-title"></h3>
+            <p id="alert-msg"></p>
+            <button id="alert-btn" onclick="closeCustomAlert()">Aceptar</button>
         </div>
     </div>
 
 <script>
+    // ==========================================
+    // 1. CONFIGURACIÓN DE FIREBASE
+    // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
         authDomain: "timhortons-mantenimiento.firebaseapp.com",
@@ -445,16 +381,43 @@
         messagingSenderId: "892024009722",
         appId: "1:892024009722:web:fd43a68570f78cedcaea43"
     };
-    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.firestore();
 
     let ticketsGlobales = []; 
     let tabActual = 'pendientes';
-    let estadoEvaluaciones = []; // Almacena el estado de cada concepto
+    let conceptosEvaluacion = [];
 
+    // ==========================================
+    // 2. FUNCIÓN DE ALERTA PERSONALIZADA
+    // ==========================================
+    function showCustomAlert(title, message, isSuccess = true) {
+        const alertBox = document.getElementById('custom-alert');
+        const alertTitle = document.getElementById('alert-title');
+        const alertMsg = document.getElementById('alert-msg');
+        const alertIcon = document.getElementById('alert-icon-container');
+
+        alertTitle.innerText = title;
+        alertMsg.innerText = message;
+
+        if(isSuccess) {
+            alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
+        } else {
+            alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
+        }
+        alertBox.style.display = 'flex';
+        lucide.createIcons();
+    }
+    function closeCustomAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+
+    // ==========================================
+    // 3. INICIALIZACIÓN
+    // ==========================================
     document.addEventListener('DOMContentLoaded', () => {
-        if (window.lucide) { lucide.createIcons(); }
-        
+        lucide.createIcons();
         const savedUser = sessionStorage.getItem('loginUser');
         if(savedUser) document.getElementById('user-initial-header').innerText = savedUser.charAt(0).toUpperCase();
 
@@ -463,8 +426,13 @@
             const appData = JSON.parse(appDataStr);
             const welcomeTitle = document.getElementById('welcome-username-display');
             if(welcomeTitle) welcomeTitle.innerText = appData.nombreProveedor || savedUser;
-            const dropdownName = document.querySelector('.user-name');
+            const dropdownName = document.getElementById('dropdown-username');
             if(dropdownName) dropdownName.innerText = appData.nombreProveedor || savedUser;
+            
+            // Protección: Si no es admin (privilegio 1), no entra
+            if(appData.privilegio == 2 || appData.privilegio == "2") {
+                window.location.replace('index.html');
+            }
         }
 
         const userMenu = document.querySelector('[data-user-menu]');
@@ -477,52 +445,32 @@
         }
 
         const toggles = document.querySelectorAll('[data-sidebar-toggle]');
-        toggles.forEach(t => t.addEventListener('click', () => document.querySelector('.app-sidebar').classList.toggle('open')));
-        document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.querySelector('.app-sidebar').classList.remove('open'));
+        toggles.forEach(t => t.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open')));
+        document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.getElementById('sidebar').classList.remove('open'));
 
         cargarTodosLosTickets();
     });
 
-    // === FUNCIONES DE ALERTA PERSONALIZADA ===
-    function showCustomAlert(title, message, isSuccess = true) {
-        const alertBox = document.getElementById('custom-alert');
-        const alertTitle = document.getElementById('alert-title');
-        const alertMsg = document.getElementById('alert-msg');
-        const alertIcon = document.getElementById('alert-icon-container');
-        const alertBtn = document.getElementById('alert-btn');
-
-        alertTitle.innerText = title;
-        alertMsg.innerText = message;
-
-        if(isSuccess) {
-            alertIcon.innerHTML = '<i data-lucide="check-circle" style="width:48px; height:48px; color: #16a34a;"></i>';
-            alertBtn.style.background = '#16a34a';
-        } else {
-            alertIcon.innerHTML = '<i data-lucide="alert-triangle" style="width:48px; height:48px; color: #DC2626;"></i>';
-            alertBtn.style.background = '#DC2626';
-        }
-
-        alertBox.style.display = 'flex';
-        lucide.createIcons();
-    }
-
-    function closeCustomAlert() {
-        document.getElementById('custom-alert').style.display = 'none';
-    }
-
-    // === CARGA Y CLASIFICACIÓN DE TICKETS ===
+    // ==========================================
+    // 4. CARGA DE DATOS Y PESTAÑAS
+    // ==========================================
     function cargarTodosLosTickets() {
+        // En Aprobación, nos interesan los que ya tienen costos capturados
         db.collection("tickets_mantenimiento")
-          .where("estado_confirmacion", "in", ["Pendiente de Aprobación", "Costos Aprobados", "Costos Rechazados"])
+          .where("estado_confirmacion", "in", ["Pendiente de Aprobación", "Costos Aprobados", "Costos Rechazados", "Facturado", "Pagado"])
           .get()
           .then((querySnapshot) => {
               ticketsGlobales = [];
-              querySnapshot.forEach((doc) => { ticketsGlobales.push(doc.data()); });
+              querySnapshot.forEach((doc) => { 
+                  let data = doc.data();
+                  data.doc_id = doc.id;
+                  ticketsGlobales.push(data); 
+              });
               
               ticketsGlobales.sort((a, b) => {
                   let fA = a.fecha_captura_costos || a.fecha_creacion || "";
                   let fB = b.fecha_captura_costos || b.fecha_creacion || "";
-                  return fA.localeCompare(fB);
+                  return fB.localeCompare(fA); // Descendente
               });
 
               actualizarBadges();
@@ -536,22 +484,24 @@
 
     function actualizarBadges() {
         const pend = ticketsGlobales.filter(t => t.estado_confirmacion === 'Pendiente de Aprobación').length;
-        const apr = ticketsGlobales.filter(t => t.estado_confirmacion === 'Costos Aprobados').length;
+        const aprob = ticketsGlobales.filter(t => ['Costos Aprobados', 'Facturado', 'Pagado'].includes(t.estado_confirmacion)).length;
         const rech = ticketsGlobales.filter(t => t.estado_confirmacion === 'Costos Rechazados').length;
         
         document.getElementById('badge-pendientes').innerText = pend;
-        document.getElementById('badge-aprobados').innerText = apr;
+        document.getElementById('badge-aprobados').innerText = aprob;
         document.getElementById('badge-rechazados').innerText = rech;
     }
 
     function cambiarTab(tab) {
         tabActual = tab;
-        document.querySelectorAll('.tab-segment').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById('tab-' + tab).classList.add('active');
         renderTablaActual();
     }
 
-    // === DIBUJAR TABLA ===
+    // ==========================================
+    // 5. DIBUJAR TABLA
+    // ==========================================
     function renderTablaActual() {
         const tbody = document.getElementById('tabla-aprobacion-body');
         tbody.innerHTML = '';
@@ -562,10 +512,10 @@
 
         let ticketsFiltrados = ticketsGlobales.filter(t => {
             if(tabActual === 'pendientes' && t.estado_confirmacion !== 'Pendiente de Aprobación') return false;
-            if(tabActual === 'aprobados' && t.estado_confirmacion !== 'Costos Aprobados') return false;
+            if(tabActual === 'aprobados' && !['Costos Aprobados', 'Facturado', 'Pagado'].includes(t.estado_confirmacion)) return false;
             if(tabActual === 'rechazados' && t.estado_confirmacion !== 'Costos Rechazados') return false;
 
-            const fDoc = t.fecha_captura_costos ? t.fecha_captura_costos.split('T')[0] : t.fecha_creacion;
+            const fDoc = t.fecha_captura_costos ? t.fecha_captura_costos.split('T')[0] : (t.fecha_creacion || "");
             if(fInicio && fDoc < fInicio) return false;
             if(fFin && fDoc > fFin) return false;
 
@@ -578,7 +528,7 @@
         });
 
         if(ticketsFiltrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay costos pendientes de aprobación en este momento.</span></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px 0;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db; margin-bottom: 10px;"></i><br>No hay tickets en esta sección.</td></tr>`;
             lucide.createIcons();
             return;
         }
@@ -586,23 +536,24 @@
         ticketsFiltrados.forEach(t => {
             const folio = t.id_ticket;
             const suc = t.sucursal || "N/A";
-            const prov = t.prov_nombre || t.proveedor || "N/A";
-            const fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : t.fecha_creacion;
-            const totalTxt = formateaMoneda(t.costo_total || 0);
+            const prov = t.proveedor || "N/A";
+            const fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : (t.fecha_creacion || "—");
+            const total = formateaMoneda(t.costo_total || 0);
             
             let estadoHtml = "";
             let accionHtml = "";
 
-            // Estados forzados a Minúsculas (Title Case)
             if(tabActual === 'pendientes') {
-                estadoHtml = `<span class="status-badge" style="background:#FEF3C7; color:#92400E;"><i class="status-dot yellow"></i> Pendiente</span>`;
-                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="check-square" style="width:14px;"></i> Revisar</button>`;
+                estadoHtml = `<span class="status-badge" style="background:#FEF3C7; color:#92400E;"><i class="status-dot yellow"></i> Por evaluar</span>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', 'evaluar')"><i data-lucide="check-square" style="width:14px;"></i> Evaluar Costos</button>`;
+            
             } else if (tabActual === 'aprobados') {
-                estadoHtml = `<span class="status-badge" style="background:#D1FAE5; color:#065F46;"><i class="status-dot green"></i> Aprobado</span>`;
-                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                estadoHtml = `<span class="status-badge" style="background:#dcfce7; color:#166534;"><i class="status-dot green"></i> Aprobado</span>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', 'lectura')"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+            
             } else if (tabActual === 'rechazados') {
-                estadoHtml = `<span class="status-badge" style="background:#FEE2E2; color:#B91C1C;"><i class="status-dot red"></i> Rechazado</span>`;
-                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                estadoHtml = `<span class="status-badge" style="background:#fee2e2; color:#991b1b;"><i class="status-dot red"></i> Rechazado</span>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', 'lectura')"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
             }
 
             const tr = document.createElement('tr');
@@ -611,8 +562,8 @@
                 <td style="text-align: center;">${suc}</td>
                 <td style="text-align: center;">${prov}</td>
                 <td style="text-align: center;">${fecha}</td>
-                <td style="text-align: right; font-weight: 600;">${totalTxt}</td>
                 <td style="text-align: center;">${estadoHtml}</td>
+                <td style="text-align: right; font-weight: 600;">${total}</td>
                 <td style="text-align: center;">${accionHtml}</td>
             `;
             tbody.appendChild(tr);
@@ -620,231 +571,217 @@
         lucide.createIcons();
     }
 
-    // === LÓGICA DEL MODAL ===
-    function formateaMoneda(valor) { return "$" + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
-
-    function actualizarContadoresModal() {
-        let total = estadoEvaluaciones.length;
-        let aprobados = estadoEvaluaciones.filter(e => e.estado === 'aprobado').length;
-        let rechazados = estadoEvaluaciones.filter(e => e.estado === 'rechazado').length;
-        
-        document.getElementById('modal-count-total').innerText = total;
-        document.getElementById('modal-count-aprobados').innerText = aprobados;
-        document.getElementById('modal-count-rechazados').innerText = rechazados;
-    }
-
-    function calcularTotalesAprobados() {
-        const folio = document.getElementById('modal-folio-hidden').value;
-        const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
-        if (!ticket || !ticket.conceptos_costos) return;
-
-        let sumaAprobados = 0;
-        ticket.conceptos_costos.forEach((c, i) => {
-            if (estadoEvaluaciones[i] && estadoEvaluaciones[i].estado === 'aprobado') {
-                sumaAprobados += parseFloat(c.importe) || 0;
-            }
+    function exportarCSV() {
+        if(ticketsGlobales.length === 0) {
+            showCustomAlert("Sin datos", "No hay registros para exportar.", false); return;
+        }
+        let csvContent = "data:text/csv;charset=utf-8,Folio,Sucursal,Proveedor,Estado,Fecha de Captura,Total\n";
+        ticketsGlobales.forEach(row => {
+            csvContent += `${row.id_ticket},"${row.sucursal}","${row.proveedor}",${row.estado_confirmacion},${row.fecha_captura_costos},${row.costo_total}\n`;
         });
-
-        const ivaAprobados = sumaAprobados * 0.16;
-        const totalAprobados = sumaAprobados + ivaAprobados;
-
-        document.getElementById('modal-importe-aprobado').innerText = formateaMoneda(sumaAprobados);
-        document.getElementById('modal-iva-aprobado').innerText = formateaMoneda(ivaAprobados);
-        document.getElementById('modal-total-aprobado').innerText = formateaMoneda(totalAprobados);
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", `AprobacionCostos_${new Date().toLocaleDateString('es-MX')}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 
-    function abrirModal(folio, isReadOnly) {
+    // ==========================================
+    // 6. LÓGICA DEL MODAL DE EVALUACIÓN
+    // ==========================================
+    function formateaMoneda(valor) { return "$" + parseFloat(valor).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+    function abrirModal(folio, modo) {
         const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
-        if(!ticket) return;
+        if(!ticket || !ticket.conceptos_costos) return;
 
         document.getElementById('modal-folio-lbl').innerText = folio;
         document.getElementById('modal-folio-hidden').value = folio;
+        document.getElementById('modal-modo-actual').value = modo;
         
-        document.getElementById('modal-importe-top').innerText = formateaMoneda(ticket.costo_subtotal || 0);
-        document.getElementById('modal-iva-top').innerText = formateaMoneda(ticket.costo_iva || 0);
-        document.getElementById('modal-suma-total').innerText = formateaMoneda(ticket.costo_total || 0);
+        // Copiamos los conceptos al array temporal para manipularlos
+        conceptosEvaluacion = JSON.parse(JSON.stringify(ticket.conceptos_costos));
         
-        const btnGuardar = document.getElementById('btn-guardar-evaluacion');
-        if(isReadOnly) {
-            btnGuardar.style.display = 'none';
-        } else {
-            btnGuardar.style.display = 'inline-flex';
+        // Si está en modo evaluar y hay conceptos que dicen 'corregido', los ponemos nulos para forzar re-evaluación
+        if(modo === 'evaluar') {
+            conceptosEvaluacion.forEach(c => {
+                if(c.estado_evaluacion === 'corregido' || !c.estado_evaluacion) {
+                    c.estado_evaluacion = null;
+                }
+            });
         }
 
         const tbody = document.getElementById('conceptos-body');
         tbody.innerHTML = '';
-        estadoEvaluaciones = [];
+        
+        const thAccion = document.getElementById('th-accion-eval');
+        const footerActions = document.getElementById('modal-footer-actions');
 
-        if (ticket.conceptos_costos && ticket.conceptos_costos.length > 0) {
-            ticket.conceptos_costos.forEach((c, index) => {
-                let estPrevio = c.estado_evaluacion || null;
-                let motPrevio = c.motivo_rechazo || '';
-                let fecPrevio = c.fecha_evaluacion || '';
-                
-                estadoEvaluaciones.push({ estado: estPrevio, motivo: motPrevio, fecha: fecPrevio });
-
-                const trData = document.createElement('tr');
-                trData.innerHTML = `
-                    <td><input type="text" class="cap-input" value="${c.tipo}" readonly></td>
-                    <td><input type="text" class="cap-input" value="${c.concepto}" readonly></td>
-                    <td><input type="text" class="cap-input" value="${c.unidad}" readonly></td>
-                    <td><input type="text" class="cap-input" value="${c.cantidad}" readonly></td>
-                    <td><input type="text" class="cap-input money" value="${formateaMoneda(c.precio_unitario)}" readonly></td>
-                    <td><input type="text" class="cap-input money" value="${formateaMoneda(c.importe)}" readonly></td>
-                    <td><input type="text" class="cap-input" value="${c.observacion}" readonly></td>
-                `;
-                tbody.appendChild(trData);
-
-                const trEval = document.createElement('tr');
-                trEval.className = 'row-evaluacion';
-                
-                const btnAprActive = estPrevio === 'aprobado' ? 'active' : '';
-                const btnRechActive = estPrevio === 'rechazado' ? 'active' : '';
-                const btnAprInactive = estPrevio === 'rechazado' ? 'inactive' : '';
-                const btnRechInactive = estPrevio === 'aprobado' ? 'inactive' : '';
-                
-                const disabledProp = isReadOnly ? 'disabled' : '';
-                const readonlyProp = isReadOnly ? 'readonly' : '';
-                
-                let textFecha = "Pendiente";
-                let colorFecha = "#6b7280"; 
-                if(estPrevio === 'aprobado') {
-                    textFecha = fecPrevio ? 'Aprobado el: ' + fecPrevio : 'Aprobado';
-                    colorFecha = "#16a34a"; 
-                } else if (estPrevio === 'rechazado') {
-                    textFecha = fecPrevio ? 'Rechazado el: ' + fecPrevio : 'Rechazado';
-                    colorFecha = "#DC2626"; 
-                }
-                
-                trEval.innerHTML = `
-                    <td colspan="7">
-                        <div class="eval-controls-container">
-                            <div class="eval-left-wrap">
-                                <button type="button" class="btn-aprobar ${btnAprActive} ${btnAprInactive}" id="btn-apr-${index}" onclick="marcarEvaluacion(${index}, 'aprobado')" ${disabledProp}>
-                                    <i data-lucide="check-circle" style="width:16px;"></i> Aprobar
-                                </button>
-                                <button type="button" class="btn-rechazar ${btnRechActive} ${btnRechInactive}" id="btn-rech-${index}" onclick="marcarEvaluacion(${index}, 'rechazado')" ${disabledProp}>
-                                    <i data-lucide="x-circle" style="width:16px;"></i> Rechazar
-                                </button>
-                                <input type="text" class="motivo-input" id="motivo-${index}" placeholder="Motivo del rechazo..." value="${motPrevio}" oninput="actualizarMotivo(${index}, this.value)" ${readonlyProp}>
-                            </div>
-                            <span class="eval-timestamp" id="fecha-${index}" style="color: ${colorFecha};">${textFecha}</span>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(trEval);
-            });
+        if (modo === 'lectura') {
+            thAccion.style.display = 'none';
+            footerActions.style.display = 'none';
+        } else {
+            thAccion.style.display = 'table-cell';
+            footerActions.style.display = 'flex';
+            document.getElementById('btn-guardar-aprobacion').disabled = false;
+            document.getElementById('btn-guardar-aprobacion').innerHTML = '<i data-lucide="check-circle" style="width:18px;"></i> Procesar Evaluación';
         }
 
-        actualizarContadoresModal();
+        conceptosEvaluacion.forEach((c, index) => {
+            const tr = document.createElement('tr');
+            
+            let statusPill = '';
+            if(c.estado_evaluacion === 'aprobado') statusPill = `<span class="status-badge" style="background:#dcfce7; color:#16a34a; font-size:10px;">Aprobado</span>`;
+            else if(c.estado_evaluacion === 'rechazado') statusPill = `<span class="status-badge" style="background:#fee2e2; color:#dc2626; font-size:10px;">Rechazado</span>`;
+            else if(c.estado_evaluacion === 'corregido') statusPill = `<span class="status-badge" style="background:#e0e7ff; color:#2563eb; font-size:10px;">Corregido</span>`;
+            else statusPill = `<span class="status-badge" style="background:#f3f4f6; color:#6b7280; font-size:10px;">Pendiente</span>`;
+
+            let evalHtml = '';
+            if (modo === 'evaluar') {
+                const btnYesClass = c.estado_evaluacion === 'aprobado' ? 'active yes' : '';
+                const btnNoClass = c.estado_evaluacion === 'rechazado' ? 'active no' : '';
+                const displayInput = c.estado_evaluacion === 'rechazado' ? 'block' : 'none';
+                
+                evalHtml = `
+                    <td style="text-align:center;">
+                        <div class="eval-btn-group">
+                            <button type="button" class="eval-btn ${btnYesClass}" onclick="setEvaluacion(${index}, 'aprobado', this)" title="Aprobar"><i data-lucide="check" style="width:16px;"></i></button>
+                            <button type="button" class="eval-btn ${btnNoClass}" onclick="setEvaluacion(${index}, 'rechazado', this)" title="Rechazar"><i data-lucide="x" style="width:16px;"></i></button>
+                        </div>
+                        <input type="text" class="rechazo-input" id="rechazo-input-${index}" placeholder="Motivo de rechazo..." value="${c.motivo_rechazo || ''}" style="display:${displayInput};" oninput="actualizarMotivo(${index}, this.value)">
+                    </td>
+                `;
+            }
+
+            tr.innerHTML = `
+                <td><span class="data-box">${c.tipo}</span></td>
+                <td>
+                    <span class="data-box" style="font-weight:600;">${c.concepto}</span>
+                    ${c.observacion ? `<span style="font-size:11px; color:#6b7280; display:block; margin-top:4px;">Nota: ${c.observacion}</span>` : ''}
+                </td>
+                <td><span class="data-box" style="text-align:center;">${c.unidad}</span></td>
+                <td><span class="data-box" style="text-align:center;">${c.cantidad}</span></td>
+                <td><span class="data-box money">${formateaMoneda(parseFloat(c.precio_unitario))}</span></td>
+                <td><span class="data-box money">${formateaMoneda(parseFloat(c.importe))}</span></td>
+                <td style="text-align:center;">${statusPill}</td>
+                ${evalHtml}
+            `;
+            tbody.appendChild(tr);
+        });
+
         calcularTotalesAprobados();
         document.getElementById('modalAprobacion').classList.add('active');
         lucide.createIcons();
     }
 
-    function cerrarModal() { document.getElementById('modalAprobacion').classList.remove('active'); }
+    function cerrarModal() { 
+        document.getElementById('modalAprobacion').classList.remove('active'); 
+    }
 
-    function marcarEvaluacion(index, estado) {
-        const btnApr = document.getElementById(`btn-apr-${index}`);
-        const btnRech = document.getElementById(`btn-rech-${index}`);
-        const inputMotivo = document.getElementById(`motivo-${index}`);
-        const lblFecha = document.getElementById(`fecha-${index}`);
-
-        btnApr.classList.remove('active', 'inactive');
-        btnRech.classList.remove('active', 'inactive');
-
-        estadoEvaluaciones[index].estado = estado;
-        const fechaActual = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
-        estadoEvaluaciones[index].fecha = fechaActual;
-
-        if(estado === 'aprobado') {
-            btnApr.classList.add('active');
-            btnRech.classList.add('inactive'); 
-            estadoEvaluaciones[index].motivo = ""; 
-            inputMotivo.value = "";
-            lblFecha.innerText = "Aprobado el: " + fechaActual;
-            lblFecha.style.color = "#16a34a"; 
+    function setEvaluacion(index, decision, btnElement) {
+        conceptosEvaluacion[index].estado_evaluacion = decision;
+        
+        const group = btnElement.closest('.eval-btn-group');
+        group.querySelectorAll('.eval-btn').forEach(b => b.classList.remove('active', 'yes', 'no'));
+        
+        if (decision === 'aprobado') {
+            btnElement.classList.add('active', 'yes');
+            document.getElementById(`rechazo-input-${index}`).style.display = 'none';
+            conceptosEvaluacion[index].motivo_rechazo = "";
+            document.getElementById(`rechazo-input-${index}`).value = "";
         } else {
-            btnRech.classList.add('active');
-            btnApr.classList.add('inactive'); 
-            inputMotivo.focus();
-            lblFecha.innerText = "Rechazado el: " + fechaActual;
-            lblFecha.style.color = "#DC2626"; 
+            btnElement.classList.add('active', 'no');
+            document.getElementById(`rechazo-input-${index}`).style.display = 'block';
         }
-
-        actualizarContadoresModal();
+        
         calcularTotalesAprobados();
     }
 
     function actualizarMotivo(index, valor) {
-        estadoEvaluaciones[index].motivo = valor;
+        conceptosEvaluacion[index].motivo_rechazo = valor;
     }
 
-    // === GUARDAR EVALUACIÓN EN FIREBASE ===
-    async function enviarEvaluacion() {
-        const folio = document.getElementById('modal-folio-hidden').value;
-        const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
-        
-        let validacionExitosa = true;
-        let algunRechazado = false;
+    function calcularTotalesAprobados() {
+        let subtotal = 0;
+        conceptosEvaluacion.forEach(c => {
+            // Solo sumamos los importes de los conceptos explícitamente aprobados
+            if(c.estado_evaluacion === 'aprobado') {
+                subtotal += parseFloat(c.importe);
+            }
+        });
 
-        for (let i = 0; i < estadoEvaluaciones.length; i++) {
-            const eval = estadoEvaluaciones[i];
-            if (!eval.estado) {
-                showCustomAlert("Atención", `Falta evaluar el concepto #${i + 1}.`, false);
-                validacionExitosa = false;
-                break;
+        const iva = subtotal * 0.16;
+        const total = subtotal + iva;
+
+        document.getElementById('lbl-subtotal').innerText = formateaMoneda(subtotal);
+        document.getElementById('lbl-iva').innerText = formateaMoneda(iva);
+        document.getElementById('lbl-total-aprobado').innerText = formateaMoneda(total);
+        
+        document.getElementById('lbl-total-aprobado').setAttribute('data-subtotal', subtotal);
+        document.getElementById('lbl-total-aprobado').setAttribute('data-iva', iva);
+        document.getElementById('lbl-total-aprobado').setAttribute('data-total', total);
+    }
+
+    // === GUARDAR EVALUACIÓN ===
+    async function guardarAprobacion() {
+        const folio = document.getElementById('modal-folio-hidden').value;
+        
+        let faltanEvaluar = false;
+        let faltaMotivo = false;
+        let tieneRechazos = false;
+
+        conceptosEvaluacion.forEach(c => {
+            if(!c.estado_evaluacion || c.estado_evaluacion === 'corregido') { faltanEvaluar = true; }
+            if(c.estado_evaluacion === 'rechazado') {
+                tieneRechazos = true;
+                if(!c.motivo_rechazo || c.motivo_rechazo.trim() === "") { faltaMotivo = true; }
             }
-            if (eval.estado === 'rechazado') {
-                algunRechazado = true;
-                if (eval.motivo.trim() === '') {
-                    showCustomAlert("Atención", `Debes proporcionar un motivo de rechazo para el concepto #${i + 1}.`, false);
-                    document.getElementById(`motivo-${i}`).focus();
-                    validacionExitosa = false;
-                    break;
-                }
-            }
+        });
+
+        if (faltanEvaluar) {
+            showCustomAlert("Evaluación Incompleta", "Debes aprobar o rechazar TODOS los conceptos antes de procesar.", false);
+            return;
+        }
+        if (faltaMotivo) {
+            showCustomAlert("Faltan Motivos", "Debes escribir el motivo de rechazo en los conceptos marcados con X.", false);
+            return;
         }
 
-        if(!validacionExitosa) return;
-
-        const btnGuardar = document.getElementById('btn-guardar-evaluacion');
+        const btnGuardar = document.getElementById('btn-guardar-aprobacion');
         btnGuardar.disabled = true;
         btnGuardar.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:18px;"></i> Guardando...';
         lucide.createIcons();
 
+        const subtotalNum = parseFloat(document.getElementById('lbl-total-aprobado').getAttribute('data-subtotal'));
+        const ivaNum = parseFloat(document.getElementById('lbl-total-aprobado').getAttribute('data-iva'));
+        const totalNum = parseFloat(document.getElementById('lbl-total-aprobado').getAttribute('data-total'));
+
+        const estadoFinalTicket = tieneRechazos ? "Costos Rechazados" : "Costos Aprobados";
+
         try {
-            let conceptosActualizados = [...ticket.conceptos_costos];
-            for (let i = 0; i < conceptosActualizados.length; i++) {
-                conceptosActualizados[i].estado_evaluacion = estadoEvaluaciones[i].estado;
-                conceptosActualizados[i].motivo_rechazo = estadoEvaluaciones[i].motivo;
-                conceptosActualizados[i].fecha_evaluacion = estadoEvaluaciones[i].fecha;
-            }
-
-            const nuevoEstado = algunRechazado ? "Costos Rechazados" : "Costos Aprobados";
-
-            const subtotalAprobadoNum = parseFloat(document.getElementById('modal-importe-aprobado').innerText.replace(/[^0-9.-]+/g,""));
-            const ivaAprobadoNum = parseFloat(document.getElementById('modal-iva-aprobado').innerText.replace(/[^0-9.-]+/g,""));
-            const totalAprobadoNum = parseFloat(document.getElementById('modal-total-aprobado').innerText.replace(/[^0-9.-]+/g,""));
-
-            await db.collection("tickets_mantenimiento").doc(folio).update({
-                conceptos_costos: conceptosActualizados,
-                estado_confirmacion: nuevoEstado,
-                costo_subtotal_aprobado: subtotalAprobadoNum,
-                costo_iva_aprobado: ivaAprobadoNum,
-                costo_total_aprobado: totalAprobadoNum,
+            const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
+            const docRealId = ticket.doc_id || folio;
+            
+            await db.collection("tickets_mantenimiento").doc(docRealId).update({
+                conceptos_costos: conceptosEvaluacion,
+                costo_subtotal_aprobado: subtotalNum,
+                costo_iva_aprobado: ivaNum,
+                costo_total_aprobado: totalNum,
+                estado_confirmacion: estadoFinalTicket,
                 fecha_aprobacion_costos: new Date().toISOString()
             });
 
-            showCustomAlert("¡Éxito!", `Evaluación guardada exitosamente. El ticket pasó a ${nuevoEstado}.`, true);
+            showCustomAlert("¡Procesado!", `La evaluación se guardó correctamente. Estado: ${estadoFinalTicket}.`, true);
             cerrarModal();
             cargarTodosLosTickets(); 
-        } catch(err) {
-            console.error(err);
-            showCustomAlert("Error", "Error al guardar la evaluación. Revisa tu conexión.", false);
-        } finally {
+
+        } catch (error) {
+            console.error("Error al guardar evaluación:", error);
+            showCustomAlert("Error", "Ocurrió un problema al guardar. Revisa tu conexión.", false);
             btnGuardar.disabled = false;
-            btnGuardar.innerHTML = '<i data-lucide="send" style="width:18px;"></i> Enviar Evaluación';
+            btnGuardar.innerHTML = '<i data-lucide="check-circle" style="width:18px;"></i> Procesar Evaluación';
             lucide.createIcons();
         }
     }
@@ -853,6 +790,7 @@
     function verPDFDesdeModal() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const t = ticketsGlobales.find(tk => tk.id_ticket === folio);
+        
         if(!t) { showCustomAlert("Error", "Error al cargar datos del ticket.", false); return; }
 
         const datosParaPDF = {
