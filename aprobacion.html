@@ -251,6 +251,10 @@
                             <a class="sidebar-link activa" href="aprobacion.html">
                                 <i data-lucide="badge-check"></i> Aprobación de costos
                             </a>
+                            <!-- NUEVA PESTAÑA AÑADIDA -->
+                            <a class="sidebar-link" href="aprobacion_gerencia.html">
+                                <i data-lucide="shield-check"></i> Aprobación gerencia
+                            </a>
                             <a class="sidebar-link" href="facturacion.html">
                                 <i data-lucide="file-text"></i> Facturación
                             </a>
@@ -787,7 +791,8 @@
                 conceptosActualizados[i].fecha_evaluacion = estadoEvaluaciones[i].fecha;
             }
 
-            const nuevoEstado = algunRechazado ? "Costos Rechazados" : "Costos Aprobados";
+            // MODIFICACIÓN DE LA LÓGICA PARA ENVIAR A GERENCIA
+            const nuevoEstado = algunRechazado ? "Costos Rechazados" : "Pendiente Gerencia";
 
             const subtotalAprobadoNum = parseFloat(document.getElementById('modal-importe-aprobado').innerText.replace(/[^0-9.-]+/g,""));
             const ivaAprobadoNum = parseFloat(document.getElementById('modal-iva-aprobado').innerText.replace(/[^0-9.-]+/g,""));
