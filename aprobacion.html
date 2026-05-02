@@ -568,10 +568,10 @@
                 accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="check-square" style="width:14px;"></i> Evaluar Costos</button>`;
             } else if (tabActual === 'aprobados') {
                 estadoHtml = `<span class="status-badge" style="background:#D1FAE5; color:#065F46;"><i class="status-dot green"></i> Aprobado</span>`;
-                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
             } else if (tabActual === 'rechazados') {
                 estadoHtml = `<span class="status-badge" style="background:#FEE2E2; color:#B91C1C;"><i class="status-dot red"></i> Rechazado</span>`;
-                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
             }
 
             const tr = document.createElement('tr');
