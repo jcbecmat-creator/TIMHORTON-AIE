@@ -37,9 +37,7 @@
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        .facturacion-wrap { max-width: 1400px; margin: 0 auto; padding: 24px; }
-        .page-header-content h1 { font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 8px 0; }
-        .page-header-content p { font-size: 14px; color: #6b7280; margin: 0 0 24px 0; }
+        .facturacion-wrap { max-width: 1600px; margin: 0 auto; padding: 24px; }
 
         /* === MÉTRICAS SUPERIORES === */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
@@ -58,21 +56,27 @@
         
         /* === TABLA === */
         .data-table-container { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
-        .data-table { width: 100%; border-collapse: collapse; min-width: 1200px; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 1800px; }
         .data-table thead { background: #f8fafc; }
-        .data-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; padding: 16px 12px; text-align: center; border-bottom: 1px solid #E5E7EB; white-space: nowrap;}
-        .data-table td { padding: 16px 12px; border-bottom: 1px solid #f3f4f6; font-size: 13px; color: #111827; vertical-align: middle; text-align: center; }
+        .data-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #6b7280; padding: 16px 12px; text-align: center; border-bottom: 1px solid #E5E7EB; white-space: nowrap;}
+        .data-table td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #111827; vertical-align: middle; text-align: center; }
         
         .co-table-empty { text-align: center; padding: 60px 20px !important; color: #6b7280; font-size: 14px; }
 
         /* Componentes de la tabla */
         .chk-custom { width: 18px; height: 18px; cursor: pointer; accent-color: #DC2626; }
-        .btn-download-red { height: 28px; background: #DC2626; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+        .btn-download-red { height: 28px; background: #DC2626; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
         .btn-download-red:hover { background: #b91c1c; }
-        .btn-download-disabled { height: 28px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-download-disabled { height: 28px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 
-        .status-badge { height: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 14px; font-size: 11px; font-weight: 700; }
+        .btn-saas-save { background:#16a34a; color:white; border:none; padding:6px; border-radius:6px; cursor:pointer; transition: background 0.2s; }
+        .btn-saas-save:hover { background: #15803d; }
+        .btn-eliminar { background: none; border: none; color: #ef4444; cursor: pointer; transition: color 0.2s; }
+        .btn-eliminar:hover { color: #b91c1c; }
+
+        .status-badge { height: 26px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 14px; font-size: 11px; font-weight: 700; white-space: nowrap; }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        
         .bg-yellow { background: #fef3c7; color: #92400e; } .dot-yellow { background-color: #f59e0b; }
         .bg-blue { background: #dbeafe; color: #1e40af; } .dot-blue { background-color: #2563eb; }
         .bg-green { background: #dcfce7; color: #166534; } .dot-green { background-color: #16a34a; }
@@ -181,10 +185,12 @@
                 </div>
 
                 <div class="facturacion-wrap">
-                    <div class="page-header-content">
-                        <h1>Facturación y Pagos</h1>
-                        <p>Carga de comprobantes fiscales y seguimiento de pagos de órdenes aprobadas</p>
-                    </div>
+                    
+                    <!-- ENCABEZADO HOMOLOGADO A TODAS LAS PANTALLAS (LÍNEA GRIS) -->
+                    <header style="border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 24px;">
+                        <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px; color: #111827;">Facturación y Pagos</h1>
+                        <p style="color: #6b7280; margin: 0;">Carga de comprobantes fiscales y seguimiento de pagos de órdenes aprobadas</p>
+                    </header>
 
                     <div class="metrics-grid">
                         <div class="metric-card">
@@ -192,7 +198,7 @@
                             <div class="metric-value" id="met-pendientes">0 - $0.00</div>
                         </div>
                         <div class="metric-card">
-                            <div class="metric-title">FOLIOS FACTURADOS</div>
+                            <div class="metric-title">FOLIOS POR PAGAR</div>
                             <div class="metric-value" id="met-facturados" style="color: #2563eb;">0 - $0.00</div>
                         </div>
                         <div class="metric-card">
@@ -218,9 +224,9 @@
                             <label class="filter-label">Estado</label>
                             <select class="input" id="filtro-estado">
                                 <option value="todos">Todos</option>
-                                <option value="pendiente">Pendiente</option>
-                                <option value="facturado">Facturado</option>
-                                <option value="pagado">Pagado</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Por pagar">Por pagar</option>
+                                <option value="Pagado">Pagado</option>
                             </select>
                         </div>
                         <div class="filter-group flex-grow" style="flex: 2;">
@@ -239,20 +245,27 @@
                             <thead>
                                 <tr>
                                     <th title="Seleccionar para adjuntar facturas">SEL.</th>
-                                    <th>FOLIO</th>
+                                    <th>FOLIO (ORDEN)</th>
                                     <th>SUCURSAL</th>
-                                    <th style="text-align: right;">TOTAL</th>
-                                    <th>FECHA DE ENVÍO</th>
+                                    <th style="text-align: right;">TOTAL ORDEN</th>
                                     <th>PDF</th>
                                     <th>XML</th>
-                                    <th>FECHA DE FACTURA</th>
-                                    <th title="Marcar como pagado">SEL. (PAGO)</th>
-                                    <th>FECHA DE PAGO</th>
-                                    <th>ESTADO</th>
+                                    <th>NO. FACTURA</th>
+                                    <th>FECHA FACTURA</th>
+                                    <th>SEM. FAC.</th>
+                                    <th style="text-align: right;">IMPORTE FACTURA</th>
+                                    <th>PAGO TENTATIVO</th>
+                                    <th>CÓDIGO SAAS</th>
+                                    <th>FECHA SAAS</th>
+                                    <th>SEM. SAAS</th>
+                                    <th>ESTATUS</th>
+                                    <th title="Marcar como pagado">PAGADO (CHK)</th>
+                                    <th>FECHA PAGO</th>
+                                    <th>ACCIÓN</th>
                                 </tr>
                             </thead>
                             <tbody id="tabla-facturas-body">
-                                <tr><td colspan="11" class="co-table-empty">Cargando datos...</td></tr>
+                                <tr><td colspan="18" class="co-table-empty">Cargando datos...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -276,7 +289,7 @@
             <i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar PDF
         </button>
         <button class="btn-adjuntar" onclick="triggerUpload('xml')">
-            <i data-lucide="file-plus" style="width: 16px;"></i> Adjuntar XML
+            <i data-lucide="file-code" style="width: 16px;"></i> Adjuntar XML
         </button>
     </div>
 
@@ -329,7 +342,7 @@
         cargarDatosFacturacion();
     });
 
-    // === ALERTAS PERSONALIZADAS ===
+    // === FUNCIONES AUXILIARES ===
     function showCustomAlert(title, message, isSuccess = true) {
         const alertBox = document.getElementById('custom-alert');
         const alertTitle = document.getElementById('alert-title');
@@ -351,11 +364,28 @@
         alertBox.style.display = 'flex';
         lucide.createIcons();
     }
+    
     function closeCustomAlert() { document.getElementById('custom-alert').style.display = 'none'; }
+    
+    function formateaMoneda(valor) { return "$" + parseFloat(valor || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+    function getWeekNumber(dStr) {
+        if(!dStr) return "";
+        const d = new Date(dStr);
+        d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+        const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+        return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+    }
+
+    function add90Days(dateStr) {
+        if(!dateStr) return "";
+        const d = new Date(dateStr);
+        d.setDate(d.getDate() + 90);
+        return d.toISOString().split('T')[0];
+    }
 
     // === CARGA DE DATOS ===
     function cargarDatosFacturacion() {
-        // Solo traemos los que pasaron la etapa de Aprobación con éxito
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "==", "Costos Aprobados")
           .get()
@@ -363,14 +393,16 @@
               facturasGlobales = [];
               querySnapshot.forEach((doc) => { 
                   let data = doc.data();
-                  // Determinar estado de facturación localmente para agilizar filtros
+                  
+                  // Homologar Estatus
                   if (data.estado_pago === 'Pagado') {
-                      data._estado_factura = 'pagado';
-                  } else if (data.url_factura_pdf || data.url_factura_xml) {
-                      data._estado_factura = 'facturado';
+                      data._estado_factura = 'Pagado';
+                  } else if (data.estado_pago === 'Por Pagar' || data.url_factura_xml) {
+                      data._estado_factura = 'Por pagar';
                   } else {
-                      data._estado_factura = 'pendiente';
+                      data._estado_factura = 'Pendiente';
                   }
+                  
                   facturasGlobales.push(data); 
               });
               
@@ -385,11 +417,9 @@
           })
           .catch((error) => {
               console.error("Error: ", error);
-              document.getElementById('tabla-facturas-body').innerHTML = '<tr><td colspan="11" class="co-table-empty" style="color: red;">Error cargando datos.</td></tr>';
+              document.getElementById('tabla-facturas-body').innerHTML = '<tr><td colspan="18" class="co-table-empty" style="color: red;">Error cargando datos.</td></tr>';
           });
     }
-
-    function formateaMoneda(valor) { return "$" + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 
     function actualizarMetricas() {
         let cPend = 0, sumPend = 0;
@@ -401,9 +431,9 @@
             const val = parseFloat(t.costo_total_aprobado) || 0;
             cTot++; sumTot += val;
             
-            if (t._estado_factura === 'pendiente') { cPend++; sumPend += val; }
-            else if (t._estado_factura === 'facturado') { cFact++; sumFact += val; }
-            else if (t._estado_factura === 'pagado') { cPag++; sumPag += val; }
+            if (t._estado_factura === 'Pendiente') { cPend++; sumPend += val; }
+            else if (t._estado_factura === 'Por pagar') { cFact++; sumFact += val; }
+            else if (t._estado_factura === 'Pagado') { cPag++; sumPag += val; }
         });
 
         document.getElementById('met-pendientes').innerText = `${cPend} - ${formateaMoneda(sumPend)}`;
@@ -437,7 +467,7 @@
         });
 
         if(filtrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="11" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay folios que coincidan con la búsqueda.</span></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="18" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay folios que coincidan con la búsqueda.</span></div></td></tr>`;
             lucide.createIcons();
             limpiarSeleccion();
             return;
@@ -449,59 +479,79 @@
             const totalVal = parseFloat(t.costo_total_aprobado) || 0;
             const totalTxt = formateaMoneda(totalVal);
             
-            // Fechas
-            const fEnvio = t.fecha_aprobacion_costos ? new Date(t.fecha_aprobacion_costos).toLocaleDateString('es-MX') : "—";
-            const fFact = t.fecha_facturacion ? new Date(t.fecha_facturacion).toLocaleDateString('es-MX') : "—";
-            const fPago = t.fecha_pago ? new Date(t.fecha_pago).toLocaleDateString('es-MX') : "—";
-
             // Botones PDF / XML
             const btnPdf = t.url_factura_pdf 
-                ? `<button class="btn-download-red" onclick="window.open('${t.url_factura_pdf}', '_blank')"><i data-lucide="download" style="width:12px;"></i> PDF</button>` 
+                ? `<button class="btn-download-red" onclick="window.open('${t.url_factura_pdf}', '_blank')"><i data-lucide="file-text" style="width:12px;"></i> PDF</button>` 
                 : `<button class="btn-download-disabled" disabled><i data-lucide="minus" style="width:12px;"></i> PDF</button>`;
             
             const btnXml = t.url_factura_xml 
-                ? `<button class="btn-download-red" onclick="window.open('${t.url_factura_xml}', '_blank')"><i data-lucide="download" style="width:12px;"></i> XML</button>` 
+                ? `<button class="btn-download-red" onclick="window.open('${t.url_factura_xml}', '_blank')"><i data-lucide="file-code" style="width:12px;"></i> XML</button>` 
                 : `<button class="btn-download-disabled" disabled><i data-lucide="minus" style="width:12px;"></i> XML</button>`;
 
-            // Checkbox Pago (Activo si ya se subió factura, o si ya estaba pagado)
-            const isPagado = (t._estado_factura === 'pagado');
-            const canPay = (t._estado_factura === 'facturado' || isPagado);
-            const chkPago = `<input type="checkbox" class="chk-custom" onchange="marcarComoPagado('${folio}', this.checked)" ${isPagado ? 'checked' : ''} ${!canPay ? 'disabled title="Sube la factura primero"' : ''}>`;
+            // Datos de la Factura (XML)
+            const numFact = t.factura_numero || "—";
+            const fechaFact = t.factura_fecha ? new Date(t.factura_fecha).toLocaleDateString('es-MX') : "—";
+            const semFact = t.factura_semana || "—";
+            const impFact = t.factura_importe ? formateaMoneda(t.factura_importe) : "—";
+            const fechaTentativa = t.factura_fecha_tentativa ? new Date(t.factura_fecha_tentativa).toLocaleDateString('es-MX') : "—";
 
-            // Badge de Estado
+            // SAAS Inputs y Datos
+            const saasVal = t.saas_codigo || '';
+            const inSaas = `<div style="display:flex; gap:4px; justify-content:center; align-items:center;">
+                                <input type="text" id="saas-${folio}" value="${saasVal}" maxlength="6" style="width:70px; text-align:center; height:28px; font-size:12px; border:1px solid #d1d5db; border-radius:4px;" ${t._estado_factura === 'Pendiente' ? 'disabled' : ''}>
+                                <button onclick="guardarSAAS('${folio}')" class="btn-saas-save" title="Guardar SAAS" ${t._estado_factura === 'Pendiente' ? 'disabled style="opacity:0.5;"' : ''}><i data-lucide="save" style="width:14px;"></i></button>
+                            </div>`;
+            const fechaSaas = t.saas_fecha ? new Date(t.saas_fecha).toLocaleDateString('es-MX') : "—";
+            const semSaas = t.saas_semana || "—";
+
+            // Checkbox Pago y Estado
+            const isPagado = (t._estado_factura === 'Pagado');
+            const canPay = (t._estado_factura === 'Por pagar' || isPagado);
+            const chkPago = `<input type="checkbox" class="chk-custom" onchange="marcarComoPagado('${folio}', this.checked)" ${isPagado ? 'checked' : ''} ${!canPay ? 'disabled title="Sube la factura XML primero"' : ''}>`;
+            const fechaPago = t.fecha_pago ? new Date(t.fecha_pago).toLocaleDateString('es-MX') : "—";
+
             let estadoHtml = "";
-            if (t._estado_factura === 'pendiente') {
+            if (t._estado_factura === 'Pendiente') {
                 estadoHtml = `<span class="status-badge bg-yellow"><i class="status-dot dot-yellow"></i> Pendiente</span>`;
-            } else if (t._estado_factura === 'facturado') {
-                estadoHtml = `<span class="status-badge bg-blue"><i class="status-dot dot-blue"></i> Facturado</span>`;
-            } else if (t._estado_factura === 'pagado') {
+            } else if (t._estado_factura === 'Por pagar') {
+                estadoHtml = `<span class="status-badge bg-blue"><i class="status-dot dot-blue"></i> Por pagar</span>`;
+            } else if (t._estado_factura === 'Pagado') {
                 estadoHtml = `<span class="status-badge bg-green"><i class="status-dot dot-green"></i> Pagado</span>`;
             }
+
+            // Eliminar Botón
+            const btnEliminar = `<button class="btn-eliminar" onclick="eliminarFactura('${folio}')" title="Borrar factura y reiniciar"><i data-lucide="trash-2" style="width:18px;"></i></button>`;
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td><input type="checkbox" class="chk-custom chk-row-upload" value="${folio}" data-total="${totalVal}" onchange="actualizarBarraFlotante()"></td>
                 <td><strong>${folio}</strong></td>
                 <td>${suc}</td>
-                <td style="text-align: right; font-weight: 600;">${totalTxt}</td>
-                <td>${fEnvio}</td>
+                <td style="text-align: right; font-weight: 600; color: #DC2626;">${totalTxt}</td>
                 <td>${btnPdf}</td>
                 <td>${btnXml}</td>
-                <td>${fFact}</td>
-                <td>${chkPago}</td>
-                <td>${fPago}</td>
+                <td>${numFact}</td>
+                <td>${fechaFact}</td>
+                <td>${semFact}</td>
+                <td style="text-align: right; font-weight: 600;">${impFact}</td>
+                <td style="color: #ea580c; font-weight: 600;">${fechaTentativa}</td>
+                <td>${inSaas}</td>
+                <td>${fechaSaas}</td>
+                <td>${semSaas}</td>
                 <td>${estadoHtml}</td>
+                <td>${chkPago}</td>
+                <td>${fechaPago}</td>
+                <td>${btnEliminar}</td>
             `;
             tbody.appendChild(tr);
         });
         lucide.createIcons();
     }
 
-    // === LÓGICA DE BARRA FLOTANTE (ADJUNTAR) ===
+    // === BARRA FLOTANTE Y SUBIDA ===
     function actualizarBarraFlotante() {
         const checkboxes = document.querySelectorAll('.chk-row-upload:checked');
-        let count = 0;
-        let sum = 0;
+        let count = 0; let sum = 0;
         
         checkboxes.forEach(cb => {
             count++;
@@ -512,17 +562,13 @@
         document.getElementById('lbl-sel-sum').innerText = formateaMoneda(sum);
 
         const bar = document.getElementById('upload-bar');
-        if (count > 0) {
-            bar.classList.add('show');
-        } else {
-            bar.classList.remove('show');
-        }
+        if (count > 0) bar.classList.add('show');
+        else bar.classList.remove('show');
     }
 
     function limpiarSeleccion() {
         document.querySelectorAll('.chk-row-upload').forEach(cb => cb.checked = false);
         actualizarBarraFlotante();
-        // Limpiar inputs de archivo
         document.getElementById('file-pdf').value = "";
         document.getElementById('file-xml').value = "";
     }
@@ -540,14 +586,59 @@
         if(checkboxes.length === 0) return;
 
         const selectedFolios = Array.from(checkboxes).map(cb => cb.value);
-        
-        // Modal de carga
+        const sumSelected = parseFloat(document.getElementById('lbl-sel-sum').innerText.replace(/[^0-9.-]+/g,""));
+
+        let updateData = {};
+
+        // VALIDACIÓN ESTRICTA DEL XML ANTES DE SUBIR
+        if (tipo === 'xml') {
+            try {
+                const text = await file.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(text, "text/xml");
+                const comprobante = xmlDoc.getElementsByTagName("cfdi:Comprobante")[0] || xmlDoc.getElementsByTagName("Comprobante")[0];
+
+                if (!comprobante) {
+                    showCustomAlert("Error", "El archivo XML no es un formato válido.", false);
+                    document.getElementById('file-xml').value = "";
+                    return;
+                }
+
+                const totalXML = parseFloat(comprobante.getAttribute("Total") || 0);
+                const fechaXMLStr = comprobante.getAttribute("Fecha") || "";
+                const fechaXML = fechaXMLStr.split('T')[0];
+                const folioXML = comprobante.getAttribute("Folio") || "";
+                const serieXML = comprobante.getAttribute("Serie") || "";
+                const numFactura = serieXML + folioXML || "S/N";
+
+                // Validar margen de 1 peso (por decimales/redondeos de proveedores)
+                if (Math.abs(totalXML - sumSelected) > 1) {
+                    showCustomAlert("Total Incorrecto", `El total del XML (${formateaMoneda(totalXML)}) no coincide con las órdenes seleccionadas (${formateaMoneda(sumSelected)}). La carga ha sido bloqueada.`, false);
+                    document.getElementById('file-xml').value = "";
+                    return;
+                }
+
+                // Generamos cálculos automáticos
+                updateData.factura_numero = numFactura;
+                updateData.factura_fecha = fechaXML;
+                updateData.factura_semana = getWeekNumber(fechaXML);
+                updateData.factura_importe = totalXML;
+                updateData.factura_fecha_tentativa = add90Days(fechaXML);
+                updateData.estado_pago = "Por Pagar"; // Actualiza el estado principal
+
+            } catch (err) {
+                console.error(err);
+                showCustomAlert("Error", "Ocurrió un error al leer el archivo XML.", false);
+                document.getElementById('file-xml').value = "";
+                return;
+            }
+        }
+
         const alertBtn = document.getElementById('alert-btn');
-        alertBtn.style.display = 'none'; // ocultar botón aceptar temporalmente
+        alertBtn.style.display = 'none'; 
         showCustomAlert("Subiendo Archivo", `Subiendo ${tipo.toUpperCase()} para ${selectedFolios.length} folio(s)...`, true);
 
         try {
-            // 1. Subir a Firebase Storage
             const ext = file.name.split('.').pop();
             const filePath = `facturas/${Date.now()}_bloque.${ext}`;
             const ref = storage.ref(filePath);
@@ -555,37 +646,66 @@
             const snapshot = await ref.put(file);
             const downloadURL = await snapshot.ref.getDownloadURL();
 
-            // 2. Actualizar Firestore
-            const batch = db.batch();
-            const isoDate = new Date().toISOString();
+            if (tipo === 'pdf') updateData.url_factura_pdf = downloadURL;
+            if (tipo === 'xml') updateData.url_factura_xml = downloadURL;
 
+            const batch = db.batch();
             selectedFolios.forEach(folio => {
                 const docRef = db.collection('tickets_mantenimiento').doc(folio);
-                const updateData = { fecha_facturacion: isoDate };
-                if (tipo === 'pdf') updateData.url_factura_pdf = downloadURL;
-                if (tipo === 'xml') updateData.url_factura_xml = downloadURL;
                 batch.update(docRef, updateData);
             });
 
             await batch.commit();
 
-            // 3. Éxito
             alertBtn.style.display = 'block'; 
-            showCustomAlert("¡Éxito!", `Archivo ${tipo.toUpperCase()} vinculado correctamente.`, true);
+            showCustomAlert("¡Éxito!", `Archivo ${tipo.toUpperCase()} validado y vinculado correctamente.`, true);
             
             limpiarSeleccion();
-            cargarDatosFacturacion(); // Recarga la tabla para ver botones y estados
+            cargarDatosFacturacion(); 
 
         } catch (error) {
-            console.error("Error al subir archivo:", error);
+            console.error("Error al subir:", error);
             alertBtn.style.display = 'block'; 
             showCustomAlert("Error", "No se pudo subir el archivo. Revisa tu conexión.", false);
         }
     }
 
+    // === GUARDAR SAAS ===
+    async function guardarSAAS(folio) {
+        const input = document.getElementById(`saas-${folio}`);
+        const val = input.value.trim();
+        
+        if(val.length !== 6 || isNaN(val)) {
+            showCustomAlert("Atención", "El código SAAS debe ser exactamente de 6 dígitos numéricos.", false);
+            return;
+        }
+
+        const btn = input.nextElementSibling;
+        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:14px;"></i>';
+        lucide.createIcons();
+
+        try {
+            const hoy = new Date().toISOString().split('T')[0];
+            const sem = getWeekNumber(hoy);
+
+            await db.collection("tickets_mantenimiento").doc(folio).update({
+                saas_codigo: val,
+                saas_fecha: hoy,
+                saas_semana: sem
+            });
+            
+            cargarDatosFacturacion(); // Refresca silenciosamente
+        } catch (e) {
+            console.error(e);
+            showCustomAlert("Error", "No se pudo guardar el SAAS.", false);
+            btn.innerHTML = '<i data-lucide="save" style="width:14px;"></i>';
+            lucide.createIcons();
+        }
+    }
+
     // === LÓGICA DE PAGO ===
     async function marcarComoPagado(folio, isChecked) {
-        const nuevoEstado = isChecked ? 'Pagado' : 'Pendiente'; // Si desmarca, quitamos el pago
+        const nuevoEstado = isChecked ? 'Pagado' : 'Por Pagar'; 
         const fechaPago = isChecked ? new Date().toISOString() : null;
 
         try {
@@ -593,12 +713,39 @@
                 estado_pago: nuevoEstado,
                 fecha_pago: fechaPago
             });
-            // Recargar silenciosamente
             cargarDatosFacturacion();
         } catch (error) {
             console.error("Error actualizando pago:", error);
             showCustomAlert("Error", "No se pudo actualizar el estado de pago.", false);
-            cargarDatosFacturacion(); // Revertir checkbox visual
+            cargarDatosFacturacion(); 
+        }
+    }
+
+    // === ELIMINAR FACTURA ===
+    async function eliminarFactura(folio) {
+        if(!confirm(`¿Estás completamente seguro de borrar la factura del folio ${folio}?\nSe eliminarán los archivos PDF, XML y códigos SAAS vinculados.`)) return;
+
+        try {
+            await db.collection("tickets_mantenimiento").doc(folio).update({
+                url_factura_pdf: firebase.firestore.FieldValue.delete(),
+                url_factura_xml: firebase.firestore.FieldValue.delete(),
+                factura_numero: firebase.firestore.FieldValue.delete(),
+                factura_fecha: firebase.firestore.FieldValue.delete(),
+                factura_semana: firebase.firestore.FieldValue.delete(),
+                factura_importe: firebase.firestore.FieldValue.delete(),
+                factura_fecha_tentativa: firebase.firestore.FieldValue.delete(),
+                saas_codigo: firebase.firestore.FieldValue.delete(),
+                saas_fecha: firebase.firestore.FieldValue.delete(),
+                saas_semana: firebase.firestore.FieldValue.delete(),
+                estado_pago: firebase.firestore.FieldValue.delete(),
+                fecha_pago: firebase.firestore.FieldValue.delete()
+            });
+
+            showCustomAlert("Eliminado", "La factura ha sido borrada exitosamente y la orden regresó a Pendiente.", true);
+            cargarDatosFacturacion();
+        } catch (error) {
+            console.error(error);
+            showCustomAlert("Error", "Ocurrió un error al intentar eliminar la factura.", false);
         }
     }
 
