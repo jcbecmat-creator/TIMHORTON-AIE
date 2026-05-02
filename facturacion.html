@@ -75,7 +75,7 @@
             .data-table th:nth-child(4), .data-table td:nth-child(4) { position: sticky; left: 310px; min-width: 110px; max-width: 110px; z-index: 5; }
             .data-table th:nth-child(5), .data-table td:nth-child(5) { position: sticky; left: 420px; min-width: 110px; max-width: 110px; z-index: 5; }
             .data-table th:nth-child(6), .data-table td:nth-child(6) { position: sticky; left: 530px; min-width: 100px; max-width: 100px; z-index: 5; }
-            .data-table th:nth-child(7), .data-table td:nth-child(7) { position: sticky; left: 630px; min-width: 110px; max-width: 110px; z-index: 5; border-right: 2px solid #cbd5e1; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.05); }
+            .data-table th:nth-child(7), .data-table td:nth-child(7) { position: sticky; left: 630px; min-width: 120px; max-width: 120px; z-index: 5; border-right: 2px solid #cbd5e1; box-shadow: 2px 0 5px -2px rgba(0,0,0,0.05); }
             
             .data-table th:nth-child(-n+7) { z-index: 10 !important; background: #f8fafc; }
             .data-table td:nth-child(-n+7) { background: white; }
@@ -89,8 +89,9 @@
         .btn-download-red:hover { background: #b91c1c; }
         .btn-download-disabled { height: 28px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 
-        .btn-eliminar { background: none; border: none; color: #ef4444; cursor: pointer; transition: color 0.2s; padding: 4px; }
-        .btn-eliminar:hover { color: #b91c1c; }
+        /* Botón de Borrar Factura */
+        .btn-delete-red { height: 28px; background: #DC2626; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; white-space: nowrap; }
+        .btn-delete-red:hover { background: #b91c1c; }
 
         .status-badge { height: 26px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 14px; font-size: 11px; font-weight: 700; white-space: nowrap; text-transform: none !important; }
         .status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 6px; }
@@ -431,41 +432,41 @@
 
     let facturasGlobales = [];
 
-    // Opciones para dropdowns
+    // Opciones para dropdowns (Formato: Mayúscula inicial, minúsculas las demás)
     const optionsIndicativo = [
-        "MTTO DE INMUEBLES CORRECTIVO NATURALESA DEL EQUIPO",
-        "MTTO DE INMUEBLES CORRECTIVO DETERIORO DEL RESTAURANTE",
-        "MTTO DE INMUEBLES CORRECTIVO MEJORAS AL RESTAURANTE",
-        "MTTO DE INMUEBLES PREVENTIVO INSTITUCIONAL",
-        "MTTO DE INMUEBLES CORRECTIVO CAUSA OPERATIVA",
-        "MTTO DE INMUEBLES PREVENTIVO ELECTROMECANICO",
-        "AGUA",
-        "GESTORA",
-        "MANTENIMIENTO Y ACCESORIOS",
-        "SEGUROS Y FIANZAS",
-        "ENERGIA ELECTRICA",
-        "HERRAMIENTAS",
-        "GASOLINA EDENRED",
-        "GASOLINA Y LUBRICANTES"
+        "Mtto de inmuebles correctivo naturaleza del equipo",
+        "Mtto de inmuebles correctivo deterioro del restaurante",
+        "Mtto de inmuebles correctivo mejoras al restaurante",
+        "Mtto de inmuebles preventivo institucional",
+        "Mtto de inmuebles correctivo causa operativa",
+        "Mtto de inmuebles preventivo electromecanico",
+        "Agua",
+        "Gestora",
+        "Mantenimiento y accesorios",
+        "Seguros y fianzas",
+        "Energia electrica",
+        "Herramientas",
+        "Gasolina edenred",
+        "Gasolina y lubricantes"
     ];
 
     const optionsCapexOpex = [
-        "OPEX",
-        "CAPEX",
-        "OTROS GASTOS",
-        "PIPAS",
-        "FOSAS",
-        "PFP"
+        "Opex",
+        "Capex",
+        "Otros gastos",
+        "Pipas",
+        "Fosas",
+        "Pfp"
     ];
 
     const optionsTipificacion = [
-        "PIPAS",
-        "FOSAS",
-        "DESGASTE NATURAL",
-        "VICIOS OCULTOS",
-        "CAUSA OPERATIVA",
-        "SINIESTRO",
-        "MEJORAS"
+        "Pipas",
+        "Fosas",
+        "Desgaste natural",
+        "Vicios ocultos",
+        "Causa operativa",
+        "Siniestro",
+        "Mejoras"
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -530,6 +531,26 @@
         const d = new Date(dateStr);
         d.setDate(d.getDate() + 90);
         return d.toISOString().split('T')[0];
+    }
+    
+    // Función para calcular rango de fechas por semana (1 a 52)
+    function getWeekDateRange(year, weekNo) {
+        let d = new Date(Date.UTC(year, 0, 1));
+        let dayNum = d.getUTCDay() || 7;
+        d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+        let weekTime = d.getTime() + (weekNo - 1) * 604800000;
+        
+        let start = new Date(weekTime);
+        start.setUTCDate(start.getUTCDate() - 3); // Lunes
+        let end = new Date(weekTime);
+        end.setUTCDate(end.getUTCDate() + 3); // Domingo
+        
+        const fmt = (date) => {
+            let dd = date.getUTCDate().toString().padStart(2, '0');
+            let mm = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+            return `${dd}/${mm}/${date.getUTCFullYear()}`;
+        }
+        return `${fmt(start)} al ${fmt(end)}`;
     }
 
     // === CARGA DE DATOS ===
@@ -683,8 +704,8 @@
             const totalVal = parseFloat(t.costo_total_aprobado) || 0;
             const totalTxt = formateaMoneda(totalVal);
             
-            // Botón PDF ORDEN ORIGINAL ROJO
-            const btnVerOrden = `<button class="btn-download-red" onclick="verPDFOrden('${folio}')" title="Ver Orden Original"><i data-lucide="search" style="width:12px; height:12px;"></i> Ver Orden</button>`;
+            // Botón PDF ORDEN ORIGINAL ROJO (Más ancho)
+            const btnVerOrden = `<button class="btn-download-red" style="min-width: 105px; white-space: nowrap;" onclick="verPDFOrden('${folio}')" title="Ver Orden Original"><i data-lucide="search" style="width:12px; height:12px;"></i> Ver Orden</button>`;
 
             // Botones PDF / XML FACTURA
             const btnPdf = t.url_factura_pdf 
@@ -701,8 +722,8 @@
             const impFact = t.factura_importe ? formateaMoneda(t.factura_importe) : "—";
             const fechaTentativa = t.factura_fecha_tentativa ? new Date(t.factura_fecha_tentativa).toLocaleDateString('es-MX') : "—";
 
-            // Eliminar Botón (Columna Acción)
-            const btnEliminar = `<button class="btn-eliminar" onclick="eliminarFactura('${folio}')" title="Borrar factura y reiniciar"><i data-lucide="trash-2" style="width:18px;"></i></button>`;
+            // Eliminar Botón (Columna Acción Roja)
+            const btnEliminar = `<button class="btn-delete-red" onclick="eliminarFactura('${folio}')" title="Borrar factura y reiniciar"><i data-lucide="trash-2" style="width:14px; color:white;"></i> Factura</button>`;
 
             // Badge de Estado 
             let estadoHtml = "";
@@ -812,6 +833,7 @@
 
         let updateData = {};
 
+        // VALIDACIÓN ESTRICTA DEL XML ANTES DE SUBIR
         if (tipo === 'xml') {
             try {
                 const text = await file.text();
@@ -847,7 +869,7 @@
 
             } catch (err) {
                 console.error(err);
-                showCustomAlert("Error", "Ocurrió un error al leer el archivo XML.", false);
+                showCustomAlert("Error", "Ocurrió un error al leer el archivo XML. Asegúrate de que sea un CFDI válido.", false);
                 document.getElementById('file-xml').value = "";
                 return;
             }
@@ -980,24 +1002,34 @@
     }
 
     // ==========================================
-    // LÓGICA DE DESCARGA ZIP (MODAL)
+    // LÓGICA DE DESCARGA ZIP (MODAL Y 52 SEMANAS)
     // ==========================================
     function abrirModalDescarga() {
         const selectSemana = document.getElementById('descarga-semana');
         const selectProv = document.getElementById('descarga-prov');
         
-        // Obtener solo semanas únicas que tengan facturas subidas (con XML o PDF)
-        const facturasValidas = facturasGlobales.filter(t => t.factura_semana && (t.url_factura_pdf || t.url_factura_xml));
-        const semanasUnicas = [...new Set(facturasValidas.map(t => t.factura_semana))].sort((a,b) => b - a);
-
-        selectSemana.innerHTML = '<option value="">— Seleccionar semana —</option>';
-        semanasUnicas.forEach(sem => {
-            selectSemana.innerHTML += `<option value="${sem}">Semana ${sem}</option>`;
-        });
+        selectSemana.innerHTML = '';
+        
+        const hoy = new Date();
+        const currentYear = hoy.getFullYear();
+        const currentWeek = getWeekNumber(hoy.toISOString());
+        
+        // Primera Opción: Semana Actual
+        const currentRange = getWeekDateRange(currentYear, currentWeek);
+        selectSemana.innerHTML += `<option value="${currentWeek}">Semana ${currentWeek} (${currentRange}) - Actual</option>`;
+        
+        // 52 Semanas
+        for(let i=1; i<=52; i++) {
+            if(i !== currentWeek) {
+                let range = getWeekDateRange(currentYear, i);
+                selectSemana.innerHTML += `<option value="${i}">Semana ${i} (${range})</option>`;
+            }
+        }
 
         selectProv.innerHTML = '<option value="todos">Todos los proveedores</option>';
-        
         document.getElementById('modalDescargaFacturas').classList.add('active');
+        
+        actualizarProveedoresDescarga(currentWeek);
         lucide.createIcons();
     }
 
@@ -1036,7 +1068,7 @@
         });
 
         if(facturasDescargar.length === 0) {
-            showCustomAlert("Aviso", "No se encontraron facturas para la selección indicada.", false);
+            showCustomAlert("Aviso", "No hay facturas cargadas para la semana y proveedor indicados.", false);
             return;
         }
 
@@ -1051,13 +1083,12 @@
 
             for(let f of facturasDescargar) {
                 const nombreProv = f.proveedor || f.prov_nombre || "Sin Proveedor";
-                const numFact = f.factura_numero || f.id_ticket; // Si no hay num, usa folio
+                const numFact = f.factura_numero || f.id_ticket; 
                 
                 // Estructura: SEMANA X > PROVEEDOR > FACTURA Y
                 const carpetaProv = carpetaPrincipal.folder(nombreProv);
                 const carpetaFact = carpetaProv.folder(numFact);
 
-                // Función auxiliar para forzar fetch cors
                 const fetchArchivo = async (url) => {
                     const res = await fetch(url);
                     return await res.blob();
