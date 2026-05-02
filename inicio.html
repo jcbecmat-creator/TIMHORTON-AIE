@@ -126,7 +126,7 @@
                             <a class="sidebar-link" href="index.html"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
                             <a class="sidebar-link" href="index.html"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
-                        <div class="sidebar-section" id="nav-seccion-admin">
+                        <div class="sidebar-section" id="nav-seccion-admin" style="display: none;">
                             <div class="sidebar-section-title">Administración</div>
                             <a class="sidebar-link" href="confirmacion.html"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
                             <a class="sidebar-link" href="costos.html"><i data-lucide="calculator"></i> Costos de reparación</a>
@@ -134,7 +134,7 @@
                             <a class="sidebar-link" href="aprobacion_gerencia.html"><i data-lucide="shield-check"></i> Aprobación gerencia</a>
                             <a class="sidebar-link" href="facturacion.html"><i data-lucide="file-text"></i> Facturación</a>
                         </div>
-                        <div class="sidebar-section" id="nav-seccion-reportes">
+                        <div class="sidebar-section" id="nav-seccion-reportes" style="display: none;">
                             <div class="sidebar-section-title">Reportes</div>
                             <a class="sidebar-link" href="index.html"><i data-lucide="bar-chart-3"></i> Reportes</a>
                         </div>
@@ -287,9 +287,18 @@
 
         const appDataStr = sessionStorage.getItem('loginSession');
         if(appDataStr) {
-            const appData = JSON.parse(appDataStr);
-            document.getElementById('welcome-username-display').innerText = appData.nombreProveedor || savedUser;
-            document.querySelector('.user-name').innerText = appData.nombreProveedor || savedUser;
+            window.appData = JSON.parse(appDataStr);
+            document.getElementById('welcome-username-display').innerText = window.appData.nombreProveedor || savedUser;
+            document.querySelector('.user-name').innerText = window.appData.nombreProveedor || savedUser;
+            
+            // Ocultar menús de administrador si es proveedor
+            if(window.appData.privilegio == 2 || window.appData.privilegio == "2") {
+                document.getElementById('nav-seccion-admin').style.display = 'none';
+                document.getElementById('nav-seccion-reportes').style.display = 'none';
+            } else {
+                document.getElementById('nav-seccion-admin').style.display = 'block';
+                document.getElementById('nav-seccion-reportes').style.display = 'block';
+            }
         }
 
         const toggles = document.querySelectorAll('[data-sidebar-toggle]');
@@ -317,19 +326,25 @@
 
     async function cargarDatosDashboard() {
         try {
-            const snapshot = await db.collection("tickets_mantenimiento").get();
+            let query = db.collection("tickets_mantenimiento");
+            
+            // FILTRO DE SEGURIDAD PARA PROVEEDORES
+            if (window.appData && (window.appData.privilegio == 2 || window.appData.privilegio == "2")) {
+                query = query.where("proveedor", "==", window.appData.nombreProveedor);
+            }
+
+            const snapshot = await query.get();
             allTickets = [];
             snapshot.forEach(doc => allTickets.push(doc.data()));
-            aplicarFiltrosCruzados(); // Procesa la primera vez sin filtros
+            aplicarFiltrosCruzados(); 
         } catch (error) {
             console.error("Error cargando dashboard:", error);
-            alert("No se pudieron cargar los datos del dashboard.");
+            alert("Error al cargar los datos: " + error.message);
         }
     }
 
     // === LÓGICA DE FILTRADO CRUZADO ===
     function setFiltro(tipo, valor) {
-        // Si le dan clic al que ya está activo, lo desactiva (toggle)
         if (activeFilters[tipo] === valor) {
             activeFilters[tipo] = null;
         } else {
@@ -344,7 +359,6 @@
     }
 
     function aplicarFiltrosCruzados() {
-        // Filtrar array completo
         let filtrados = allTickets.filter(t => {
             if (activeFilters.estatus && getGrupoEstatus(t) !== activeFilters.estatus) return false;
             if (activeFilters.sucursal && getSucursal(t) !== activeFilters.sucursal) return false;
@@ -355,7 +369,6 @@
             return true;
         });
 
-        // Mostrar texto de filtros
         const activos = Object.values(activeFilters).filter(v => v !== null);
         const btnClear = document.getElementById('btn-clear-filters');
         const txtDisplay = document.getElementById('filtros-activos-display');
@@ -406,8 +419,8 @@
         });
 
         dibujarGrafica('chartEstatus', 'doughnut', dEstatus, 'estatus', thColors);
-        dibujarGrafica('chartSucursales', 'bar', dSucursales, 'sucursal', ['#DC2626'], true, true); // Top 5, format money
-        dibujarGrafica('chartProveedores', 'horizontalBar', dProveedores, 'proveedor', ['#111827'], true); // Top 5
+        dibujarGrafica('chartSucursales', 'bar', dSucursales, 'sucursal', ['#DC2626'], true, true); 
+        dibujarGrafica('chartProveedores', 'horizontalBar', dProveedores, 'proveedor', ['#111827'], true); 
         dibujarGrafica('chartCapex', 'pie', dCapex, 'capex', ['#10b981', '#3b82f6', '#f59e0b', '#8b5cf6']);
         dibujarGrafica('chartTendencia', 'line', dMeses, 'mes', ['#DC2626']);
         dibujarGrafica('chartTipificacion', 'bar', dTipo, 'tipo', ['#f59e0b']);
@@ -419,12 +432,12 @@
 
         let entries = Object.entries(dataObj);
         if (tipo === 'line') {
-            entries.sort((a, b) => a[0].localeCompare(b[0])); // Cronológico
+            entries.sort((a, b) => a[0].localeCompare(b[0])); 
         } else if (top5) {
             entries.sort((a, b) => b[1] - a[1]);
-            entries = entries.slice(0, 5); // Solo Top 5
+            entries = entries.slice(0, 5); 
         } else if (tipo !== 'doughnut' && tipo !== 'pie') {
-            entries.sort((a, b) => b[1] - a[1]); // Descendente para barras
+            entries.sort((a, b) => b[1] - a[1]); 
         }
 
         const labels = entries.map(e => e[0]);
