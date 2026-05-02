@@ -37,7 +37,7 @@
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
-        .facturacion-wrap { max-width: 1600px; margin: 0 auto; padding: 24px; }
+        .facturacion-wrap { max-width: 100%; margin: 0 auto; padding: 24px; }
 
         /* === MÉTRICAS SUPERIORES === */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
@@ -56,10 +56,10 @@
         
         /* === TABLA === */
         .data-table-container { background: white; border-radius: 12px; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
-        .data-table { width: 100%; border-collapse: collapse; min-width: 1800px; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 2500px; /* Incrementado para nuevas columnas */ }
         .data-table thead { background: #f8fafc; }
         .data-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #6b7280; padding: 16px 12px; text-align: center; border-bottom: 1px solid #E5E7EB; white-space: nowrap;}
-        .data-table td { padding: 12px 10px; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #111827; vertical-align: middle; text-align: center; }
+        .data-table td { padding: 10px; border-bottom: 1px solid #f3f4f6; font-size: 12px; color: #111827; vertical-align: middle; text-align: center; }
         
         .co-table-empty { text-align: center; padding: 60px 20px !important; color: #6b7280; font-size: 14px; }
 
@@ -69,9 +69,7 @@
         .btn-download-red:hover { background: #b91c1c; }
         .btn-download-disabled { height: 28px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 
-        .btn-saas-save { background:#16a34a; color:white; border:none; padding:6px; border-radius:6px; cursor:pointer; transition: background 0.2s; }
-        .btn-saas-save:hover { background: #15803d; }
-        .btn-eliminar { background: none; border: none; color: #ef4444; cursor: pointer; transition: color 0.2s; }
+        .btn-eliminar { background: none; border: none; color: #ef4444; cursor: pointer; transition: color 0.2s; padding: 4px; }
         .btn-eliminar:hover { color: #b91c1c; }
 
         .status-badge { height: 26px; display: inline-flex; align-items: center; justify-content: center; padding: 0 12px; border-radius: 14px; font-size: 11px; font-weight: 700; white-space: nowrap; }
@@ -80,6 +78,22 @@
         .bg-yellow { background: #fef3c7; color: #92400e; } .dot-yellow { background-color: #f59e0b; }
         .bg-blue { background: #dbeafe; color: #1e40af; } .dot-blue { background-color: #2563eb; }
         .bg-green { background: #dcfce7; color: #166534; } .dot-green { background-color: #16a34a; }
+
+        /* Estilos para inputs automáticos de SAAS y Selects */
+        .table-input-auto { 
+            width: 80px; text-align: center; height: 30px; font-size: 12px; 
+            border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;
+            transition: all 0.2s;
+        }
+        .table-input-auto:focus { background: white; outline: none; border-color: #DC2626; box-shadow: 0 0 0 1px #DC2626; }
+        .table-input-auto:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .table-select {
+            height: 30px; font-size: 12px; padding: 0 8px;
+            border: 1px solid #d1d5db; border-radius: 6px; background: #f9fafb;
+            width: 100%; min-width: 150px;
+        }
+        .table-select:focus { background: white; outline: none; border-color: #DC2626; }
 
         /* === BARRA FLOTANTE DE SUBIDA === */
         .upload-bottom-bar { 
@@ -94,7 +108,7 @@
         
         .btn-limpiar { background: white; color: #6b7280; border: 1px solid #e5e7eb; height: 40px; padding: 0 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;}
         .btn-limpiar:hover { background: #f3f4f6; color: #111827; }
-        .btn-adjuntar { background: #DC2626; color: white; border: none; height: 40px; padding: 0 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background 0.2s;}
+        .btn-adjuntar { background: #DC2626; color: white; border: none; height: 40px; padding: 0 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s;}
         .btn-adjuntar:hover { background: #b91c1c; }
 
         /* === MODAL DE ALERTA PERSONALIZADO === */
@@ -106,15 +120,6 @@
         #alert-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: opacity 0.2s; }
         #alert-btn:hover { opacity: 0.9; }
 
-        @media (max-width: 900px) {
-            .metrics-grid { grid-template-columns: 1fr 1fr; }
-            .upload-bottom-bar { flex-direction: column; gap: 12px; padding: 16px; bottom: -200px;}
-            .up-info { flex-direction: column; text-align: center; gap: 4px; }
-            .btn-adjuntar, .btn-limpiar { width: 100%; justify-content: center; }
-        }
-        @media (max-width: 600px) {
-            .metrics-grid { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body class="has-sidebar">
@@ -255,17 +260,20 @@
                                     <th>SEM. FAC.</th>
                                     <th style="text-align: right;">IMPORTE FACTURA</th>
                                     <th>PAGO TENTATIVO</th>
+                                    <th>ACCIÓN</th> <!-- Colocada aquí según solicitud -->
+                                    <th>ESTATUS</th> <!-- Colocada aquí según solicitud -->
                                     <th>CÓDIGO SAAS</th>
                                     <th>FECHA SAAS</th>
                                     <th>SEM. SAAS</th>
-                                    <th>ESTATUS</th>
                                     <th title="Marcar como pagado">PAGADO (CHK)</th>
                                     <th>FECHA PAGO</th>
-                                    <th>ACCIÓN</th>
+                                    <th>INDICATIVO DE GASTO</th> <!-- Nueva Columna -->
+                                    <th>CALIFICACIÓN CAPEX / OPEX</th> <!-- Nueva Columna -->
+                                    <th>TIPIFICACIÓN DE GASTO</th> <!-- Nueva Columna -->
                                 </tr>
                             </thead>
                             <tbody id="tabla-facturas-body">
-                                <tr><td colspan="18" class="co-table-empty">Cargando datos...</td></tr>
+                                <tr><td colspan="21" class="co-table-empty">Cargando datos...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -319,6 +327,43 @@
     const storage = firebase.storage();
 
     let facturasGlobales = [];
+
+    // Opciones para nuevos dropdowns (extraídas de imágenes)
+    const optionsIndicativo = [
+        "MTTO DE INMUEBLES CORRECTIVO NATURALESA DEL EQUIPO",
+        "MTTO DE INMUEBLES CORRECTIVO DETERIORO DEL RESTAURANTE",
+        "MTTO DE INMUEBLES CORRECTIVO MEJORAS AL RESTAURANTE",
+        "MTTO DE INMUEBLES PREVENTIVO INSTITUCIONAL",
+        "MTTO DE INMUEBLES CORRECTIVO CAUSA OPERATIVA",
+        "MTTO DE INMUEBLES PREVENTIVO ELECTROMECANICO",
+        "AGUA",
+        "GESTORA",
+        "MANTENIMIENTO Y ACCESORIOS",
+        "SEGUROS Y FIANZAS",
+        "ENERGIA ELECTRICA",
+        "HERRAMIENTAS",
+        "GASOLINA EDENRED",
+        "GASOLINA Y LUBRICANTES"
+    ];
+
+    const optionsCapexOpex = [
+        "OPEX",
+        "CAPEX",
+        "OTROS GASTOS",
+        "PIPAS",
+        "FOSAS",
+        "PFP"
+    ];
+
+    const optionsTipificacion = [
+        "PIPAS",
+        "FOSAS",
+        "DESGASTE NATURAL",
+        "VICIOS OCULTOS",
+        "CAUSA OPERATIVA",
+        "SINIESTRO",
+        "MEJORAS"
+    ];
 
     document.addEventListener('DOMContentLoaded', () => {
         if (window.lucide) { lucide.createIcons(); }
@@ -394,10 +439,10 @@
               querySnapshot.forEach((doc) => { 
                   let data = doc.data();
                   
-                  // Homologar Estatus
+                  // Lógica de Estatus Capitalizado
                   if (data.estado_pago === 'Pagado') {
                       data._estado_factura = 'Pagado';
-                  } else if (data.estado_pago === 'Por Pagar' || data.url_factura_xml) {
+                  } else if (data.url_factura_xml) {
                       data._estado_factura = 'Por pagar';
                   } else {
                       data._estado_factura = 'Pendiente';
@@ -417,7 +462,7 @@
           })
           .catch((error) => {
               console.error("Error: ", error);
-              document.getElementById('tabla-facturas-body').innerHTML = '<tr><td colspan="18" class="co-table-empty" style="color: red;">Error cargando datos.</td></tr>';
+              document.getElementById('tabla-facturas-body').innerHTML = '<tr><td colspan="21" class="co-table-empty" style="color: red;">Error cargando datos.</td></tr>';
           });
     }
 
@@ -440,6 +485,18 @@
         document.getElementById('met-facturados').innerText = `${cFact} - ${formateaMoneda(sumFact)}`;
         document.getElementById('met-pagados').innerText = `${cPag} - ${formateaMoneda(sumPag)}`;
         document.getElementById('met-total').innerText = `${cTot} - ${formateaMoneda(sumTot)}`;
+    }
+
+    // Helper para generar selects en la tabla
+    function generateTableSelect(folio, field, options, currentValue) {
+        let html = `<select class="table-select" onchange="guardarAutofield('${folio}', '${field}', this.value)">`;
+        html += `<option value="">— Seleccionar —</option>`;
+        options.forEach(opt => {
+            const selected = (opt === currentValue) ? 'selected' : '';
+            html += `<option value="${opt}" ${selected}>${opt}</option>`;
+        });
+        html += `</select>`;
+        return html;
     }
 
     function renderTablaActual() {
@@ -467,7 +524,7 @@
         });
 
         if(filtrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="18" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay folios que coincidan con la búsqueda.</span></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="21" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay folios que coincidan con la búsqueda.</span></div></td></tr>`;
             lucide.createIcons();
             limpiarSeleccion();
             return;
@@ -495,21 +552,10 @@
             const impFact = t.factura_importe ? formateaMoneda(t.factura_importe) : "—";
             const fechaTentativa = t.factura_fecha_tentativa ? new Date(t.factura_fecha_tentativa).toLocaleDateString('es-MX') : "—";
 
-            // SAAS Inputs y Datos
-            const saasVal = t.saas_codigo || '';
-            const inSaas = `<div style="display:flex; gap:4px; justify-content:center; align-items:center;">
-                                <input type="text" id="saas-${folio}" value="${saasVal}" maxlength="6" style="width:70px; text-align:center; height:28px; font-size:12px; border:1px solid #d1d5db; border-radius:4px;" ${t._estado_factura === 'Pendiente' ? 'disabled' : ''}>
-                                <button onclick="guardarSAAS('${folio}')" class="btn-saas-save" title="Guardar SAAS" ${t._estado_factura === 'Pendiente' ? 'disabled style="opacity:0.5;"' : ''}><i data-lucide="save" style="width:14px;"></i></button>
-                            </div>`;
-            const fechaSaas = t.saas_fecha ? new Date(t.saas_fecha).toLocaleDateString('es-MX') : "—";
-            const semSaas = t.saas_semana || "—";
+            // Eliminar Botón (Columna Acción)
+            const btnEliminar = `<button class="btn-eliminar" onclick="eliminarFactura('${folio}')" title="Borrar factura y reiniciar"><i data-lucide="trash-2" style="width:18px;"></i></button>`;
 
-            // Checkbox Pago y Estado
-            const isPagado = (t._estado_factura === 'Pagado');
-            const canPay = (t._estado_factura === 'Por pagar' || isPagado);
-            const chkPago = `<input type="checkbox" class="chk-custom" onchange="marcarComoPagado('${folio}', this.checked)" ${isPagado ? 'checked' : ''} ${!canPay ? 'disabled title="Sube la factura XML primero"' : ''}>`;
-            const fechaPago = t.fecha_pago ? new Date(t.fecha_pago).toLocaleDateString('es-MX') : "—";
-
+            // Badge de Estado (Capitalizado)
             let estadoHtml = "";
             if (t._estado_factura === 'Pendiente') {
                 estadoHtml = `<span class="status-badge bg-yellow"><i class="status-dot dot-yellow"></i> Pendiente</span>`;
@@ -519,8 +565,25 @@
                 estadoHtml = `<span class="status-badge bg-green"><i class="status-dot dot-green"></i> Pagado</span>`;
             }
 
-            // Eliminar Botón
-            const btnEliminar = `<button class="btn-eliminar" onclick="eliminarFactura('${folio}')" title="Borrar factura y reiniciar"><i data-lucide="trash-2" style="width:18px;"></i></button>`;
+            // SAAS Input Autoguardado (sin botón)
+            const saasVal = t.saas_codigo || '';
+            const inSaas = `<input type="text" value="${saasVal}" maxlength="6" class="table-input-auto" 
+                                placeholder="6 dig." onblur="guardarSAASAutonomo('${folio}', this.value)" 
+                                ${t._estado_factura === 'Pendiente' ? 'disabled' : ''}>`;
+            
+            const fechaSaas = t.saas_fecha ? new Date(t.saas_fecha).toLocaleDateString('es-MX') : "—";
+            const semSaas = t.saas_semana || "—";
+
+            // Checkbox Pago (CHK)
+            const isPagado = (t._estado_factura === 'Pagado');
+            const canPay = (t._estado_factura === 'Por pagar' || isPagado);
+            const chkPago = `<input type="checkbox" class="chk-custom" onchange="marcarComoPagado('${folio}', this.checked)" ${isPagado ? 'checked' : ''} ${!canPay ? 'disabled title="Sube la factura XML primero"' : ''}>`;
+            const fechaPago = t.fecha_pago ? new Date(t.fecha_pago).toLocaleDateString('es-MX') : "—";
+
+            // Nuevos Dropdowns
+            const selIndicativo = generateTableSelect(folio, 'indicativo_gasto', optionsIndicativo, t.indicativo_gasto);
+            const selCapexOpex = generateTableSelect(folio, 'calificacion_capex_opex', optionsCapexOpex, t.calificacion_capex_opex);
+            const selTipificacion = generateTableSelect(folio, 'tipificacion_gasto', optionsTipificacion, t.tipificacion_gasto);
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -535,13 +598,16 @@
                 <td>${semFact}</td>
                 <td style="text-align: right; font-weight: 600;">${impFact}</td>
                 <td style="color: #ea580c; font-weight: 600;">${fechaTentativa}</td>
+                <td>${btnEliminar}</td> <!-- Columna Acción -->
+                <td>${estadoHtml}</td> <!-- Columna Estatus -->
                 <td>${inSaas}</td>
                 <td>${fechaSaas}</td>
                 <td>${semSaas}</td>
-                <td>${estadoHtml}</td>
                 <td>${chkPago}</td>
                 <td>${fechaPago}</td>
-                <td>${btnEliminar}</td>
+                <td>${selIndicativo}</td> <!-- Nueva Columna -->
+                <td>${selCapexOpex}</td> <!-- Nueva Columna -->
+                <td>${selTipificacion}</td> <!-- Nueva Columna -->
             `;
             tbody.appendChild(tr);
         });
@@ -599,36 +665,36 @@
                 const comprobante = xmlDoc.getElementsByTagName("cfdi:Comprobante")[0] || xmlDoc.getElementsByTagName("Comprobante")[0];
 
                 if (!comprobante) {
-                    showCustomAlert("Error", "El archivo XML no es un formato válido.", false);
+                    showCustomAlert("Error", "El archivo XML no es un formato CFDI válido.", false);
                     document.getElementById('file-xml').value = "";
                     return;
                 }
 
-                const totalXML = parseFloat(comprobante.getAttribute("Total") || 0);
-                const fechaXMLStr = comprobante.getAttribute("Fecha") || "";
+                const totalXML = parseFloat(comprobante.getAttribute("Total") || comprobante.getAttribute("total") || 0);
+                const fechaXMLStr = comprobante.getAttribute("Fecha") || comprobante.getAttribute("fecha") || "";
                 const fechaXML = fechaXMLStr.split('T')[0];
-                const folioXML = comprobante.getAttribute("Folio") || "";
-                const serieXML = comprobante.getAttribute("Serie") || "";
-                const numFactura = serieXML + folioXML || "S/N";
+                const folioXML = comprobante.getAttribute("Folio") || comprobante.getAttribute("folio") || "";
+                const serieXML = comprobante.getAttribute("Serie") || comprobante.getAttribute("serie") || "";
+                const numFactura = (serieXML + folioXML) || "S/N";
 
-                // Validar margen de 1 peso (por decimales/redondeos de proveedores)
+                // Validar margen de 1 peso (por decimales)
                 if (Math.abs(totalXML - sumSelected) > 1) {
                     showCustomAlert("Total Incorrecto", `El total del XML (${formateaMoneda(totalXML)}) no coincide con las órdenes seleccionadas (${formateaMoneda(sumSelected)}). La carga ha sido bloqueada.`, false);
                     document.getElementById('file-xml').value = "";
                     return;
                 }
 
-                // Generamos cálculos automáticos
+                // Generamos cálculos automáticos y cambiamos estatus
                 updateData.factura_numero = numFactura;
                 updateData.factura_fecha = fechaXML;
                 updateData.factura_semana = getWeekNumber(fechaXML);
                 updateData.factura_importe = totalXML;
                 updateData.factura_fecha_tentativa = add90Days(fechaXML);
-                updateData.estado_pago = "Por Pagar"; // Actualiza el estado principal
+                updateData.estado_pago = "Por Pagar"; // Cambia estatus al subir factura
 
             } catch (err) {
                 console.error(err);
-                showCustomAlert("Error", "Ocurrió un error al leer el archivo XML.", false);
+                showCustomAlert("Error", "Ocurrió un error al leer el archivo XML. Asegúrate de que sea un CFDI válido.", false);
                 document.getElementById('file-xml').value = "";
                 return;
             }
@@ -636,7 +702,7 @@
 
         const alertBtn = document.getElementById('alert-btn');
         alertBtn.style.display = 'none'; 
-        showCustomAlert("Subiendo Archivo", `Subiendo ${tipo.toUpperCase()} para ${selectedFolios.length} folio(s)...`, true);
+        showCustomAlert("Procesando", `Subiendo y validando ${tipo.toUpperCase()}...`, true);
 
         try {
             const ext = file.name.split('.').pop();
@@ -658,7 +724,7 @@
             await batch.commit();
 
             alertBtn.style.display = 'block'; 
-            showCustomAlert("¡Éxito!", `Archivo ${tipo.toUpperCase()} validado y vinculado correctamente.`, true);
+            showCustomAlert("¡Éxito!", `Archivo ${tipo.toUpperCase()} vinculado correctamente. Estatus actualizado a 'Por pagar'.`, true);
             
             limpiarSeleccion();
             cargarDatosFacturacion(); 
@@ -670,19 +736,20 @@
         }
     }
 
-    // === GUARDAR SAAS ===
-    async function guardarSAAS(folio) {
-        const input = document.getElementById(`saas-${folio}`);
-        const val = input.value.trim();
-        
+    // === AUTOGUARDADO DE SAAS (onblur) ===
+    async function guardarSAASAutonomo(folio, val) {
+        val = val.trim();
+        if(!val) return; // No hacer nada si está vacío
+
         if(val.length !== 6 || isNaN(val)) {
             showCustomAlert("Atención", "El código SAAS debe ser exactamente de 6 dígitos numéricos.", false);
+            cargarDatosFacturacion(); // Recargar para revertir valor visual
             return;
         }
 
-        const btn = input.nextElementSibling;
-        btn.innerHTML = '<i data-lucide="loader-2" class="animate-spin" style="width:14px;"></i>';
-        lucide.createIcons();
+        // Buscar si el valor cambió antes de guardar
+        const ticket = facturasGlobales.find(t => t.id_ticket === folio);
+        if(ticket && ticket.saas_codigo === val) return; 
 
         try {
             const hoy = new Date().toISOString().split('T')[0];
@@ -694,17 +761,31 @@
                 saas_semana: sem
             });
             
-            cargarDatosFacturacion(); // Refresca silenciosamente
+            // Recarga silenciosa para actualizar fechas y semanas en la tabla
+            cargarDatosFacturacion(); 
         } catch (e) {
             console.error(e);
-            showCustomAlert("Error", "No se pudo guardar el SAAS.", false);
-            btn.innerHTML = '<i data-lucide="save" style="width:14px;"></i>';
-            lucide.createIcons();
+            showCustomAlert("Error", "No se pudo autoguardar el SAAS.", false);
+            cargarDatosFacturacion();
         }
     }
 
-    // === LÓGICA DE PAGO ===
+    // === GUARDADO AUTOMÁTICO DE DROPDOWNS ===
+    async function guardarAutofield(folio, field, value) {
+        try {
+            let updateData = {};
+            updateData[field] = value;
+            await db.collection("tickets_mantenimiento").doc(folio).update(updateData);
+            // No requiere recarga total, el valor ya quedó visualmente
+        } catch (e) {
+            console.error(e);
+            showCustomAlert("Error", "No se pudo guardar la selección.", false);
+        }
+    }
+
+    // === LÓGICA DE PAGO (CHK) ===
     async function marcarComoPagado(folio, isChecked) {
+        // Cambia estatus a Pagado o Por Pagar
         const nuevoEstado = isChecked ? 'Pagado' : 'Por Pagar'; 
         const fechaPago = isChecked ? new Date().toISOString() : null;
 
@@ -713,7 +794,7 @@
                 estado_pago: nuevoEstado,
                 fecha_pago: fechaPago
             });
-            cargarDatosFacturacion();
+            cargarDatosFacturacion(); // Recargar para actualizar badge de estatus
         } catch (error) {
             console.error("Error actualizando pago:", error);
             showCustomAlert("Error", "No se pudo actualizar el estado de pago.", false);
@@ -723,7 +804,7 @@
 
     // === ELIMINAR FACTURA ===
     async function eliminarFactura(folio) {
-        if(!confirm(`¿Estás completamente seguro de borrar la factura del folio ${folio}?\nSe eliminarán los archivos PDF, XML y códigos SAAS vinculados.`)) return;
+        if(!confirm(`¿Estás completamente seguro de borrar la factura del folio ${folio}?\nSe eliminarán archivos PDF, XML, datos de factura, SAAS y el estatus volverá a 'Pendiente'.`)) return;
 
         try {
             await db.collection("tickets_mantenimiento").doc(folio).update({
@@ -737,11 +818,11 @@
                 saas_codigo: firebase.firestore.FieldValue.delete(),
                 saas_fecha: firebase.firestore.FieldValue.delete(),
                 saas_semana: firebase.firestore.FieldValue.delete(),
-                estado_pago: firebase.firestore.FieldValue.delete(),
+                estado_pago: firebase.firestore.FieldValue.delete(), // Vuelve a 'Pendiente' por lógica
                 fecha_pago: firebase.firestore.FieldValue.delete()
             });
 
-            showCustomAlert("Eliminado", "La factura ha sido borrada exitosamente y la orden regresó a Pendiente.", true);
+            showCustomAlert("Eliminado", "La factura ha sido borrada exitosamente y la orden regresó a 'Pendiente'.", true);
             cargarDatosFacturacion();
         } catch (error) {
             console.error(error);
