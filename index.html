@@ -219,10 +219,12 @@
             <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
-                    <nav class="sidebar-nav">
-                        <a href="#" class="sidebar-link" id="nav-inicio" onclick="cambiarVista(event, 'vista-inicio')"><i data-lucide="home"></i> Inicio</a>
+                <nav class="sidebar-nav">
+                        <!-- ¡CORREGIDO! Ahora manda a inicio.html -->
+                        <a href="inicio.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Inicio Dashboard</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
+                            <!-- Esta es la página activa en index.html -->
                             <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
                             <a href="#" class="sidebar-link" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
