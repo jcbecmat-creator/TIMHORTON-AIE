@@ -35,7 +35,7 @@
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         html.is-logged-in #app-screen { display: block !important; }
 
-        /* === ESTILOS DEL MENÚ PRINCIPAL (INTACTOS) === */
+        /* === ESTILOS DEL MENÚ PRINCIPAL === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
         .sidebar-link.activa i { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
@@ -43,10 +43,6 @@
 
         /* === COSTOS DE REPARACIÓN STYLES === */
         .costos-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-16); }
-        .page-header-section { margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--gray-200); }
-        .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-6); }
-        .page-header-content h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-2) 0; }
-        .page-header-content p { font-size: var(--text-sm); color: var(--gray-500); margin: 0; }
         
         .tabs-container { display: flex; gap: 15px; align-items: center; }
         .tab-btn { background: #f3f4f6; border: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
@@ -247,13 +243,13 @@
                 </div>
 
                 <div class="costos-wrap">
-                    <!-- ENCABEZADO MODIFICADO PARA INCLUIR LA LÍNEA GRIS DEBAJO DEL TEXTO -->
-                    <header class="page-header-section" style="border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 20px;">
-                        <div class="page-header-content" style="margin-bottom: 15px;">
-                            <h1>Costos de Reparación</h1>
-                            <p>Gestiona los costos de conceptos empleados en órdenes aprobadas</p>
+                    <!-- ENCABEZADO REORGANIZADO PARA ALINEAR BOTONES Y PONER LÍNEA GRIS -->
+                    <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 24px;">
+                        <div class="page-header-content">
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Costos de Reparación</h1>
+                            <p style="color: #6b7280; margin: 0;">Gestiona los costos de conceptos empleados en órdenes aprobadas</p>
                         </div>
-                        <div class="tabs-container">
+                        <div class="tabs-container" style="margin-bottom: 0; padding-bottom: 0;">
                             <button class="tab-btn active" onclick="cambiarTab('pendientes')" id="tab-pendientes">
                                 Pendientes <span class="tab-badge" id="badge-pendientes">0</span>
                             </button>
@@ -388,7 +384,7 @@
         </div>
     </div>
 
-    <!-- ALERTA CUSTOM INTEGRADA -->
+    <!-- ALERTA CUSTOM -->
     <div id="custom-alert" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 9999999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
         <div style="background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
             <div id="alert-icon-container" style="margin-bottom: 16px; display: flex; justify-content: center;"></div>
@@ -692,7 +688,6 @@
         if (modo === 'lectura') {
             isReadOnly = true;
         } else if (modo === 'corregir') {
-            // En corregir, si está aprobado, se bloquea. Si está rechazado o es nuevo, se permite editar.
             if (estEval === 'aprobado') {
                 isReadOnly = true;
             } else if (estEval === 'rechazado') {
@@ -702,9 +697,7 @@
 
         const roAttr = isReadOnly ? 'readonly' : '';
         const disAttr = isReadOnly ? 'disabled' : '';
-        // Clases visuales
         const editableClass = isEditableRechazo ? 'editable-field' : '';
-        // Botón basura
         const hideBasura = isReadOnly || (modo === 'corregir' && estEval === 'aprobado') ? 'display:none;' : '';
 
         const optTipo = `<option value="Material" ${tVal==='Material'?'selected':''}>Material</option>
@@ -726,7 +719,6 @@
         `;
         tbody.appendChild(tr);
 
-        // Si es un concepto rechazado, agregamos una fila extra para mostrar el motivo del admin
         if (isEditableRechazo && motRech) {
             const trMotivo = document.createElement('tr');
             trMotivo.className = 'row-motivo-rechazo';
@@ -746,7 +738,6 @@
 
     function eliminarFila(btn) {
         const row = btn.closest('tr');
-        // Check if there is a reason row directly below it
         if(row.nextElementSibling && row.nextElementSibling.classList.contains('row-motivo-rechazo')) {
             row.nextElementSibling.remove();
         }
@@ -780,10 +771,10 @@
         document.getElementById('modal-suma-total').setAttribute('data-total', totalGran);
     }
 
-    // === GUARDAR EN FIREBASE (Desde Nuevo o Corregir) ===
+    // === GUARDAR EN FIREBASE ===
     async function guardarConceptos() {
         const folio = document.getElementById('modal-folio-hidden').value;
-        const modo = document.getElementById('modal-modo-actual').value; // 'nuevo' o 'corregir'
+        const modo = document.getElementById('modal-modo-actual').value; 
         const subtotalNum = parseFloat(document.getElementById('modal-suma-total').getAttribute('data-subtotal')) || 0;
         const ivaNum = parseFloat(document.getElementById('modal-suma-total').getAttribute('data-iva')) || 0;
         const totalNum = parseFloat(document.getElementById('modal-suma-total').getAttribute('data-total')) || 0;
@@ -800,13 +791,12 @@
             const obs = fila.querySelector('.inp-obs').value.trim();
             const importe = cant * precio;
 
-            // Si es modo corregir, asumimos que los de solo lectura también se van intactos
             let estEvalActual = null;
             if (modo === 'corregir') {
                 if (fila.querySelector('.inp-concepto').hasAttribute('readonly')) {
-                    estEvalActual = 'aprobado'; // Mantiene su estado aprobado
+                    estEvalActual = 'aprobado'; 
                 } else {
-                    estEvalActual = 'corregido'; // Avisa que ya fue modificado
+                    estEvalActual = 'corregido'; 
                 }
             }
 
@@ -815,7 +805,7 @@
                 conceptosAguardar.push({ 
                     tipo, concepto, unidad, cantidad: cant, precio_unitario: precio, importe, observacion: obs,
                     estado_evaluacion: estEvalActual,
-                    motivo_rechazo: "" // Se limpia el motivo al reenviar
+                    motivo_rechazo: "" 
                 });
             }
         });
@@ -841,8 +831,8 @@
                 costo_subtotal: subtotalNum,
                 costo_iva: ivaNum,
                 costo_total: totalNum,
-                estado_confirmacion: "Pendiente de Aprobación", // Regresa a pendiente de aprobación
-                fecha_captura_costos: new Date().toISOString() // Actualiza la fecha para que suba en la lista
+                estado_confirmacion: "Pendiente de Aprobación", 
+                fecha_captura_costos: new Date().toISOString() 
             });
 
             showCustomAlert("¡Éxito!", modo === 'corregir' ? "Corrección enviada exitosamente." : "Costos capturados exitosamente.", true);
