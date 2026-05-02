@@ -43,10 +43,8 @@
 
         /* Estilos de la página Aprobación */
         .aprobacion-wrap { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-16); }
-        .page-header-section { margin-bottom: var(--space-8); padding-bottom: var(--space-6); border-bottom: 1px solid var(--gray-200); }
-        .page-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-6); }
-        .page-header-content h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--gray-900); letter-spacing: var(--tracking-tight); margin: 0 0 var(--space-2) 0; }
-        .page-header-content p { font-size: var(--text-sm); color: var(--gray-500); margin: 0; }
+        .page-header-content h1 { font-size: 24px; font-weight: bold; margin: 0 0 5px 0; padding: 0; color: #111827; line-height: 1; }
+        .page-header-content p { color: #6b7280; margin: 0; padding: 0; line-height: 1.5; }
 
         /* === ESTILOS DE PESTAÑAS (TABS HOMOLOGADOS) === */
         .tabs-container { display: flex; gap: 15px; align-items: center; overflow-x: auto; padding-bottom: 5px; }
@@ -63,17 +61,16 @@
         .filter-actions { display: flex; gap: var(--space-2); }
         
         .btn-secondary { height: 42px; background: #f8fafc; color: #374151; border: 1px solid #cbd5e1; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
-        .btn-exportar { height: 42px; background: #16a34a; color: white; border: none; padding: 0 20px; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-sizing: border-box; }
-
-        .data-table-container { background: white; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); }
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table thead { background: var(--gray-50); }
-        .data-table th { font-size: 11px; font-weight: var(--weight-semibold); text-transform: uppercase; color: var(--gray-500); padding: var(--space-4) var(--space-5); text-align: center; border-bottom: 1px solid var(--gray-200); white-space: nowrap;}
-        .data-table td { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--gray-100); font-size: var(--text-sm); color: var(--gray-700); vertical-align: middle; text-align: center; }
+        
+        /* === TABLA HOMOLOGADA EXACTA A COSTOS DE REPARACIÓN === */
+        .co-table-container { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #E5E7EB; }
+        .co-table { width: 100%; border-collapse: collapse; }
+        .co-table th { padding: 16px 20px; text-align: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #E5E7EB; white-space: nowrap; }
+        .co-table td { padding: 16px 20px; text-align: center; font-size: 14px; color: #111827; border-bottom: 1px solid #f3f4f6; }
         .co-table-empty { text-align: center; padding: 40px 20px !important; color: #6b7280; font-size: 14px; }
 
-        .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-action-disabled { height: 32px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
+        .btn-action-disabled { height: 32px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
         
         /* CORRECCIÓN DE BADGES PARA EVITAR MAYÚSCULAS */
         .status-badge { height: 32px; display: inline-flex; align-items: center; justify-content: center; padding: 0 16px; border-radius: 16px; font-size: 12px; font-weight: 700; text-transform: none !important; }
@@ -136,18 +133,8 @@
         .row-evaluacion { background: #f8fafc; }
         .row-evaluacion td { padding: 12px 4px; border-bottom: 2px solid #e5e7eb; border-radius: 0 0 8px 8px; }
         
-        /* ESTRUCTURA MATEMÁTICA PARA ALINEACIÓN */
-        .eval-controls-container {
-            display: grid;
-            grid-template-columns: 80% 20%; 
-            align-items: center;
-        }
-        .eval-left-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-right: 4px; 
-        }
+        .eval-controls-container { display: grid; grid-template-columns: 80% 20%; align-items: center; }
+        .eval-left-wrap { display: flex; align-items: center; gap: 12px; padding-right: 4px; }
         
         .btn-aprobar { background: #16a34a; color: white; border: none; height: 36px; padding: 0 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; flex-shrink: 0; }
         .btn-aprobar:hover { background: #15803d; }
@@ -160,17 +147,7 @@
         .btn-rechazar.inactive { opacity: 0.5; }
 
         .motivo-input { 
-            flex-grow: 1; 
-            height: 36px !important; 
-            padding: 0 12px !important; 
-            border-radius: 8px !important; 
-            border: 1px solid #d1d5db !important; 
-            font-size: 13px !important; 
-            color: #111827 !important; 
-            background-color: #f3f4f6 !important; 
-            box-sizing: border-box !important; 
-            transition: all 0.2s ease !important;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+            flex-grow: 1; height: 36px !important; padding: 0 12px !important; border-radius: 8px !important; border: 1px solid #d1d5db !important; font-size: 13px !important; color: #111827 !important; background-color: #f3f4f6 !important; box-sizing: border-box !important; transition: all 0.2s ease !important; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         }
         .motivo-input:focus { outline: none; background: white !important; border-color: #ef4444 !important; box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1) !important; }
         .motivo-input[readonly] { background-color: #e5e7eb !important; color: #6b7280 !important; font-weight: 600; cursor: not-allowed !important; border-color: #d1d5db !important; box-shadow: none !important; }
@@ -179,7 +156,6 @@
 
         /* Footer del modal */
         .modal-footer { padding: 20px 24px; background: #fff; border-top: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
-        
         .footer-counters-group { display: flex; gap: 24px; align-items: center; }
 
         .botones-accion-group { display: flex; gap: 12px; }
@@ -298,10 +274,9 @@
                 </div>
 
                 <div class="aprobacion-wrap">
-                    <!-- ENCABEZADO CON LÍNEA GRIS Y SUBMENÚS TIPO TABS HOMOLOGADOS -->
                     <header style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 20px; margin-bottom: 24px;">
                         <div class="page-header-content">
-                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Aprobación de Costos</h1>
+                            <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px; color: #111827;">Aprobación de Costos</h1>
                             <p style="color: #6b7280; margin: 0;">Evalúa y autoriza los conceptos cargados por los proveedores</p>
                         </div>
                         <div class="tabs-container" style="margin-bottom: 0; padding-bottom: 0;">
@@ -334,19 +309,15 @@
                             <button class="btn-secondary" type="button" onclick="renderTablaActual()">
                                 <i data-lucide="search" style="width: 16px;"></i> Buscar
                             </button>
-                            <button class="btn-exportar" type="button">
-                                <i data-lucide="download" style="width: 16px;"></i> Exportar
-                            </button>
                         </div>
                     </form>
 
-                    <div class="data-table-container">
-                        <table class="data-table">
+                    <div class="co-table-container">
+                        <table class="co-table">
                             <thead>
                                 <tr>
                                     <th>Folio</th>
                                     <th>Sucursal</th>
-                                    <th>Enviado por</th>
                                     <th>Fecha envío</th>
                                     <th style="text-align: right;">Total</th>
                                     <th>Estado</th>
@@ -354,7 +325,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tabla-aprobacion-body">
-                                <tr><td colspan="7" class="co-table-empty">Cargando...</td></tr>
+                                <tr><td colspan="6" class="co-table-empty">Cargando...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -453,7 +424,7 @@
 
     let ticketsGlobales = []; 
     let tabActual = 'pendientes';
-    let estadoEvaluaciones = []; // Almacena el estado de cada concepto
+    let estadoEvaluaciones = []; 
 
     document.addEventListener('DOMContentLoaded', () => {
         if (window.lucide) { lucide.createIcons(); }
@@ -486,7 +457,6 @@
         cargarTodosLosTickets();
     });
 
-    // === FUNCIONES DE ALERTA PERSONALIZADA ===
     function showCustomAlert(title, message, isSuccess = true) {
         const alertBox = document.getElementById('custom-alert');
         const alertTitle = document.getElementById('alert-title');
@@ -513,7 +483,6 @@
         document.getElementById('custom-alert').style.display = 'none';
     }
 
-    // === CARGA Y CLASIFICACIÓN DE TICKETS ===
     function cargarTodosLosTickets() {
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "in", ["Pendiente de Aprobación", "Costos Aprobados", "Costos Rechazados"])
@@ -525,7 +494,7 @@
               ticketsGlobales.sort((a, b) => {
                   let fA = a.fecha_captura_costos || a.fecha_creacion || "";
                   let fB = b.fecha_captura_costos || b.fecha_creacion || "";
-                  return fB.localeCompare(fA);
+                  return fA.localeCompare(fB);
               });
 
               actualizarBadges();
@@ -533,7 +502,7 @@
           })
           .catch((error) => {
               console.error("Error: ", error);
-              document.getElementById('tabla-aprobacion-body').innerHTML = '<tr><td colspan="7" style="text-align: center; color: red;">Error cargando datos.</td></tr>';
+              document.getElementById('tabla-aprobacion-body').innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Error cargando datos.</td></tr>';
           });
     }
 
@@ -554,7 +523,6 @@
         renderTablaActual();
     }
 
-    // === DIBUJAR TABLA ===
     function renderTablaActual() {
         const tbody = document.getElementById('tabla-aprobacion-body');
         tbody.innerHTML = '';
@@ -581,16 +549,15 @@
         });
 
         if(ticketsFiltrados.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay costos pendientes de aprobación en este momento.</span></div></td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="6" class="co-table-empty"><div style="display: flex; flex-direction: column; align-items: center; gap: 10px;"><i data-lucide="inbox" style="width: 48px; height: 48px; color: #d1d5db;"></i><span>No hay costos pendientes de aprobación en este momento.</span></div></td></tr>`;
             lucide.createIcons();
             return;
         }
 
         ticketsFiltrados.forEach(t => {
             const folio = t.id_ticket;
-            const suc = t.sucursal || "N/A";
-            const prov = t.prov_nombre || t.proveedor || "N/A";
-            const fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : t.fecha_creacion;
+            const suc = (t.sucursal || "N/A").toUpperCase(); // Transformado a mayúsculas
+            const fecha = t.fecha_captura_costos ? new Date(t.fecha_captura_costos).toLocaleDateString('es-MX') : (t.fecha_creacion ? new Date(t.fecha_creacion).toLocaleDateString('es-MX') : "—");
             const totalTxt = formateaMoneda(t.costo_total || 0);
             
             let estadoHtml = "";
@@ -601,17 +568,16 @@
                 accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', false)"><i data-lucide="check-square" style="width:14px;"></i> Evaluar Costos</button>`;
             } else if (tabActual === 'aprobados') {
                 estadoHtml = `<span class="status-badge" style="background:#D1FAE5; color:#065F46;"><i class="status-dot green"></i> Aprobado</span>`;
-                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
             } else if (tabActual === 'rechazados') {
                 estadoHtml = `<span class="status-badge" style="background:#FEE2E2; color:#B91C1C;"><i class="status-dot red"></i> Rechazado</span>`;
-                accionHtml = `<button class="btn-action-red" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
+                accionHtml = `<button class="btn-action-disabled" onclick="abrirModal('${folio}', true)"><i data-lucide="eye" style="width:14px;"></i> Ver Detalles</button>`;
             }
 
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td style="text-align: center;"><strong>${folio}</strong></td>
                 <td style="text-align: center;">${suc}</td>
-                <td style="text-align: center;">${prov}</td>
                 <td style="text-align: center;">${fecha}</td>
                 <td style="text-align: right; font-weight: 600;">${totalTxt}</td>
                 <td style="text-align: center;">${estadoHtml}</td>
@@ -622,7 +588,6 @@
         lucide.createIcons();
     }
 
-    // === LÓGICA DEL MODAL ===
     function formateaMoneda(valor) { return "$" + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
 
     function actualizarContadoresModal() {
@@ -782,7 +747,6 @@
         estadoEvaluaciones[index].motivo = valor;
     }
 
-    // === GUARDAR EVALUACIÓN EN FIREBASE ===
     async function enviarEvaluacion() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const ticket = ticketsGlobales.find(t => t.id_ticket === folio);
@@ -851,7 +815,6 @@
         }
     }
 
-    // === VER PDF DESDE EL MODAL ===
     function verPDFDesdeModal() {
         const folio = document.getElementById('modal-folio-hidden').value;
         const t = ticketsGlobales.find(tk => tk.id_ticket === folio);
