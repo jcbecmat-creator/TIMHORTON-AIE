@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Inicio | Tim Hortons</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <!-- Librería para Gráficas Interactivas -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/fonts.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/style.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/components.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/design-system.css">
+    <link rel="stylesheet" href="https://tims-orden-de-servicio.onrender.com/static/css/app-shell.css">
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        if (!sessionStorage.getItem('loginSession')) {
+            window.location.href = 'index.html'; // Ajusta si tu login tiene otro nombre
+        } else {
+            document.documentElement.classList.add('is-logged-in');
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
+        .app-content { overflow-y: auto; height: 100vh; padding-bottom: 120px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
+        html.is-logged-in #app-screen { display: block !important; }
+        
+        .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
+        .sidebar-link.activa i { color: #DC2626 !important; }
+        .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
+        .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
+
+        .dashboard-wrap { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+        /* === MÉTRICAS SUPERIORES === */
+        .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+        .metric-card { background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; display: flex; align-items: center; gap: 16px; transition: transform 0.2s; }
+        .metric-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .metric-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .metric-content { display: flex; flex-direction: column; }
+        .metric-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 4px;}
+        .metric-value { font-size: 24px; font-weight: 800; color: #111827; line-height: 1; }
+
+        /* Colores de Iconos KPI */
+        .icon-blue { background: #dbeafe; color: #2563eb; }
+        .icon-yellow { background: #fef3c7; color: #d97706; }
+        .icon-green { background: #dcfce7; color: #16a34a; }
+        .icon-red { background: #fee2e2; color: #dc2626; }
+
+        /* === GRIDS DE GRÁFICAS === */
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .chart-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #f3f4f6; padding-bottom: 12px; }
+        .chart-title { font-size: 15px; font-weight: 700; color: #111827; margin: 0; display: flex; align-items: center; gap: 8px; }
+        .chart-container { position: relative; height: 300px; width: 100%; }
+
+        @media (max-width: 1024px) {
+            .metrics-grid { grid-template-columns: 1fr 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="has-sidebar">
+
+    <div id="app-screen" style="display: block;">
+        <header class="main-header">
+            <div class="header-left">
+                <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
+                    <span class="hamburger"></span>
+                </button>
+                <a href="inicio.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
+                <h1 class="system-title">Ordenes de Servicio</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-menu" data-user-menu>
+                    <button class="user-circle-btn" type="button" data-user-trigger>
+                        <span class="user-circle-initial" id="user-initial-header">U</span>
+                    </button>
+                    <div class="user-dropdown" data-user-dropdown>
+                        <div class="user-card">
+                            <div class="user-circle-avatar user-circle-initial">U</div>
+                            <div class="user-meta">
+                                <div class="user-name">Cargando...</div>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                            <a href="index.html" class="dropdown-link destructive" onclick="sessionStorage.clear();">
+                                <i data-lucide="log-out"></i> Cerrar sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            <aside class="sidebar app-sidebar" data-app-sidebar>
+                <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
+                <div class="sidebar-content">
+                    <nav class="sidebar-nav">
+                        <!-- INICIO AHORA APUNTA A inicio.html y está activa -->
+                        <a class="sidebar-link activa" href="inicio.html"><i data-lucide="layout-dashboard"></i> Inicio Dashboard</a>
+                        <div class="sidebar-section">
+                            <div class="sidebar-section-title">Formas</div>
+                            <!-- Cambia 'index.html' por tu formulario de correctivo real si tiene otro nombre -->
+                            <a class="sidebar-link" href="index.html"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a class="sidebar-link" href="index.html"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                        </div>
+                        <div class="sidebar-section" id="nav-seccion-admin">
+                            <div class="sidebar-section-title">Administración</div>
+                            <a class="sidebar-link" href="confirmacion.html"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <a class="sidebar-link" href="costos.html"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            <a class="sidebar-link" href="aprobacion.html"><i data-lucide="badge-check"></i> Aprobación de costos</a>
+                            <a class="sidebar-link" href="aprobacion_gerencia.html"><i data-lucide="shield-check"></i> Aprobación gerencia</a>
+                            <a class="sidebar-link" href="facturacion.html"><i data-lucide="file-text"></i> Facturación</a>
+                        </div>
+                        <div class="sidebar-section" id="nav-seccion-reportes">
+                            <div class="sidebar-section-title">Reportes</div>
+                            <a class="sidebar-link" href="index.html"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                        </div>
+                    </nav>
+                </div>
+            </aside>
+            <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+
+            <main class="main-content app-content">
+                
+                <div id="global-welcome-section" style="text-align: center; padding-top: 10px; padding-bottom: 25px; border-bottom: 1px solid #e5e7eb; margin-bottom: 25px; background: white;">
+                    <h1 style="margin: 0; font-size: 24px; color: #111827; font-weight: 700;">¡Hola, <span id="welcome-username-display" style="color: #DC2626;">Usuario</span>!</h1>
+                    <h2 style="margin: 5px 0 0 0; font-size: 16px; color: #6b7280; font-weight: 500;">Este es el resumen operativo de tu sistema.</h2>
+                </div>
+
+                <div class="dashboard-wrap">
+                    
+                    <!-- KPIs -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon icon-blue"><i data-lucide="files" style="width: 24px; height: 24px;"></i></div>
+                            <div class="metric-content">
+                                <span class="metric-title">Total de Folios</span>
+                                <span class="metric-value" id="kpi-total">0</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon icon-yellow"><i data-lucide="clock" style="width: 24px; height: 24px;"></i></div>
+                            <div class="metric-content">
+                                <span class="metric-title">En Proceso / Pendientes</span>
+                                <span class="metric-value" id="kpi-pendientes">0</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon icon-red"><i data-lucide="circle-dollar-sign" style="width: 24px; height: 24px;"></i></div>
+                            <div class="metric-content">
+                                <span class="metric-title">Gasto Aprobado</span>
+                                <span class="metric-value" id="kpi-gasto">$0.00</span>
+                            </div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon icon-green"><i data-lucide="check-circle" style="width: 24px; height: 24px;"></i></div>
+                            <div class="metric-content">
+                                <span class="metric-title">Total Pagado</span>
+                                <span class="metric-value" id="kpi-pagado">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRÁFICAS FILA 1 -->
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title"><i data-lucide="pie-chart" style="color:#6b7280;"></i> Distribución por Estatus</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chartEstatus"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title"><i data-lucide="bar-chart-2" style="color:#6b7280;"></i> Top Gasto por Sucursal</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chartSucursales"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRÁFICAS FILA 2 -->
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title"><i data-lucide="trending-up" style="color:#6b7280;"></i> Tendencia de Folios Creados</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chartTendencia"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title"><i data-lucide="users" style="color:#6b7280;"></i> Top 5 Proveedores (Órdenes)</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="chartProveedores"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyC6a4ikG4ap0BJTjCiW97sDaDr6zcXjhoA",
+        authDomain: "timhortons-mantenimiento.firebaseapp.com",
+        projectId: "timhortons-mantenimiento",
+        storageBucket: "timhortons-mantenimiento.firebasestorage.app",
+        messagingSenderId: "892024009722",
+        appId: "1:892024009722:web:fd43a68570f78cedcaea43"
+    };
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    const db = firebase.firestore();
+
+    // Configuración global de Chart.js para que use la misma fuente de tu web
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#6b7280';
+    
+    // Paleta de colores corporativos
+    const colors = ['#DC2626', '#f59e0b', '#2563eb', '#16a34a', '#8b5cf6', '#f43f5e', '#14b8a6', '#f97316'];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+        
+        const savedUser = sessionStorage.getItem('loginUser') || 'Admin';
+        document.getElementById('user-initial-header').innerText = savedUser.charAt(0).toUpperCase();
+
+        const appDataStr = sessionStorage.getItem('loginSession');
+        if(appDataStr) {
+            const appData = JSON.parse(appDataStr);
+            document.getElementById('welcome-username-display').innerText = appData.nombreProveedor || savedUser;
+            document.querySelector('.user-name').innerText = appData.nombreProveedor || savedUser;
+        }
+
+        const toggles = document.querySelectorAll('[data-sidebar-toggle]');
+        toggles.forEach(t => t.addEventListener('click', () => document.querySelector('.app-sidebar').classList.toggle('open')));
+        document.querySelector('[data-sidebar-close]').addEventListener('click', () => document.querySelector('.app-sidebar').classList.remove('open'));
+
+        cargarDatosDashboard();
+    });
+
+    function formateaMoneda(valor) { return "$" + parseFloat(valor || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+
+    async function cargarDatosDashboard() {
+        try {
+            const snapshot = await db.collection("tickets_mantenimiento").get();
+            let tickets = [];
+            snapshot.forEach(doc => tickets.push(doc.data()));
+
+            procesarYDibujar(tickets);
+        } catch (error) {
+            console.error("Error cargando dashboard:", error);
+            alert("No se pudieron cargar los datos del dashboard.");
+        }
+    }
+
+    function procesarYDibujar(tickets) {
+        // Variables para KPIs
+        let totalFolios = tickets.length;
+        let foliosPendientes = 0;
+        let gastoAprobado = 0;
+        let totalPagado = 0;
+
+        // Variables para Gráficas
+        let dataEstatus = {};
+        let dataSucursales = {}; // Costo por sucursal
+        let dataMeses = {};
+        let dataProveedores = {};
+
+        tickets.forEach(t => {
+            const estatus = t.estado_confirmacion || 'Nuevo';
+            const suc = (t.sucursal || 'S/N').toUpperCase();
+            const prov = (t.proveedor || t.prov_nombre || 'S/N').toUpperCase();
+            const costo = parseFloat(t.costo_total_aprobado || t.costo_total || 0);
+
+            // KPIs Lógica
+            if (['Nuevo', 'En proceso', 'Pendiente de Aprobación', 'Pendiente Gerencia'].includes(estatus)) {
+                foliosPendientes++;
+            }
+            if (['Costos Aprobados', 'Facturado', 'Pagado'].includes(estatus)) {
+                gastoAprobado += costo;
+            }
+            if (t.estado_pago === 'Pagado' || estatus === 'Pagado') {
+                totalPagado += costo;
+            }
+
+            // Agrupación Estatus
+            dataEstatus[estatus] = (dataEstatus[estatus] || 0) + 1;
+
+            // Agrupación Sucursales (Solo sumamos si hay costo)
+            if (costo > 0) {
+                dataSucursales[suc] = (dataSucursales[suc] || 0) + costo;
+            }
+
+            // Agrupación Tendencia Mensual (Año-Mes)
+            if (t.fecha_creacion) {
+                const mes = t.fecha_creacion.substring(0, 7); // Extrae YYYY-MM
+                dataMeses[mes] = (dataMeses[mes] || 0) + 1;
+            }
+
+            // Agrupación Proveedores (Por cantidad de tickets)
+            dataProveedores[prov] = (dataProveedores[prov] || 0) + 1;
+        });
+
+        // Actualizar KPIs HTML
+        document.getElementById('kpi-total').innerText = totalFolios;
+        document.getElementById('kpi-pendientes').innerText = foliosPendientes;
+        document.getElementById('kpi-gasto').innerText = formateaMoneda(gastoAprobado);
+        document.getElementById('kpi-pagado').innerText = formateaMoneda(totalPagado);
+
+        dibujarDonaEstatus(dataEstatus);
+        dibujarBarrasSucursal(dataSucursales);
+        dibujarLineaTendencia(dataMeses);
+        dibujarBarrasProveedores(dataProveedores);
+    }
+
+    // --- GRÁFICA 1: ESTATUS (Dona) ---
+    function dibujarDonaEstatus(data) {
+        const ctx = document.getElementById('chartEstatus').getContext('2d');
+        const labels = Object.keys(data);
+        const values = Object.values(data);
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: colors,
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right', labels: { boxWidth: 12, usePointStyle: true } }
+                },
+                cutout: '65%'
+            }
+        });
+    }
+
+    // --- GRÁFICA 2: SUCURSALES MÁS COSTOSAS (Barras Verticales Top 5) ---
+    function dibujarBarrasSucursal(data) {
+        const ctx = document.getElementById('chartSucursales').getContext('2d');
+        
+        // Ordenar de mayor a menor y tomar el Top 5
+        const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const labels = sorted.map(item => item[0]);
+        const values = sorted.map(item => item[1]);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Gasto Total ($)',
+                    data: values,
+                    backgroundColor: '#DC2626',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: (ctx) => formateaMoneda(ctx.raw) } }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // --- GRÁFICA 3: TENDENCIA MENSUAL (Línea) ---
+    function dibujarLineaTendencia(data) {
+        const ctx = document.getElementById('chartTendencia').getContext('2d');
+        
+        // Ordenar cronológicamente
+        const sorted = Object.entries(data).sort((a, b) => a[0].localeCompare(b[0]));
+        const labels = sorted.map(item => item[0]); // Fechas YYYY-MM
+        const values = sorted.map(item => item[1]);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Folios Creados',
+                    data: values,
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#2563eb',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    fill: true,
+                    tension: 0.3 // Hace la línea curva y suave
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // --- GRÁFICA 4: TOP PROVEEDORES (Barras Horizontales) ---
+    function dibujarBarrasProveedores(data) {
+        const ctx = document.getElementById('chartProveedores').getContext('2d');
+        
+        // Ordenar por cantidad y tomar Top 5
+        const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        const labels = sorted.map(item => item[0]);
+        const values = sorted.map(item => item[1]);
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total de Órdenes',
+                    data: values,
+                    backgroundColor: '#10b981',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                indexAxis: 'y', // La vuelve horizontal
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, grid: { borderDash: [4, 4] } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
