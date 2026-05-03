@@ -9,7 +9,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     
-    <!-- Librerías para crear y descargar el archivo ZIP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
@@ -36,8 +35,10 @@
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 120px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         html.is-logged-in #app-screen { display: block !important; }
         
+        /* === CORRECCIÓN DEL MENÚ ACTIVO === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
-        .sidebar-link.activa i { color: #DC2626 !important; }
+        .sidebar-link.activa i, .sidebar-link.activa svg { color: #DC2626 !important; }
+        
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
@@ -89,7 +90,6 @@
         .btn-download-red:hover { background: #b91c1c; }
         .btn-download-disabled { height: 28px; background: #e5e7eb; color: #9ca3af; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: not-allowed; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 
-        /* Botón de Borrar Factura */
         .btn-delete-red { height: 28px; background: #DC2626; color: white; border: none; padding: 0 12px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; white-space: nowrap; }
         .btn-delete-red:hover { background: #b91c1c; }
 
@@ -162,7 +162,6 @@
         .modal-header-card h2 { margin: 0; font-size: 20px; color: #111827; font-weight: 800; }
         .modal-header-card p { margin: 4px 0 0 0; font-size: 13px; color: #6b7280; }
         
-        /* Modal Custom Alert */
         .modal-card-alert { background: white; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
         #alert-icon-container { margin-bottom: 16px; display: flex; justify-content: center; }
         #alert-title { margin: 0 0 8px 0; font-size: 18px; color: #111827; font-weight: 700; }
@@ -191,7 +190,7 @@
                 <button class="header-hamburger" type="button" aria-label="Abrir navegación" data-sidebar-toggle>
                     <span class="hamburger"></span>
                 </button>
-                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
+                <a href="inicio.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Logo" class="header-logo"></a>
                 <h1 class="system-title">Ordenes de Servicio</h1>
             </div>
             <div class="header-right">
@@ -233,6 +232,7 @@
                             <a class="sidebar-link" href="costos.html"><i data-lucide="calculator"></i> Costos de reparación</a>
                             <a class="sidebar-link" href="aprobacion.html"><i data-lucide="badge-check"></i> Aprobación de costos</a>
                             <a class="sidebar-link" href="aprobacion_gerencia.html"><i data-lucide="shield-check"></i> Aprobación gerencia</a>
+                            
                             <a class="sidebar-link activa" href="facturacion.html"><i data-lucide="file-text"></i> Facturación</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-reportes">
@@ -324,7 +324,6 @@
                                     <th>SEM. FAC.</th>
                                     <th style="text-align: right;">IMPORTE FACTURA</th>
                                     
-                                    <!-- COLUMNAS REORDENADAS -->
                                     <th>ESTATUS</th> 
                                     <th>ACCIÓN</th>
                                     <th>PAGO TENTATIVO</th>
@@ -349,7 +348,6 @@
         </div>
     </div>
 
-    <!-- BOTÓN FLOTANTE DE DESCARGA -->
     <button class="fab-download" onclick="abrirModalDescarga()">
         <i data-lucide="folder-down" style="width: 20px; height: 20px;"></i>
         <span>Descargar Facturas</span>
@@ -377,7 +375,6 @@
     <input type="file" id="file-pdf" accept=".pdf" style="display:none" onchange="handleUpload(event, 'pdf')">
     <input type="file" id="file-xml" accept=".xml" style="display:none" onchange="handleUpload(event, 'xml')">
 
-    <!-- MODAL DE DESCARGA DE FACTURAS -->
     <div id="modalDescargaFacturas" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header-card">
@@ -433,7 +430,6 @@
 
     let facturasGlobales = [];
 
-    // Opciones para dropdowns (Formato: Mayúscula inicial, minúsculas las demás)
     const optionsIndicativo = [
         "Mtto de inmuebles correctivo naturaleza del equipo",
         "Mtto de inmuebles correctivo deterioro del restaurante",
@@ -492,7 +488,6 @@
         cargarDatosFacturacion();
     });
 
-    // === FUNCIONES AUXILIARES ===
     function showCustomAlert(title, message, isSuccess = true) {
         const alertBox = document.getElementById('custom-alert');
         const alertTitle = document.getElementById('alert-title');
@@ -534,7 +529,6 @@
         return d.toISOString().split('T')[0];
     }
     
-    // Función para calcular rango de fechas por semana (1 a 52)
     function getWeekDateRange(year, weekNo) {
         let d = new Date(Date.UTC(year, 0, 1));
         let dayNum = d.getUTCDay() || 7;
@@ -542,9 +536,9 @@
         let weekTime = d.getTime() + (weekNo - 1) * 604800000;
         
         let start = new Date(weekTime);
-        start.setUTCDate(start.getUTCDate() - 3); // Lunes
+        start.setUTCDate(start.getUTCDate() - 3); 
         let end = new Date(weekTime);
-        end.setUTCDate(end.getUTCDate() + 3); // Domingo
+        end.setUTCDate(end.getUTCDate() + 3); 
         
         const fmt = (date) => {
             let dd = date.getUTCDate().toString().padStart(2, '0');
@@ -554,7 +548,6 @@
         return `${fmt(start)} al ${fmt(end)}`;
     }
 
-    // === CARGA DE DATOS ===
     function cargarDatosFacturacion() {
         db.collection("tickets_mantenimiento")
           .where("estado_confirmacion", "==", "Costos Aprobados")
@@ -564,7 +557,6 @@
               querySnapshot.forEach((doc) => { 
                   let data = doc.data();
                   
-                  // Lógica de Estatus
                   if (data.estado_pago === 'Pagado') {
                       data._estado_factura = 'Pagado';
                   } else if (data.url_factura_xml) {
@@ -623,7 +615,6 @@
         return html;
     }
 
-    // === MOSTRAR PDF ORDEN ORIGINAL ===
     function verPDFOrden(folio) {
         const t = facturasGlobales.find(tk => tk.id_ticket === folio);
         if(!t) { showCustomAlert("Error", "Error al cargar datos de la orden.", false); return; }
@@ -705,10 +696,8 @@
             const totalVal = parseFloat(t.costo_total_aprobado) || 0;
             const totalTxt = formateaMoneda(totalVal);
             
-            // Botón PDF ORDEN ORIGINAL ROJO (Más ancho)
             const btnVerOrden = `<button class="btn-download-red" style="min-width: 105px; white-space: nowrap;" onclick="verPDFOrden('${folio}')" title="Ver Orden Original"><i data-lucide="search" style="width:12px; height:12px;"></i> Ver Orden</button>`;
 
-            // Botones PDF / XML FACTURA
             const btnPdf = t.url_factura_pdf 
                 ? `<button class="btn-download-red" onclick="window.open('${t.url_factura_pdf}', '_blank')"><i data-lucide="file-text" style="width:12px;"></i> PDF</button>` 
                 : `<button class="btn-download-disabled" disabled><i data-lucide="minus" style="width:12px;"></i> PDF</button>`;
@@ -723,10 +712,8 @@
             const impFact = t.factura_importe ? formateaMoneda(t.factura_importe) : "—";
             const fechaTentativa = t.factura_fecha_tentativa ? new Date(t.factura_fecha_tentativa).toLocaleDateString('es-MX') : "—";
 
-            // Eliminar Botón (Columna Acción Roja)
             const btnEliminar = `<button class="btn-delete-red" onclick="eliminarFactura('${folio}')" title="Borrar factura y reiniciar"><i data-lucide="trash-2" style="width:14px; color:white;"></i> Factura</button>`;
 
-            // Badge de Estado 
             let estadoHtml = "";
             if (t._estado_factura === 'Pendiente') {
                 estadoHtml = `<span class="status-badge bg-yellow"><i class="status-dot dot-yellow"></i> Pendiente</span>`;
@@ -736,7 +723,6 @@
                 estadoHtml = `<span class="status-badge bg-green"><i class="status-dot dot-green"></i> Pagado</span>`;
             }
 
-            // SAAS Input Autoguardado
             const saasVal = t.saas_codigo || '';
             const inSaas = `<input type="text" value="${saasVal}" maxlength="6" class="table-input-auto" 
                                 placeholder="6 dig." onblur="guardarSAASAutonomo('${folio}', this.value)" 
@@ -745,13 +731,11 @@
             const fechaSaas = t.saas_fecha ? new Date(t.saas_fecha).toLocaleDateString('es-MX') : "—";
             const semSaas = t.saas_semana || "—";
 
-            // Checkbox Pago (CHK)
             const isPagado = (t._estado_factura === 'Pagado');
             const canPay = (t._estado_factura === 'Por pagar' || isPagado);
             const chkPago = `<input type="checkbox" class="chk-custom" onchange="marcarComoPagado('${folio}', this.checked)" ${isPagado ? 'checked' : ''} ${!canPay ? 'disabled title="Sube la factura XML primero"' : ''}>`;
             const fechaPago = t.fecha_pago ? new Date(t.fecha_pago).toLocaleDateString('es-MX') : "—";
 
-            // Dropdowns
             const selIndicativo = generateTableSelect(folio, 'indicativo_gasto', optionsIndicativo, t.indicativo_gasto);
             const selCapexOpex = generateTableSelect(folio, 'calificacion_capex_opex', optionsCapexOpex, t.calificacion_capex_opex);
             const selTipificacion = generateTableSelect(folio, 'tipificacion_gasto', optionsTipificacion, t.tipificacion_gasto);
@@ -773,7 +757,6 @@
                 <td>${semFact}</td>
                 <td style="text-align: right; font-weight: 600;">${impFact}</td>
                 
-                <!-- COLUMNAS REORDENADAS -->
                 <td>${estadoHtml}</td>
                 <td>${btnEliminar}</td>
                 <td style="color: #ea580c; font-weight: 600;">${fechaTentativa}</td>
@@ -792,7 +775,6 @@
         lucide.createIcons();
     }
 
-    // === BARRA FLOTANTE Y SUBIDA ===
     function actualizarBarraFlotante() {
         const checkboxes = document.querySelectorAll('.chk-row-upload:checked');
         let count = 0; let sum = 0;
@@ -834,7 +816,6 @@
 
         let updateData = {};
 
-        // VALIDACIÓN ESTRICTA DEL XML ANTES DE SUBIR
         if (tipo === 'xml') {
             try {
                 const text = await file.text();
@@ -912,7 +893,6 @@
         }
     }
 
-    // === AUTOGUARDADO DE SAAS ===
     async function guardarSAASAutonomo(folio, val) {
         val = val.trim();
         if(!val) return; 
@@ -944,7 +924,6 @@
         }
     }
 
-    // === GUARDADO AUTOMÁTICO DE DROPDOWNS ===
     async function guardarAutofield(folio, field, value) {
         try {
             let updateData = {};
@@ -956,7 +935,6 @@
         }
     }
 
-    // === LÓGICA DE PAGO ===
     async function marcarComoPagado(folio, isChecked) {
         const nuevoEstado = isChecked ? 'Pagado' : 'Por Pagar'; 
         const fechaPago = isChecked ? new Date().toISOString() : null;
@@ -974,7 +952,6 @@
         }
     }
 
-    // === ELIMINAR FACTURA ===
     async function eliminarFactura(folio) {
         if(!confirm(`¿Estás completamente seguro de borrar la factura del folio ${folio}?\nSe eliminarán archivos PDF, XML, datos de factura, SAAS y el estatus volverá a 'Pendiente'.`)) return;
 
@@ -1002,9 +979,6 @@
         }
     }
 
-    // ==========================================
-    // LÓGICA DE DESCARGA ZIP (MODAL Y 52 SEMANAS)
-    // ==========================================
     function abrirModalDescarga() {
         const selectSemana = document.getElementById('descarga-semana');
         const selectProv = document.getElementById('descarga-prov');
@@ -1015,11 +989,9 @@
         const currentYear = hoy.getFullYear();
         const currentWeek = getWeekNumber(hoy.toISOString());
         
-        // Primera Opción: Semana Actual
         const currentRange = getWeekDateRange(currentYear, currentWeek);
         selectSemana.innerHTML += `<option value="${currentWeek}">Semana ${currentWeek} (${currentRange}) - Actual</option>`;
         
-        // 52 Semanas
         for(let i=1; i<=52; i++) {
             if(i !== currentWeek) {
                 let range = getWeekDateRange(currentYear, i);
@@ -1086,7 +1058,6 @@
                 const nombreProv = f.proveedor || f.prov_nombre || "Sin Proveedor";
                 const numFact = f.factura_numero || f.id_ticket; 
                 
-                // Estructura: SEMANA X > PROVEEDOR > FACTURA Y
                 const carpetaProv = carpetaPrincipal.folder(nombreProv);
                 const carpetaFact = carpetaProv.folder(numFact);
 
@@ -1125,7 +1096,6 @@
             lucide.createIcons();
         }
     }
-
 </script>
 </body>
 </html>
