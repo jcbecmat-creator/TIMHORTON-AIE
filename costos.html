@@ -37,7 +37,7 @@
 
         /* === ESTILOS DEL MENÚ PRINCIPAL === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
-        .sidebar-link.activa i { color: #DC2626 !important; }
+        .sidebar-link.activa i, .sidebar-link.activa svg { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
@@ -65,6 +65,7 @@
         .co-table { width: 100%; border-collapse: collapse; }
         .co-table th { padding: 16px 20px; text-align: center; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #6b7280; border-bottom: 1px solid #E5E7EB; white-space: nowrap; }
         .co-table td { padding: 16px 20px; text-align: center; font-size: 14px; color: #111827; border-bottom: 1px solid #f3f4f6; }
+        .co-table-empty { text-align: center; padding: 40px 20px !important; color: #6b7280; font-size: 14px; }
         
         .btn-action-red { height: 32px; background: #DC2626; color: white; border: none; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; }
         .btn-action-gray { height: 32px; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; padding: 0 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; box-sizing: border-box; transition: background 0.2s; }
@@ -213,7 +214,7 @@
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
+                        <a href="inicio.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
                             <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
@@ -221,9 +222,11 @@
                         </div>
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
-                            <a class="sidebar-link" href="inicio.html"><i data-lucide="home"></i> Inicio</a>
                             <a class="sidebar-link" href="confirmacion.html"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
-                            <a class="sidebar-link" href="costos.html"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            
+                            <!-- Costos de reparación ES LA PESTAÑA ACTIVA AQUÍ -->
+                            <a class="sidebar-link activa" href="costos.html"><i data-lucide="calculator"></i> Costos de reparación</a>
+                            
                             <a class="sidebar-link" href="aprobacion.html"><i data-lucide="badge-check"></i> Aprobación de costos</a>
                             <a class="sidebar-link" href="aprobacion_gerencia.html"><i data-lucide="shield-check"></i> Aprobación gerencia</a>
                             <a class="sidebar-link" href="facturacion.html"><i data-lucide="file-text"></i> Facturación</a>
