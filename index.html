@@ -43,8 +43,9 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         
+        /* === ESTILOS DEL MENÚ === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 8px !important; }
-        .sidebar-link.activa i { color: #DC2626 !important; }
+        .sidebar-link.activa i, .sidebar-link.activa svg { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
@@ -219,14 +220,12 @@
             <aside class="sidebar app-sidebar" id="sidebar" data-app-sidebar>
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
-                <nav class="sidebar-nav">
-                        <!-- ¡CORREGIDO! Ahora manda a inicio.html -->
-                        <a href="inicio.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Inicio Dashboard</a>
+                    <nav class="sidebar-nav">
+                        <a class="sidebar-link" href="inicio.html"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
-                            <!-- Esta es la página activa en index.html -->
-                            <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
-                            <a href="#" class="sidebar-link" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                            <a class="sidebar-link activa" href="#" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a class="sidebar-link" href="#" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
@@ -238,7 +237,7 @@
                         </div>
                         <div class="sidebar-section" id="nav-seccion-reportes">
                             <div class="sidebar-section-title">Reportes</div>
-                            <a href="#" class="sidebar-link" onclick="cambiarVista(event, 'vista-reportes')"><i data-lucide="bar-chart-3"></i> Reportes</a>
+                            <a class="sidebar-link" href="#" onclick="cambiarVista(event, 'vista-reportes')"><i data-lucide="bar-chart-3"></i> Reportes</a>
                         </div>
                     </nav>
                 </div>
