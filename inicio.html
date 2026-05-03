@@ -46,26 +46,33 @@
         #welcome-username-display { margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2; }
 
         /* === CONTROLES DASHBOARD === */
-        .dashboard-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .btn-limpiar-filtros { background: #DC2626; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: none; align-items: center; gap: 8px; transition: background 0.2s; box-shadow: 0 4px 6px rgba(220,38,38,0.2); }
+        .dashboard-header-controls { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb; 
+        }
+        .btn-limpiar-filtros { background: #DC2626; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; display: none; align-items: center; gap: 8px; transition: background 0.2s; box-shadow: 0 4px 6px rgba(220,38,38,0.2); }
         .btn-limpiar-filtros:hover { background: #b91c1c; }
-        .filtros-activos-text { font-size: 14px; color: #4b5563; font-weight: 700; }
+        
+        .filtros-activos-text { font-size: 18px; font-weight: 800; color: #111827; }
 
         /* === MÉTRICAS SUPERIORES === */
         .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
-        .metric-card { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; display: flex; align-items: center; gap: 16px; transition: transform 0.2s; cursor: default; }
+        .metric-card { 
+            background: white; padding: 20px; border-radius: 16px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; 
+            display: flex; align-items: center; gap: 16px; transition: all 0.2s; cursor: pointer; 
+        }
         .metric-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border-color: #d1d5db; }
         .metric-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .metric-content { display: flex; flex-direction: column; overflow: hidden; }
         .metric-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: #6b7280; letter-spacing: 0.5px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        /* Tamaño ajustado para que quepa "000 - $000,000.00" */
         .metric-value { font-size: 18px; font-weight: 900; color: #111827; line-height: 1.2; letter-spacing: -0.5px; white-space: nowrap; }
 
         .icon-blue { background: #eff6ff; color: #2563eb; }
         .icon-yellow { background: #fef3c7; color: #d97706; }
         .icon-green { background: #f0fdf4; color: #16a34a; }
         .icon-red { background: #fef2f2; color: #dc2626; }
-        .icon-dark { background: #f3f4f6; color: #1f2937; } /* Nuevo color para Total General */
+        .icon-dark { background: #f3f4f6; color: #1f2937; } 
 
         /* === GRIDS DE GRÁFICAS === */
         .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
@@ -163,28 +170,28 @@
 
                     <!-- KPIs GENERALES -->
                     <div class="metrics-grid">
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-total" onclick="setFiltroKpi('total')">
                             <div class="metric-icon icon-blue"><i data-lucide="files" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Total de Folios</span>
                                 <span class="metric-value" id="kpi-total">0 - $0.00</span>
                             </div>
                         </div>
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-rechazados" onclick="setFiltroKpi('rechazados')">
                             <div class="metric-icon icon-red"><i data-lucide="x-circle" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Gastos Rechazados</span>
                                 <span class="metric-value" id="kpi-rechazados">0 - $0.00</span>
                             </div>
                         </div>
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-aprobados" onclick="setFiltroKpi('aprobados')">
                             <div class="metric-icon icon-yellow"><i data-lucide="circle-dollar-sign" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Gasto Aprobado</span>
                                 <span class="metric-value" id="kpi-gasto">0 - $0.00</span>
                             </div>
                         </div>
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-pagados" onclick="setFiltroKpi('pagados')">
                             <div class="metric-icon icon-green"><i data-lucide="check-circle" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Total Pagado</span>
@@ -194,32 +201,34 @@
                     </div>
 
                     <!-- TÍTULO FINANZAS -->
-                    <h2 style="font-size: 18px; font-weight: 800; color: #111827; margin: 10px 0 15px 0; padding-bottom: 5px; border-bottom: 1px solid #e5e7eb;">Finanzas</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #e5e7eb;">
+                        <h2 style="font-size: 18px; font-weight: 800; color: #111827; margin: 0;">Finanzas</h2>
+                    </div>
 
                     <!-- KPIs FINANZAS -->
                     <div class="metrics-grid" style="margin-bottom: 35px;">
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-fin_pendientes" onclick="setFiltroKpi('fin_pendientes')">
                             <div class="metric-icon icon-yellow"><i data-lucide="clock" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Folios Pendientes</span>
                                 <span class="metric-value" id="kpi-fin-pendientes">0 - $0.00</span>
                             </div>
                         </div>
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-fin_porpagar" onclick="setFiltroKpi('fin_porpagar')">
                             <div class="metric-icon icon-blue"><i data-lucide="file-text" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Folios Por Pagar</span>
                                 <span class="metric-value" id="kpi-fin-porpagar">0 - $0.00</span>
                             </div>
                         </div>
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-fin_pagados" onclick="setFiltroKpi('fin_pagados')">
                             <div class="metric-icon icon-green"><i data-lucide="check-circle" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Folios Pagados</span>
                                 <span class="metric-value" id="kpi-fin-pagados">0 - $0.00</span>
                             </div>
                         </div>
-                        <div class="metric-card">
+                        <div class="metric-card" id="card-fin_total" onclick="setFiltroKpi('fin_total')">
                             <div class="metric-icon icon-dark"><i data-lucide="calculator" stroke-width="2.5" style="width: 26px; height: 26px;"></i></div>
                             <div class="metric-content">
                                 <span class="metric-title">Total General</span>
@@ -313,7 +322,18 @@
         proveedor: null,
         capex: null,
         mes: null,
-        tipo: null
+        tipo: null,
+        kpi: null // Filtro para clics en tarjetas
+    };
+
+    const kpiNames = {
+        'rechazados': 'Gastos Rechazados',
+        'aprobados': 'Gasto Aprobado',
+        'pagados': 'Total Pagado',
+        'fin_pendientes': 'Folios Pendientes',
+        'fin_porpagar': 'Folios Por Pagar',
+        'fin_pagados': 'Folios Pagados',
+        'fin_total': 'Total General'
     };
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -328,7 +348,6 @@
             document.getElementById('welcome-username-display').innerText = window.appData.nombreProveedor || savedUser;
             document.querySelector('.user-name').innerText = window.appData.nombreProveedor || savedUser;
             
-            // Ocultar menús de administrador si es proveedor
             if(window.appData.privilegio == 2 || window.appData.privilegio == "2") {
                 document.getElementById('nav-seccion-admin').style.display = 'none';
                 document.getElementById('nav-seccion-reportes').style.display = 'none';
@@ -365,7 +384,6 @@
         try {
             let query = db.collection("tickets_mantenimiento");
             
-            // FILTRO DE SEGURIDAD PARA PROVEEDORES
             if (window.appData && (window.appData.privilegio == 2 || window.appData.privilegio == "2")) {
                 query = query.where("proveedor", "==", window.appData.nombreProveedor);
             }
@@ -390,29 +408,77 @@
         aplicarFiltrosCruzados();
     }
 
+    // Lógica al dar clic en una tarjeta (KPI)
+    function setFiltroKpi(kpiName) {
+        document.querySelectorAll('.metric-card').forEach(c => {
+            c.style.borderColor = '#e5e7eb';
+            c.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)';
+        });
+        
+        if (activeFilters.kpi === kpiName || kpiName === 'total') {
+            activeFilters.kpi = null;
+        } else {
+            activeFilters.kpi = kpiName;
+            const card = document.getElementById('card-' + kpiName);
+            if(card) {
+                card.style.borderColor = '#DC2626';
+                card.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.2)';
+            }
+        }
+        aplicarFiltrosCruzados();
+    }
+
     function limpiarFiltrosDashboard() {
-        activeFilters = { estatus: null, sucursal: null, proveedor: null, capex: null, mes: null, tipo: null };
+        activeFilters = { estatus: null, sucursal: null, proveedor: null, capex: null, mes: null, tipo: null, kpi: null };
+        document.querySelectorAll('.metric-card').forEach(c => {
+            c.style.borderColor = '#e5e7eb';
+            c.style.boxShadow = '0 4px 6px -1px rgba(0,0,0,0.05)';
+        });
         aplicarFiltrosCruzados();
     }
 
     function aplicarFiltrosCruzados() {
         let filtrados = allTickets.filter(t => {
+            // Filtros de las gráficas
             if (activeFilters.estatus && getGrupoEstatus(t) !== activeFilters.estatus) return false;
             if (activeFilters.sucursal && getSucursal(t) !== activeFilters.sucursal) return false;
             if (activeFilters.proveedor && getProveedor(t) !== activeFilters.proveedor) return false;
             if (activeFilters.capex && getCapex(t) !== activeFilters.capex) return false;
             if (activeFilters.mes && getMes(t) !== activeFilters.mes) return false;
             if (activeFilters.tipo && getTipo(t) !== activeFilters.tipo) return false;
+            
+            // Filtro si dieron clic en una tarjeta (KPI)
+            if (activeFilters.kpi) {
+                const estGrupo = getGrupoEstatus(t);
+                const estRaw = t.estado_confirmacion;
+                
+                if (activeFilters.kpi === 'rechazados' && estGrupo !== 'Rechazados') return false;
+                if (activeFilters.kpi === 'aprobados' && !(estGrupo === 'Aprobados' || estRaw === 'Pendiente Gerencia')) return false;
+                if (activeFilters.kpi === 'pagados' && !(t.estado_pago === 'Pagado' || estRaw === 'Pagado')) return false;
+                
+                if (activeFilters.kpi === 'fin_pendientes' && !(estRaw === 'Costos Aprobados' && t.estado_pago !== 'Pagado' && t.estado_pago !== 'Por Pagar' && !t.url_factura_xml)) return false;
+                if (activeFilters.kpi === 'fin_porpagar' && !(estRaw === 'Costos Aprobados' && (t.estado_pago === 'Por Pagar' || t.url_factura_xml) && t.estado_pago !== 'Pagado')) return false;
+                if (activeFilters.kpi === 'fin_pagados' && !(estRaw === 'Costos Aprobados' && t.estado_pago === 'Pagado')) return false;
+                if (activeFilters.kpi === 'fin_total' && estRaw !== 'Costos Aprobados') return false;
+            }
             return true;
         });
 
-        const activos = Object.values(activeFilters).filter(v => v !== null);
+        const activos = [];
+        if(activeFilters.estatus) activos.push(activeFilters.estatus);
+        if(activeFilters.sucursal) activos.push(activeFilters.sucursal);
+        if(activeFilters.proveedor) activos.push(activeFilters.proveedor);
+        if(activeFilters.capex) activos.push(activeFilters.capex);
+        if(activeFilters.mes) activos.push(activeFilters.mes);
+        if(activeFilters.tipo) activos.push(activeFilters.tipo);
+        if(activeFilters.kpi) activos.push(kpiNames[activeFilters.kpi]);
+
         const btnClear = document.getElementById('btn-clear-filters');
         const txtDisplay = document.getElementById('filtros-activos-display');
         
         if (activos.length > 0) {
             btnClear.style.display = 'inline-flex';
-            txtDisplay.innerHTML = `Filtrando por: <strong style="color:#DC2626;">${activos.join(', ')}</strong>`;
+            txtDisplay.innerHTML = `Información General <span style="font-size: 14px; font-weight: 600; color: #6b7280; margin-left: 10px;">(Filtrando por: <span style="color:#DC2626;">${activos.join(', ')}</span>)</span>`;
         } else {
             btnClear.style.display = 'none';
             txtDisplay.innerHTML = 'Información General';
@@ -423,13 +489,11 @@
     }
 
     function actualizarKpis(tickets) {
-        // Variables Generales (Fila 1)
         let top_total = { c: 0, s: 0 };
         let top_rechazados = { c: 0, s: 0 };
         let top_aprobado = { c: 0, s: 0 };
         let top_pagado = { c: 0, s: 0 };
 
-        // Variables Finanzas (Fila 2)
         let fin_pendientes = { c: 0, s: 0 };
         let fin_porpagar = { c: 0, s: 0 };
         let fin_pagados = { c: 0, s: 0 };
@@ -440,7 +504,7 @@
             const estGrupo = getGrupoEstatus(t);
             const estRaw = t.estado_confirmacion;
 
-            // --- Lógica KPIs Fila 1 (Generales) ---
+            // Fila 1
             top_total.c++; top_total.s += costo;
 
             if (estGrupo === 'Rechazados') {
@@ -453,7 +517,7 @@
                 top_pagado.c++; top_pagado.s += costo;
             }
 
-            // --- Lógica KPIs Fila 2 (Finanzas, simulando facturacion.html) ---
+            // Fila 2
             if (estRaw === 'Costos Aprobados') {
                 fin_total.c++; fin_total.s += costo;
 
@@ -467,13 +531,11 @@
             }
         });
 
-        // Escribir en HTML (Fila 1)
         document.getElementById('kpi-total').innerText = `${top_total.c} - ${formateaMoneda(top_total.s)}`;
         document.getElementById('kpi-rechazados').innerText = `${top_rechazados.c} - ${formateaMoneda(top_rechazados.s)}`;
         document.getElementById('kpi-gasto').innerText = `${top_aprobado.c} - ${formateaMoneda(top_aprobado.s)}`;
         document.getElementById('kpi-pagado').innerText = `${top_pagado.c} - ${formateaMoneda(top_pagado.s)}`;
 
-        // Escribir en HTML (Fila 2 - Finanzas)
         document.getElementById('kpi-fin-pendientes').innerText = `${fin_pendientes.c} - ${formateaMoneda(fin_pendientes.s)}`;
         document.getElementById('kpi-fin-porpagar').innerText = `${fin_porpagar.c} - ${formateaMoneda(fin_porpagar.s)}`;
         document.getElementById('kpi-fin-pagados').innerText = `${fin_pagados.c} - ${formateaMoneda(fin_pagados.s)}`;
@@ -503,7 +565,6 @@
         dibujarGrafica('chartTipificacion', 'bar', dTipo, 'tipo', ['#f59e0b']);
     }
 
-    // Constructor Maestro de Gráficas
     function dibujarGrafica(canvasId, tipo, dataObj, filtroClave, colores, top5 = false, isMoney = false) {
         if (chartInstances[canvasId]) { chartInstances[canvasId].destroy(); }
 
