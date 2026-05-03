@@ -38,7 +38,7 @@
 
         /* === ESTILOS DEL MENÚ === */
         .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 0 8px 8px 0 !important; }
-        .sidebar-link.activa i { color: #DC2626 !important; }
+        .sidebar-link.activa i, .sidebar-link.activa svg { color: #DC2626 !important; }
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
 
@@ -190,11 +190,11 @@
 </head>
 <body class="has-sidebar">
 
-    <div id="app-screen" style="display: none;">
+    <div id="app-screen" style="display: block;">
         <header class="main-header">
             <div class="header-left">
                 <button class="header-hamburger" type="button" data-sidebar-toggle><span class="hamburger"></span></button>
-                <a href="index.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo"></a>
+                <a href="inicio.html"><img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" class="header-logo"></a>
                 <h1 class="system-title">Ordenes de Servicio</h1>
             </div>
             <div class="header-right">
@@ -224,7 +224,7 @@
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a href="index.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
+                        <a href="inicio.html" class="sidebar-link" id="nav-inicio"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
                             <a href="index.html" class="sidebar-link"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
@@ -232,8 +232,8 @@
                         </div>
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
-                            <a class="sidebar-link" href="inicio.html"><i data-lucide="home"></i> Inicio</a>
-                            <a class="sidebar-link" href="confirmacion.html"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
+                            <!-- PESTAÑA ACTIVA AQUÍ: Confirmación Operativa -->
+                            <a class="sidebar-link activa" href="confirmacion.html"><i data-lucide="check-circle-2"></i> Confirmación operativa</a>
                             <a class="sidebar-link" href="costos.html"><i data-lucide="calculator"></i> Costos de reparación</a>
                             <a class="sidebar-link" href="aprobacion.html"><i data-lucide="badge-check"></i> Aprobación de costos</a>
                             <a class="sidebar-link" href="aprobacion_gerencia.html"><i data-lucide="shield-check"></i> Aprobación gerencia</a>
