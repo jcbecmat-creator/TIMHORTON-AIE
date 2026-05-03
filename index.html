@@ -44,8 +44,25 @@
         .app-content { overflow-y: auto; height: 100vh; padding-bottom: 100px; -webkit-overflow-scrolling: touch; background-color: #F8FAFC; }
         
         /* === ESTILOS DEL MENÚ === */
-        .sidebar-link.activa { background-color: #FEF2F2 !important; color: #DC2626 !important; font-weight: 700 !important; border-left: 4px solid #DC2626 !important; border-radius: 8px !important; }
-        .sidebar-link.activa i, .sidebar-link.activa svg { color: #DC2626 !important; }
+        .sidebar-link.activa { 
+            background-color: #FEF2F2 !important; 
+            color: #DC2626 !important; 
+            font-weight: 700 !important; 
+            border-left: 4px solid #DC2626 !important; 
+            border-radius: 0 8px 8px 0 !important; 
+        }
+        
+        .sidebar-link.activa i, 
+        .sidebar-link.activa svg, 
+        .sidebar-link.activa svg path, 
+        .sidebar-link.activa svg line, 
+        .sidebar-link.activa svg polyline, 
+        .sidebar-link.activa svg rect, 
+        .sidebar-link.activa svg circle { 
+            stroke: #DC2626 !important;
+            color: #DC2626 !important;
+        }
+
         .sidebar-section { padding: 10px 0; border-bottom: 1px solid #f1f5f9; margin-bottom: 5px; }
         .sidebar-section:last-child { border-bottom: none; }
         .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px; margin: 10px 20px; }
@@ -221,9 +238,10 @@
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a class="sidebar-link" href="inicio.html"><i data-lucide="home"></i> Inicio</a>
+                        <a href="inicio.html" class="sidebar-link"><i data-lucide="home"></i> Inicio</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
+                            <!-- PESTAÑA ACTIVA AQUÍ: Mantenimiento Correctivo -->
                             <a class="sidebar-link activa" href="#" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
                             <a class="sidebar-link" href="#" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
@@ -251,23 +269,9 @@
                     <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">PROVEEDOR</h2>
                 </div>
 
-                <div id="vista-inicio" class="modulo-vista">
-                    <div style="text-align: center; padding-top: 30px; padding-bottom: 50px;">
-                        <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
-                        <p style="color: #666; margin-bottom: 40px;">Selecciona una opción del menú lateral para comenzar.</p>
-                        
-                        <div style="border-top: 1px solid #e5e7eb; padding-top: 32px; max-width: 400px; margin: 50px auto 0 auto;">
-                           <p style="color:#94a3b8; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-top:20px;">
-                               © 2026 TIM HORTONS - TODOS LOS DERECHOS RESERVADOS.
-                           </p>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 20px;">
                         
-                        <!-- ENCABEZADO Y PESTAÑAS (LINEA GRIS POR DEBAJO) -->
                         <header class="page-header-section" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
                             <div style="margin-bottom: 15px;">
                                 <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
