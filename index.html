@@ -238,12 +238,11 @@
                 <button class="sidebar-close" type="button" data-sidebar-close><span class="close-icon">X</span></button>
                 <div class="sidebar-content">
                     <nav class="sidebar-nav">
-                        <a href="inicio.html" class="sidebar-link"><i data-lucide="home"></i> Inicio</a>
+                        <a href="inicio.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Inicio Dashboard</a>
                         <div class="sidebar-section">
                             <div class="sidebar-section-title">Formas</div>
-                            <!-- PESTAÑA ACTIVA AQUÍ: Mantenimiento Correctivo -->
-                            <a class="sidebar-link activa" href="#" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
-                            <a class="sidebar-link" href="#" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
+                            <a href="#" class="sidebar-link activa" onclick="cambiarVista(event, 'vista-mantenimiento')"><i data-lucide="wrench"></i> Mantenimiento correctivo</a>
+                            <a href="#" class="sidebar-link" id="nav-preventivo" onclick="cambiarVista(event, 'vista-ordenes-servicio')"><i data-lucide="calendar-check"></i> Mantenimientos Preventivos</a>
                         </div>
                         <div class="sidebar-section" id="nav-seccion-admin">
                             <div class="sidebar-section-title">Administración</div>
@@ -269,9 +268,23 @@
                     <h2 id="welcome-username-display" style="margin: 5px 0 0 0; font-size: 30px; color: #DC2626; font-weight: 800; text-transform: uppercase; line-height: 1.2;">PROVEEDOR</h2>
                 </div>
 
+                <div id="vista-inicio" class="modulo-vista">
+                    <div style="text-align: center; padding-top: 30px; padding-bottom: 50px;">
+                        <img src="https://tims-orden-de-servicio.onrender.com/static/images/logo.png" alt="Tim Hortons" style="width: 150px; margin-bottom: 20px;">
+                        <p style="color: #666; margin-bottom: 40px;">Selecciona una opción del menú lateral para comenzar.</p>
+                        
+                        <div style="border-top: 1px solid #e5e7eb; padding-top: 32px; max-width: 400px; margin: 50px auto 0 auto;">
+                           <p style="color:#94a3b8; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-top:20px;">
+                               © 2026 TIM HORTONS - TODOS LOS DERECHOS RESERVADOS.
+                           </p>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="vista-mantenimiento" class="modulo-vista activa">
                     <div class="reporte-container" style="max-width: 1200px; margin: 0 auto; position: relative; padding-bottom: 20px;">
                         
+                        <!-- ENCABEZADO Y PESTAÑAS (LINEA GRIS POR DEBAJO) -->
                         <header class="page-header-section" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
                             <div style="margin-bottom: 15px;">
                                 <h1 style="font-size: 24px; font-weight: bold; margin-bottom: 5px;">Mantenimiento Correctivo</h1>
@@ -1442,7 +1455,14 @@
             document.querySelectorAll('.modulo-vista').forEach(v => v.classList.remove('activa'));
             document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('activa'));
             document.getElementById(idVista).classList.add('activa');
-            if(event) event.currentTarget.classList.add('activa');
+            
+            if(event) {
+                event.currentTarget.classList.add('activa');
+            } else {
+                const linkActivo = document.querySelector(`.sidebar-link[onclick*="${idVista}"]`);
+                if(linkActivo) linkActivo.classList.add('activa');
+            }
+            
             const sidebar = document.getElementById('sidebar');
             if (window.innerWidth <= 1024 && sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); }
         }
