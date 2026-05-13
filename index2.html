@@ -132,8 +132,9 @@
                         </ul>
                     </div>
                     <div class="header-right">
-                        <img src="https://i.ibb.co/FbxyGYSn/Tim-Hortons.jpg" alt="Tim Hortons Logo" class="logo-img">
-                        <img src="https://i.ibb.co/SDLR885x/T1.jpg" alt="Tim Hortons Store" class="store-img">
+                        <!-- Las imágenes locales no necesitan crossorigin si ya vienen en la app, pero no hace daño -->
+                        <img src="https://i.ibb.co/FbxyGYSn/Tim-Hortons.jpg" alt="Tim Hortons Logo" class="logo-img" crossorigin="anonymous">
+                        <img src="https://i.ibb.co/SDLR885x/T1.jpg" alt="Tim Hortons Store" class="store-img" crossorigin="anonymous">
                     </div>
                 </div>
 
@@ -235,8 +236,8 @@
                         </ul>
                     </div>
                     <div class="header-right">
-                        <img src="https://i.ibb.co/FbxyGYSn/Tim-Hortons.jpg" alt="Tim Hortons Logo" class="logo-img">
-                        <img src="https://i.ibb.co/SDLR885x/T1.jpg" alt="Tim Hortons Store" class="store-img">
+                        <img src="https://i.ibb.co/FbxyGYSn/Tim-Hortons.jpg" alt="Tim Hortons Logo" class="logo-img" crossorigin="anonymous">
+                        <img src="https://i.ibb.co/SDLR885x/T1.jpg" alt="Tim Hortons Store" class="store-img" crossorigin="anonymous">
                     </div>
                 </div>
 
@@ -347,17 +348,18 @@
                 document.getElementById('pdf-prov-tel').innerText = data.prov_tel;
                 document.getElementById('pdf-prov-mail').innerText = data.prov_mail;
 
+                // INYECCIÓN DE CROSSORIGIN A LAS IMÁGENES
                 data.fotos_falla.forEach((fotoBase64, index) => {
-                    if(fotoBase64) { document.getElementById(`pdf-falla-${index}`).innerHTML = `<img src="${fotoBase64}">`; }
+                    if(fotoBase64) { document.getElementById(`pdf-falla-${index}`).innerHTML = `<img src="${fotoBase64}" crossorigin="anonymous">`; }
                 });
 
                 data.fotos_solucion.forEach((fotoBase64, index) => {
-                    if(fotoBase64) { document.getElementById(`pdf-sol-${index}`).innerHTML = `<img src="${fotoBase64}">`; }
+                    if(fotoBase64) { document.getElementById(`pdf-sol-${index}`).innerHTML = `<img src="${fotoBase64}" crossorigin="anonymous">`; }
                 });
 
-                if(data.firma) { document.getElementById('pdf-firma').innerHTML = `<img src="${data.firma}">`; }
-                if(data.foto_selfie) { document.getElementById('pdf-foto-tecnico').innerHTML = `<img src="${data.foto_selfie}">`; }
-                if(data.foto_soporte) { document.getElementById('pdf-soporte-fisico').innerHTML = `<img src="${data.foto_soporte}">`; }
+                if(data.firma) { document.getElementById('pdf-firma').innerHTML = `<img src="${data.firma}" crossorigin="anonymous">`; }
+                if(data.foto_selfie) { document.getElementById('pdf-foto-tecnico').innerHTML = `<img src="${data.foto_selfie}" crossorigin="anonymous">`; }
+                if(data.foto_soporte) { document.getElementById('pdf-soporte-fisico').innerHTML = `<img src="${data.foto_soporte}" crossorigin="anonymous">`; }
 
             } else { alert("No se encontraron datos. Por favor regresa a la aplicación."); }
         });
@@ -388,11 +390,17 @@
             const fechaHoraRaw = document.getElementById('pdf-fecha').innerText;
             const fechaHora = fechaHoraRaw.replace(/[\s\/:,]/g, '_'); 
             
+            // CONFIGURACIÓN DE CORS REFORZADA EN HTML2CANVAS
             const opciones = {
                 margin:       0,
                 filename:     `MTTO_CORR_${sucursal}_${fechaHora}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 }, 
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    allowTaint: true, 
+                    scrollY: 0 
+                }, 
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
